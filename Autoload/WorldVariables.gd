@@ -1,22 +1,29 @@
 extends Node
 
-var __root : Vector2 = Vector2.ZERO
-var __renderDistance : int = 5
-const __tileSize : int = 32
-const __chunkSizeTiles : int = 10
-const __chunkSizePixels : int = __tileSize * __chunkSizeTiles
-var __generatedChunks = []
-var __nextToGenerate = []
+
+const __tileSize : int = 32	# Tile Size in Engine Units
+const __chunkSizeTiles : int = 10	# Chunk Size in Tiles
+const __chunkSizePixels : int = __tileSize * __chunkSizeTiles	# Chunk Size in Enigne Units
+
+var __root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
+var __renderDistance : int = 5	# Render distance in Chunks
+var __generatedChunks = []	# Array that stores all generated Chunks
+var __nextToGenerate = []	# Array that stores all the Chunks that are up next
+							# to generate (Neighbours of generated Chunks)
+
+"""Ready Method"""
 
 func _ready():
 	pass
 
+"""Getter-Methods"""
+
 func getRoot():
 	return __root
-	
+
 func getRenderDistance():
 	return __renderDistance
-	
+
 func getTileSize():
 	return __tileSize
 	
@@ -32,6 +39,8 @@ func getGeneratedChunks():
 func getNextToGenerate():
 	return __nextToGenerate
 
+"""Setter-Methods"""
+
 func setRenderDistance(val):
 	__renderDistance = val
 
@@ -40,13 +49,19 @@ func setGeneratedChunks(value):
 
 func setNextToGenerate(value):
 	__nextToGenerate.push_back(value)
-	
+
+"""Methods to remove elements from Array"""
+
 func removeGeneratedChunks(value):
 	__generatedChunks.erase(value)
 	
 func removeNextToGenerate(value):
 	__nextToGenerate.erase(value)
 
+"""Other Methods"""
+
+"""Remove Chunks that are too far away from
+the nextToGenerate Array"""
 func updateNextToGenerate():
 	var rootLeft = Vector2.LEFT
 	var rootRight = Vector2.RIGHT
