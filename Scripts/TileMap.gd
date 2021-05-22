@@ -5,6 +5,7 @@ onready var tileMapFloor = get_parent().get_node("Floor")	# Floor TileMap
 onready var tileMapNature = get_parent().get_node("Nature")	# Nature TileMap
 
 var size : int = WorldVariables.getChunkSizeTiles()	# Chunk Size
+var noise : OpenSimplexNoise = OpenSimplexNoise.new()	#Holds Noise Texture
 
 """Ready Method"""
 """Generates first Chunk"""
@@ -19,6 +20,7 @@ func _process(delta):
 """Generates a Chunk and keeps track of the currently
 generated and next to generate Chunks"""
 func generateChunk(root):
+	# createNoise(root, size)
 	generateFloor(root)
 	generateNature(root)
 	WorldVariables.setGeneratedChunks(root)
@@ -38,9 +40,6 @@ func generateChunk(root):
 	if !WorldVariables.getGeneratedChunks().has(rootUp):
 		WorldVariables.setNextToGenerate(rootUp)
 	
-	print("Generated Chunk at")
-	print(root * WorldVariables.getChunkSizePixels())
-	
 """Removes a Chunk from the world and from the generatedChunks Array"""
 func removeChunk(root):
 	removeFloor(root)
@@ -52,16 +51,16 @@ None of these Tiles have collision"""
 func generateFloor(root):
 	for x in size:
 		for y in size:
-			tileMapFloor.set_cell(x + root.x * size, y + root.y * size, 0)
+			tileMapFloor.set_cell(x + root.x * size, y + root.y * size, 20)
 	
 """Generates Objects on top of the Floor using the Nature TileMap
 Some of these Tiles have collision"""
 func generateNature(root):
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	for x in range(0, size):
-		for y in range(0, size):
-			var rand = rng.randi_range(-1, 6)	# Chooses a random Tile
+	for x in range(size):
+		for y in range(size):
+			var rand = rng.randi_range(-1, 20)	# Chooses a random Tile
 			var gen = rng.randi_range(1, 10)	# Chooses a random number
 			if gen % 3:	# which is used to determine if a Tile gets added
 				tileMapNature.set_cell(x + root.x * size, y + root.y * size, -1)
@@ -77,6 +76,33 @@ func removeFloor(root):
 	
 """Removes the Objects on top of the Floor"""
 func removeNature(root):
-	for x in range(0, size):
-		for y in range(0, size):
+	for x in range(size):
+		for y in range(size):
 			tileMapNature.set_cell(x + root.x * size, y + root.y * size, -1)
+	
+"""Creates a noise texture to generate specific tiles based on the noise value
+***UNFINISHED***"""
+func createNoise(root, size):
+	var rng = RandomNumberGenerator.new()
+	for x in range(size):
+		for y in range(size):
+			var noise2D = noise.get_noise_2d(x + root.x * size, y + root.y * size) * 5 + 3
+			if noise2D < 1:
+				tileMapFloor.set_cell(x + root.x * size, y + root.y * size, 0)
+				tileMapNature.set_cell(x + root.x * size, y + root.y * size, 0)
+			elif noise2D < 2:
+				var rand = rng.randi_range(1, 5)
+				tileMapFloor.set_cell(x + root.x * size, y + root.y * size, rand)
+				tileMapNature.set_cell(x + root.x * size, y + root.y * size, rand)
+			elif noise2D < 3:
+				var rand = rng.randi_range(6, 10)
+				tileMapFloor.set_cell(x + root.x * size, y + root.y * size, rand)
+				tileMapNature.set_cell(x + root.x * size, y + root.y * size, rand)
+			elif noise2D < 4:
+				var rand = rng.randi_range(11, 15)
+				tileMapFloor.set_cell(x + root.x * size, y + root.y * size, rand)
+				tileMapNature.set_cell(x + root.x * size, y + root.y * size, rand)
+			elif noise2D > 4:
+				var rand = rng.randi_range(16, 20)
+				tileMapFloor.set_cell(x + root.x * size, y + root.y * size, rand)
+				tileMapNature.set_cell(x + root.x * size, y + root.y * size, rand)

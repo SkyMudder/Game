@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
 
-
 var velocity = Vector2.ZERO	# Player Velocity
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
@@ -16,9 +15,7 @@ func _physics_process(delta):
 	if input_vector != Vector2.ZERO:
 		velocity = input_vector * 2
 	else:
-		velocity = Vector2.ZERO
-		print(WorldVariables.getGeneratedChunks().size())
-		print(WorldVariables.getNextToGenerate().size())
+		velocity = Vector2.ZERO 
 
 	move_and_collide(velocity)
 	emit_signal("on_player_moved")
