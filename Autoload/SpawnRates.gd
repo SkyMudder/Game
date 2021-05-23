@@ -13,8 +13,8 @@ func getPercentage():
 
 const __dirt : int = 300
 const __grass : int = 200
-const __rock : int = 30
-const __tree : int = 30
+const __rock : int = 70
+const __tree : int = 70
 
 """Getters"""
 

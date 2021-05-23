@@ -23,6 +23,7 @@ func _physics_process(delta):
 
 	velocity = move_and_slide(velocity)
 	emit_signal("on_player_moved")
+	print(get_global_mouse_position())
 
 """Checks if the Player is close to a Chunk
 Close is defined by the Render Distance"""
