@@ -393,7 +393,7 @@ current = true
 position = Vector2( 16, 16 )
 shape = SubResource( 3 )
 
-[node name="Nature" type="TileMap" parent="KinematicBody2D"]
+[node name="Nature" type="TileMap" parent="."]
 tile_set = SubResource( 4 )
 cell_size = Vector2( 32, 32 )
 format = 1

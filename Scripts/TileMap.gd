@@ -89,7 +89,7 @@ func createNoise(root, size):
 		for y in range(size):
 			var noise2D = noise.get_noise_2d(x + root.x * size, y + root.y * size) + 1
 			if noise2D < 1:
-				var rand = rng.randi_range(0, 50)
+				var rand = rng.randi_range(0, tileMapDirt.size())
 				if rand < 10:
 					tileMapDirt.set_cell(x + root.x * size, y + root.y * size, rand / 2)
 				else:
