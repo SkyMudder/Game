@@ -19,13 +19,13 @@ func _ready():
 	
 """Updates every Frame
 Cleans up the nextToGenerate Array and updates the Bitmask Region"""
-func _process(delta):
+func _process(_delta):
 	WorldVariables.updateNextToGenerate()
 	
 """Generates a Chunk and keeps track of the currently
 generated and next to generate Chunks"""
 func generateChunk(root):
-	createNoiseAndGenerate(root, size)
+	createNoiseAndGenerate(root)
 	WorldVariables.setGeneratedChunks(root)
 	WorldVariables.removeNextToGenerate(root)
 	var rootLeft = root + Vector2.LEFT
@@ -44,7 +44,7 @@ func generateChunk(root):
 		WorldVariables.setNextToGenerate(rootUp)
 	
 """Creates a noise texture to generate specific tiles based on the noise value"""
-func createNoiseAndGenerate(root, size):
+func createNoiseAndGenerate(root):
 	var percentage = SpawnRates.getPercentage()
 	var rng = RandomNumberGenerator.new()
 	rng.seed = root.x * root.y

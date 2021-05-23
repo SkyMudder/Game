@@ -11,7 +11,7 @@ func getPercentage():
 
 """World"""
 
-const __dirt : int = 200
+const __dirt : int = 300
 const __grass : int = 200
 const __rock : int = 30
 const __tree : int = 30
