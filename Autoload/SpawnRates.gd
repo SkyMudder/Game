@@ -11,11 +11,15 @@ func getPercentage():
 
 """World"""
 
+const __dirt : int = 200
 const __grass : int = 200
-const __rock : int = 50
-const __tree : int = 100
+const __rock : int = 30
+const __tree : int = 30
 
 """Getters"""
+
+func getDirt():
+	return __dirt
 
 func getGrass():
 	return __grass
