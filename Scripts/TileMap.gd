@@ -1,9 +1,10 @@
 extends TileMap
 
 
-onready var tileMapDirt = get_parent().get_node("Dirt")	# Dirt TileMap
-onready var tileMapGrass = get_parent().get_node("Grass")	# Grass TileMap
-onready var tileMapNature = get_parent().get_node("Nature")	# Nature TileMap
+onready var tileMapDirt = get_parent().get_node("Dirt")
+onready var tileMapGrass = get_parent().get_node("Grass")
+onready var tileMapNature = get_parent().get_node("Nature")
+onready var tileMapGrassTop = get_parent().get_node("GrassTop")
 
 var size : int = WorldVariables.getChunkSizeTiles()	# Chunk Size
 var noise : OpenSimplexNoise = OpenSimplexNoise.new()	#Holds Noise Texture
@@ -41,6 +42,56 @@ func generateChunk(root):
 	if !WorldVariables.getGeneratedChunks().has(rootUp):
 		WorldVariables.setNextToGenerate(rootUp)
 	
+"""Creates a noise texture to generate specific tiles based on the noise value"""
+func createNoiseAndGenerate(root, size):
+	var percentage = SpawnRates.getPercentage()
+	var rng = RandomNumberGenerator.new()
+	rng.seed = root.x * root.y
+	
+	for x in range(size):
+		for y in range(size):
+			var rand = rng.randi_range(0, percentage)
+			var posCurrent = Vector2(x, y)
+			var noise2D = noise.get_noise_2d(x + root.x * size, y + root.y * size) + 1
+			if noise2D < 1:
+				var randDirt = rng.randi_range(0, 3)
+				generateDirt(posCurrent, root, rand, randDirt)
+			elif noise2D > 1:
+				var randGrass = rng.randi_range(0, 4)
+				generateGrass(posCurrent, root, rand)
+				generateGrassTop(posCurrent, root, rand, randGrass)
+	
+"""Generates the Dirt Floor
+None of these Tiles have Collision"""
+func generateDirt(posCurrent, root, rand, randDirt):
+	tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 0)
+	if rand < SpawnRates.getDirt():
+		tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, randDirt)
+	else:
+		tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 4)
+	generateNature(0, posCurrent, root, rand)
+	
+"""Generates the Grass Floor
+None of these Tiles have Collision"""
+func generateGrass(posCurrent, root, rand):
+	tileMapGrass.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 0)
+	generateNature(1, posCurrent, root, rand)
+	
+"""Generates Grass on top of the Grass Floor"""
+func generateGrassTop(posCurrent, root, rand, randGrass):
+	if rand < SpawnRates.getGrass():
+		tileMapGrassTop.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, randGrass)
+	
+"""Generates Nature-Objects on top of the Floor
+Some of these Tiles have Collision"""
+func generateNature(type, posCurrent, root, rand):
+	if type == 0:
+		if rand < SpawnRates.getRock():
+			tileMapNature.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, type)
+	if type == 1:
+		if rand < SpawnRates.getTree():
+			tileMapNature.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, type)
+	
 """Removes a Chunk from the world and from the generatedChunks Array"""
 func removeChunk(root):
 	removeDirt(root)
@@ -60,52 +111,14 @@ func removeGrass(root):
 		for y in range(size):
 			tileMapGrass.set_cell(x + root.x * size, y + root.y * size, -1)
 	
+"""Removes the Grass on top of the Grass Floor"""
+func removeGrassTop(root):
+	for x in range(size):
+		for y in range(size):
+			tileMapGrassTop.set_cell(x + root.x * size, y + root.y * size, -1)
+	
 """Removes the Nature-Objects"""
 func removeNature(root):
 	for x in range(size):
 		for y in range(size):
 			tileMapNature.set_cell(x + root.x * size, y + root.y * size, -1)
-	
-"""Creates a noise texture to generate specific tiles based on the noise value
-Currently generates Dirt and Grass with varying Objects on top of it"""
-func createNoiseAndGenerate(root, size):
-	var percentage = SpawnRates.getPercentage()
-	var rng = RandomNumberGenerator.new()
-	rng.seed = root.x * root.y
-	
-	for x in range(size):
-		for y in range(size):
-			var rand = rng.randi_range(0, percentage)
-			var posCurrent = Vector2(x, y)
-			var noise2D = noise.get_noise_2d(x + root.x * size, y + root.y * size) + 1
-			if noise2D < 1:
-				var randDirt = rng.randi_range(0, 3)
-				generateDirt(posCurrent, root, rand, randDirt)
-			elif noise2D > 1:
-				generateGrass(posCurrent, root, rand)
-	
-"""Generates the Dirt Floor
-None of these Tiles have Collision"""
-func generateDirt(posCurrent, root, rand, randDirt):
-	tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 0)
-	if rand < SpawnRates.getDirt():
-		tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, randDirt)
-	else:
-		tileMapDirt.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 4)
-	generateNature(16, posCurrent, root, rand)
-	
-"""Generates the Grass Floor
-None of these Tiles have Collision"""
-func generateGrass(posCurrent, root, rand):
-	tileMapGrass.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 0)
-	generateNature(17, posCurrent, root, rand)
-	
-"""Generates Nature-Objects on top of the Floor
-Some of these Tiles have Collision"""
-func generateNature(type, posCurrent, root, rand):
-	if type == 16:
-		if rand < SpawnRates.getRock():
-			tileMapNature.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, type)
-	if type == 17:
-		if rand < SpawnRates.getTree():
-			tileMapNature.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, type)

@@ -1,12 +1,13 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://TilesetResources/GrassTileMap.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/TileMap.gd" type="Script" id=2]
-[ext_resource path="res://TilesetResources/Nature.png" type="Texture" id=3]
+[ext_resource path="res://TilesetResources/NatureObjects.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/Player.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/GameManager.gd" type="Script" id=6]
 [ext_resource path="res://TilesetResources/Dirt.png" type="Texture" id=7]
+[ext_resource path="res://TilesetResources/GrassTop.png" type="Texture" id=8]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Dirt.png 0"
@@ -105,18 +106,9 @@
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="CircleShape2D" id=3]
-radius = 8.0
-
-[sub_resource type="ConvexPolygonShape2D" id=4]
-points = PoolVector2Array( 3.77344, 21.2571, 29.1699, 21.5362, 28.6117, 25.4434, 25.8209, 26.8388, 12.9832, 27.1179, 5.44794, 24.327 )
-
-[sub_resource type="ConvexPolygonShape2D" id=5]
-points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168, 21.3556, 25.8168 )
-
-[sub_resource type="TileSet" id=6]
-0/name = "Nature.png 0"
-0/texture = ExtResource( 3 )
+[sub_resource type="TileSet" id=7]
+0/name = "GrassTop.png 0"
+0/texture = ExtResource( 8 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 32, 32 )
@@ -129,8 +121,8 @@ points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168,
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
-1/name = "Nature.png 1"
-1/texture = ExtResource( 3 )
+1/name = "GrassTop.png 1"
+1/texture = ExtResource( 8 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 0, 32, 32, 32 )
@@ -143,8 +135,8 @@ points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168,
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
-2/name = "Nature.png 2"
-2/texture = ExtResource( 3 )
+2/name = "GrassTop.png 2"
+2/texture = ExtResource( 8 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
 2/region = Rect2( 0, 64, 32, 32 )
@@ -157,8 +149,8 @@ points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168,
 2/shape_one_way_margin = 0.0
 2/shapes = [  ]
 2/z_index = 0
-3/name = "Nature.png 3"
-3/texture = ExtResource( 3 )
+3/name = "GrassTop.png 3"
+3/texture = ExtResource( 8 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
 3/region = Rect2( 0, 96, 32, 32 )
@@ -171,11 +163,11 @@ points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168,
 3/shape_one_way_margin = 0.0
 3/shapes = [  ]
 3/z_index = 0
-4/name = "Nature.png 4"
-4/texture = ExtResource( 3 )
+4/name = "GrassTop.png 4"
+4/texture = ExtResource( 8 )
 4/tex_offset = Vector2( 0, 0 )
 4/modulate = Color( 1, 1, 1, 1 )
-4/region = Rect2( 32, 0, 32, 32 )
+4/region = Rect2( 0, 128, 32, 32 )
 4/tile_mode = 0
 4/occluder_offset = Vector2( 0, 0 )
 4/navigation_offset = Vector2( 0, 0 )
@@ -185,202 +177,59 @@ points = PoolVector2Array( 21.3556, 28.6076, 12.1459, 28.6076, 12.1459, 25.8168,
 4/shape_one_way_margin = 0.0
 4/shapes = [  ]
 4/z_index = 0
-5/name = "Nature.png 5"
-5/texture = ExtResource( 3 )
-5/tex_offset = Vector2( 0, 0 )
-5/modulate = Color( 1, 1, 1, 1 )
-5/region = Rect2( 32, 32, 32, 32 )
-5/tile_mode = 0
-5/occluder_offset = Vector2( 0, 0 )
-5/navigation_offset = Vector2( 0, 0 )
-5/shape_offset = Vector2( 0, 0 )
-5/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-5/shape_one_way = false
-5/shape_one_way_margin = 0.0
-5/shapes = [  ]
-5/z_index = 0
-6/name = "Nature.png 6"
-6/texture = ExtResource( 3 )
-6/tex_offset = Vector2( 0, 0 )
-6/modulate = Color( 1, 1, 1, 1 )
-6/region = Rect2( 32, 64, 32, 32 )
-6/tile_mode = 0
-6/occluder_offset = Vector2( 0, 0 )
-6/navigation_offset = Vector2( 0, 0 )
-6/shape_offset = Vector2( 0, 0 )
-6/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-6/shape_one_way = false
-6/shape_one_way_margin = 0.0
-6/shapes = [  ]
-6/z_index = 0
-7/name = "Nature.png 7"
-7/texture = ExtResource( 3 )
-7/tex_offset = Vector2( 0, 0 )
-7/modulate = Color( 1, 1, 1, 1 )
-7/region = Rect2( 32, 96, 32, 32 )
-7/tile_mode = 0
-7/occluder_offset = Vector2( 0, 0 )
-7/navigation_offset = Vector2( 0, 0 )
-7/shape_offset = Vector2( 0, 0 )
-7/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-7/shape_one_way = false
-7/shape_one_way_margin = 0.0
-7/shapes = [  ]
-7/z_index = 0
-8/name = "Nature.png 8"
-8/texture = ExtResource( 3 )
-8/tex_offset = Vector2( 0, 0 )
-8/modulate = Color( 1, 1, 1, 1 )
-8/region = Rect2( 64, 0, 32, 32 )
-8/tile_mode = 0
-8/occluder_offset = Vector2( 0, 0 )
-8/navigation_offset = Vector2( 0, 0 )
-8/shape_offset = Vector2( 0, 0 )
-8/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-8/shape_one_way = false
-8/shape_one_way_margin = 0.0
-8/shapes = [  ]
-8/z_index = 0
-9/name = "Nature.png 9"
-9/texture = ExtResource( 3 )
-9/tex_offset = Vector2( 0, 0 )
-9/modulate = Color( 1, 1, 1, 1 )
-9/region = Rect2( 64, 32, 32, 32 )
-9/tile_mode = 0
-9/occluder_offset = Vector2( 0, 0 )
-9/navigation_offset = Vector2( 0, 0 )
-9/shape_offset = Vector2( 0, 0 )
-9/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-9/shape_one_way = false
-9/shape_one_way_margin = 0.0
-9/shapes = [  ]
-9/z_index = 0
-10/name = "Nature.png 10"
-10/texture = ExtResource( 3 )
-10/tex_offset = Vector2( 0, 0 )
-10/modulate = Color( 1, 1, 1, 1 )
-10/region = Rect2( 64, 64, 32, 32 )
-10/tile_mode = 0
-10/occluder_offset = Vector2( 0, 0 )
-10/navigation_offset = Vector2( 0, 0 )
-10/shape_offset = Vector2( 0, 0 )
-10/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-10/shape_one_way = false
-10/shape_one_way_margin = 0.0
-10/shapes = [  ]
-10/z_index = 0
-11/name = "Nature.png 11"
-11/texture = ExtResource( 3 )
-11/tex_offset = Vector2( 0, 0 )
-11/modulate = Color( 1, 1, 1, 1 )
-11/region = Rect2( 64, 96, 32, 32 )
-11/tile_mode = 0
-11/occluder_offset = Vector2( 0, 0 )
-11/navigation_offset = Vector2( 0, 0 )
-11/shape_offset = Vector2( 0, 0 )
-11/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-11/shape_one_way = false
-11/shape_one_way_margin = 0.0
-11/shapes = [  ]
-11/z_index = 0
-12/name = "Nature.png 12"
-12/texture = ExtResource( 3 )
-12/tex_offset = Vector2( 0, 0 )
-12/modulate = Color( 1, 1, 1, 1 )
-12/region = Rect2( 96, 0, 32, 32 )
-12/tile_mode = 0
-12/occluder_offset = Vector2( 0, 0 )
-12/navigation_offset = Vector2( 0, 0 )
-12/shape_offset = Vector2( 0, 0 )
-12/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-12/shape_one_way = false
-12/shape_one_way_margin = 0.0
-12/shapes = [  ]
-12/z_index = 0
-13/name = "Nature.png 13"
-13/texture = ExtResource( 3 )
-13/tex_offset = Vector2( 0, 0 )
-13/modulate = Color( 1, 1, 1, 1 )
-13/region = Rect2( 96, 32, 32, 32 )
-13/tile_mode = 0
-13/occluder_offset = Vector2( 0, 0 )
-13/navigation_offset = Vector2( 0, 0 )
-13/shape_offset = Vector2( 0, 0 )
-13/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-13/shape_one_way = false
-13/shape_one_way_margin = 0.0
-13/shapes = [  ]
-13/z_index = 0
-14/name = "Nature.png 14"
-14/texture = ExtResource( 3 )
-14/tex_offset = Vector2( 0, 0 )
-14/modulate = Color( 1, 1, 1, 1 )
-14/region = Rect2( 96, 64, 32, 32 )
-14/tile_mode = 0
-14/occluder_offset = Vector2( 0, 0 )
-14/navigation_offset = Vector2( 0, 0 )
-14/shape_offset = Vector2( 0, 0 )
-14/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-14/shape_one_way = false
-14/shape_one_way_margin = 0.0
-14/shapes = [  ]
-14/z_index = 0
-15/name = "Nature.png 15"
-15/texture = ExtResource( 3 )
-15/tex_offset = Vector2( 0, 0 )
-15/modulate = Color( 1, 1, 1, 1 )
-15/region = Rect2( 96, 96, 32, 32 )
-15/tile_mode = 0
-15/occluder_offset = Vector2( 0, 0 )
-15/navigation_offset = Vector2( 0, 0 )
-15/shape_offset = Vector2( 0, 0 )
-15/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-15/shape_one_way = false
-15/shape_one_way_margin = 0.0
-15/shapes = [  ]
-15/z_index = 0
-16/name = "Nature.png 16"
-16/texture = ExtResource( 3 )
-16/tex_offset = Vector2( 0, 0 )
-16/modulate = Color( 1, 1, 1, 1 )
-16/region = Rect2( 128, 0, 32, 32 )
-16/tile_mode = 0
-16/occluder_offset = Vector2( 0, 0 )
-16/navigation_offset = Vector2( 0, 0 )
-16/shape_offset = Vector2( 0, 0 )
-16/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-16/shape = SubResource( 4 )
-16/shape_one_way = false
-16/shape_one_way_margin = 1.0
-16/shapes = [ {
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 8.0
+
+[sub_resource type="ConvexPolygonShape2D" id=8]
+points = PoolVector2Array( 30.1877, 29.4368, 3.06102, 29.4368, 3.06102, 19.3898, 30.1877, 19.3898 )
+
+[sub_resource type="ConvexPolygonShape2D" id=9]
+points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 21.9655, 24.7482 )
+
+[sub_resource type="TileSet" id=6]
+0/name = "NatureObjects.png 0"
+0/texture = ExtResource( 3 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 32, 32 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape = SubResource( 8 )
+0/shape_one_way = false
+0/shape_one_way_margin = 1.0
+0/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 4 ),
+"shape": SubResource( 8 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
-16/z_index = 0
-17/name = "Nature.png 17"
-17/texture = ExtResource( 3 )
-17/tex_offset = Vector2( 0, 0 )
-17/modulate = Color( 1, 1, 1, 1 )
-17/region = Rect2( 128, 32, 32, 32 )
-17/tile_mode = 0
-17/occluder_offset = Vector2( 0, 0 )
-17/navigation_offset = Vector2( 0, 0 )
-17/shape_offset = Vector2( 0, 0 )
-17/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-17/shape = SubResource( 5 )
-17/shape_one_way = false
-17/shape_one_way_margin = 1.0
-17/shapes = [ {
+0/z_index = 0
+1/name = "NatureObjects.png 1"
+1/texture = ExtResource( 3 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 32, 0, 32, 32 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape = SubResource( 9 )
+1/shape_one_way = false
+1/shape_one_way_margin = 1.0
+1/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 5 ),
+"shape": SubResource( 9 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
-17/z_index = 0
+1/z_index = 0
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 6 )
@@ -389,11 +238,17 @@ script = ExtResource( 6 )
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
 format = 1
-tile_data = PoolIntArray( 0, 4, 0 )
+tile_data = PoolIntArray( 0, 0, 0 )
 script = ExtResource( 2 )
 
 [node name="Grass" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
+cell_size = Vector2( 32, 32 )
+format = 1
+script = ExtResource( 2 )
+
+[node name="GrassTop" type="TileMap" parent="."]
+tile_set = SubResource( 7 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
