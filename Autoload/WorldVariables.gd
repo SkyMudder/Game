@@ -11,11 +11,6 @@ var __generatedChunks = []	# Array that stores all generated Chunks
 var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
 
-"""Ready Method"""
-
-func _ready():
-	pass
-
 """Getter-Methods"""
 
 func getRoot():
