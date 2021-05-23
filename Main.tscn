@@ -106,7 +106,7 @@
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="TileSet" id=7]
+[sub_resource type="TileSet" id=3]
 0/name = "GrassTop.png 0"
 0/texture = ExtResource( 8 )
 0/tex_offset = Vector2( 0, 0 )
@@ -178,16 +178,16 @@
 4/shapes = [  ]
 4/z_index = 0
 
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=4]
 radius = 8.0
 
-[sub_resource type="ConvexPolygonShape2D" id=8]
+[sub_resource type="ConvexPolygonShape2D" id=5]
 points = PoolVector2Array( 30.1877, 29.4368, 3.06102, 29.4368, 3.06102, 19.3898, 30.1877, 19.3898 )
 
-[sub_resource type="ConvexPolygonShape2D" id=9]
+[sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 21.9655, 24.7482 )
 
-[sub_resource type="TileSet" id=6]
+[sub_resource type="TileSet" id=7]
 0/name = "NatureObjects.png 0"
 0/texture = ExtResource( 3 )
 0/tex_offset = Vector2( 0, 0 )
@@ -198,14 +198,14 @@ points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 2
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape = SubResource( 8 )
+0/shape = SubResource( 5 )
 0/shape_one_way = false
 0/shape_one_way_margin = 1.0
 0/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 8 ),
+"shape": SubResource( 5 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 0/z_index = 0
@@ -219,14 +219,14 @@ points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 2
 1/navigation_offset = Vector2( 0, 0 )
 1/shape_offset = Vector2( 0, 0 )
 1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-1/shape = SubResource( 9 )
+1/shape = SubResource( 6 )
 1/shape_one_way = false
 1/shape_one_way_margin = 1.0
 1/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 9 ),
+"shape": SubResource( 6 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 1/z_index = 0
@@ -248,7 +248,7 @@ format = 1
 script = ExtResource( 2 )
 
 [node name="GrassTop" type="TileMap" parent="."]
-tile_set = SubResource( 7 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
@@ -266,10 +266,10 @@ current = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
 position = Vector2( 16, 16 )
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="Nature" type="TileMap" parent="."]
-tile_set = SubResource( 6 )
+tile_set = SubResource( 7 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )

@@ -8,18 +8,19 @@ onready var tileMapGrassTop = get_parent().get_node("GrassTop")
 
 var size : int = WorldVariables.getChunkSizeTiles()	# Chunk Size
 var noise : OpenSimplexNoise = OpenSimplexNoise.new()	#Holds Noise Texture
+var thread	# Used to update the nextToGenerate Array and the Bitmask Region
+var flag = 0
 
-"""Ready Method"""
-"""Generates first Chunk"""
+"""Ready Method
+Generates first Chunk"""
 func _ready():
-	generateChunk(WorldVariables.getRoot())
+	WorldVariables.setNextToGenerate(WorldVariables.getRoot())
 	noise.seed = 1
 	
 """Updates every Frame
-Cleans up the nextToGenerate Array"""
+Cleans up the nextToGenerate Array and updates the Bitmask Region"""
 func _process(delta):
 	WorldVariables.updateNextToGenerate()
-	tileMapGrass.update_bitmask_region()
 	
 """Generates a Chunk and keeps track of the currently
 generated and next to generate Chunks"""
@@ -60,6 +61,7 @@ func createNoiseAndGenerate(root, size):
 				var randGrass = rng.randi_range(0, 4)
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass)
+				update_bitmask_area(Vector2(x + root.x * size, y + root.y * size))
 	
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
@@ -76,6 +78,7 @@ None of these Tiles have Collision"""
 func generateGrass(posCurrent, root, rand):
 	tileMapGrass.set_cell(posCurrent.x + root.x * size, posCurrent.y + root.y * size, 0)
 	generateNature(1, posCurrent, root, rand)
+	flag = 1
 	
 """Generates Grass on top of the Grass Floor"""
 func generateGrassTop(posCurrent, root, rand, randGrass):
@@ -96,6 +99,7 @@ func generateNature(type, posCurrent, root, rand):
 func removeChunk(root):
 	removeDirt(root)
 	removeGrass(root)
+	removeGrassTop(root)
 	removeNature(root)
 	WorldVariables.removeGeneratedChunks(root)
 	
