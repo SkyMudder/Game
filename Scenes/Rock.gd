@@ -1,0 +1,11 @@
+extends StaticBody2D
+
+
+func _on_Rock_input_event(viewport, event, shape_idx):
+	if Input.is_mouse_button_pressed(BUTTON_LEFT):
+		var RockBreakingEffect = load("res://Effects/RockBreakingEffect.tscn")
+		var rockBreakingEffect = RockBreakingEffect.instance()
+		var world = get_tree().current_scene
+		world.add_child(rockBreakingEffect)
+		rockBreakingEffect.global_position = global_position
+		queue_free()
