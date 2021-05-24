@@ -11,8 +11,11 @@ func _ready():
 	
 """Gets called every time the Player moves"""
 func _on_KinematicBody2D_on_player_moved():
+	var start = OS.get_ticks_msec()
 	checkRemoveChunk()
 	checkGenerateChunk()
+	var end = OS.get_ticks_msec()
+	print(end - start)
 	
 """Checks if a Chunk should be generated
 Based on how close the Player is to it
