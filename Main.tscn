@@ -182,7 +182,7 @@
 radius = 8.0
 
 [sub_resource type="ConvexPolygonShape2D" id=5]
-points = PoolVector2Array( 30.1877, 29.4368, 3.06102, 29.4368, 3.06102, 19.3898, 30.1877, 19.3898 )
+points = PoolVector2Array( 28.1153, 30.0534, 5.02001, 29.8919, 5.18152, 19.394, 28.1153, 19.717 )
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 21.9655, 24.7482 )

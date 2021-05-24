@@ -1,12 +1,12 @@
 extends Node
 
 
-const __tileSize : int = 32	# Tile Size in Engine Units
+const __tileSizePixels : int = 32	# Tile Size in Engine Units
 const __chunkSizeTiles : int = 10	# Chunk Size in Tiles
-const __chunkSizePixels : int = __tileSize * __chunkSizeTiles	# Chunk Size in Enigne Units
+const __chunkSizePixels : int = __tileSizePixels * __chunkSizeTiles	# Chunk Size in Enigne Units
 
 var __root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
-var __renderDistance : int = 10	# Render distance in Chunks (Must be higher than 1)
+var __renderDistance : int = 2	# Render distance in Chunks (Must be higher than 1)
 var __generatedChunks = []	# Array that stores all generated Chunks
 var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
@@ -19,8 +19,8 @@ func getRoot():
 func getRenderDistance():
 	return __renderDistance
 
-func getTileSize():
-	return __tileSize
+func getTileSizePixels():
+	return __tileSizePixels
 	
 func getChunkSizeTiles():
 	return __chunkSizeTiles

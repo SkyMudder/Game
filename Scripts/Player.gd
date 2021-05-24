@@ -2,9 +2,9 @@ extends KinematicBody2D
 
 
 var velocity = Vector2.ZERO	# Player Velocity
-const MAX_SPEED = 100
-const ACCELERATION = 400
-const FRICTION = 300
+const MAX_SPEED = 100 * 10
+const ACCELERATION = 400 * 10
+const FRICTION = 300 * 10
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
 
@@ -23,7 +23,6 @@ func _physics_process(delta):
 
 	velocity = move_and_slide(velocity)
 	emit_signal("on_player_moved")
-	print(get_global_mouse_position())
 
 """Checks if the Player is close to a Chunk
 Close is defined by the Render Distance"""
