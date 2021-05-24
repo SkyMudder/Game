@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Sprites/Rock.png" type="Texture" id=1]
+[ext_resource path="res://HitHurtBoxes/Hurtbox.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.24047
 height = 13.79
 
-[node name="StaticBody2D" type="StaticBody2D"]
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 16, 16 )
+
+[node name="Rock" type="StaticBody2D"]
 
 [node name="Rock" type="Sprite" parent="."]
 position = Vector2( 16, 16 )
@@ -16,3 +20,11 @@ texture = ExtResource( 1 )
 position = Vector2( 16.6307, 20.2045 )
 rotation = 1.5708
 shape = SubResource( 1 )
+
+[node name="Hurtbox" parent="." instance=ExtResource( 2 )]
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2( 16, 16 )
+shape = SubResource( 2 )
+
+[editable path="Hurtbox"]
