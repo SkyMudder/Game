@@ -4,6 +4,7 @@ extends TileMap
 onready var tileMapDirt = get_parent().get_node("Dirt")
 onready var tileMapGrass = get_parent().get_node("Grass")
 onready var tileMapGrassTop = get_parent().get_node("GrassTop")
+onready var player = get_node("../KinematicBody2D")
 
 var chunkSizeTiles : int = WorldVariables.getChunkSizeTiles()	# Chunk Size in Tiles
 var chunkSizePixels : int = WorldVariables.getChunkSizePixels()	#	Chunk Size in Pixels
@@ -85,10 +86,12 @@ func generateNature(type, posCurrent, root, rand):
 	if type == 0:
 		if rand < SpawnRates.getRock():
 			pass
-#			var Rock = load("res://Scenes/Rock.tscn")
-#			var rock = Rock.instance()
-#			var world = get_tree().current_scene
-#			world.add_child(rock)
+			var Rock = load("res://Scenes/Rock.tscn")
+			var rock = Rock.instance()
+			var world = get_tree().current_scene
+			world.add_child(rock)
+			rock.global_position = Vector2(posCurrent.x * tileSizePixels + root.x * chunkSizePixels, posCurrent.y * tileSizePixels + root.y * chunkSizePixels)
+			rock.add_to_group("Objects")
 	if type == 1:
 		if rand < SpawnRates.getTree():
 			var Tree = load("res://Scenes/Tree.tscn")
@@ -96,13 +99,14 @@ func generateNature(type, posCurrent, root, rand):
 			var world = get_tree().current_scene
 			world.add_child(tree)
 			tree.global_position = Vector2(posCurrent.x * tileSizePixels + root.x * chunkSizePixels, posCurrent.y * tileSizePixels + root.y * chunkSizePixels)
+			tree.add_to_group("Objects")
 	
 """Removes a Chunk from the world and from the generatedChunks Array"""
 func removeChunk(root):
 	removeDirt(root)
 	removeGrass(root)
 	removeGrassTop(root)
-	removeNature(root)
+	removeNature()
 	WorldVariables.removeGeneratedChunks(root)
 	
 """Removes the Dirt"""
@@ -123,9 +127,8 @@ func removeGrassTop(root):
 		for y in range(chunkSizeTiles):
 			tileMapGrassTop.set_cell(x + root.x * chunkSizeTiles, y + root.y * chunkSizeTiles, -1)
 	
-"""Removes the Nature-Objects
-***Currently not working***"""
-func removeNature(root):
-	for x in range(chunkSizeTiles):
-		for y in range(chunkSizeTiles):
-			pass
+"""Removes the Nature-Objects"""
+func removeNature():
+	for x in get_tree().get_nodes_in_group("Objects"):
+		if player.isFarFromObject(x.global_position):
+			x.queue_free()

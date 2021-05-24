@@ -32,10 +32,18 @@ func isCloseToChunk(chunk):
 	else:
 		return false
 	
-"""Checks if a Player is far from a Chunk
+"""Checks if the Player is far from a Chunk
 Far is defined by the Render Distance"""
 func isFarFromChunk(chunk):
 	if self.position.distance_to(chunk * WorldVariables.getChunkSizePixels()) > WorldVariables.getRenderDistance() * WorldVariables.getChunkSizePixels():
+		return true
+	else:
+		return false
+	
+"""Checks if the Player is far from an Object
+Far is defined by the Render Distance"""
+func isFarFromObject(pos):
+	if self.position.distance_to(pos) > WorldVariables.getRenderDistance() * WorldVariables.getChunkSizePixels() + 150:
 		return true
 	else:
 		return false
