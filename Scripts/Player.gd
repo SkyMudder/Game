@@ -2,9 +2,9 @@ extends KinematicBody2D
 
 
 var velocity = Vector2.ZERO	# Player Velocity
-const MAX_SPEED = 100 * 10
-const ACCELERATION = 400 * 10
-const FRICTION = 300 * 10
+const MAX_SPEED = 100
+const ACCELERATION = 500
+const FRICTION = 500
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
 
