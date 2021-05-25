@@ -54,7 +54,7 @@ func createNoiseAndGenerate(root):
 			var rand = rng.randi_range(0, percentage)
 			var posCurrent = Vector2(x, y)
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles, y + root.y * chunkSizeTiles) + 1
-			if noise2D < 1:
+			if noise2D <= 1:
 				var randDirt = rng.randi_range(0, 3)
 				generateDirt(posCurrent, root, rand, randDirt)
 			elif noise2D > 1:
@@ -79,7 +79,8 @@ func generateGrass(posCurrent, root, rand):
 	tileMapGrass.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 0)
 	generateNature(1, posCurrent, root, rand)
 	
-"""Generates Grass on top of the Grass Floor"""
+"""Generates Grass on top of the Grass Floor
+None of these Tiles have Collision"""
 func generateGrassTop(posCurrent, root, rand, randGrass):
 	if rand < SpawnRates.getGrass():
 		tileMapGrassTop.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, randGrass)

@@ -239,7 +239,6 @@ script = ExtResource( 6 )
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
 format = 1
-tile_data = PoolIntArray( 0, 0, 0 )
 script = ExtResource( 2 )
 
 [node name="Grass" type="TileMap" parent="."]
@@ -256,6 +255,9 @@ script = ExtResource( 2 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Player" type="Sprite" parent="KinematicBody2D"]
 position = Vector2( 16, 16 )

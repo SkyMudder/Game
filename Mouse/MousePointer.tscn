@@ -12,7 +12,7 @@ collision_layer = 16
 collision_mask = 8
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
-position = Vector2( 4, 4 )
+position = Vector2( 3.97372, 3.47444 )
 shape = SubResource( 1 )
 
 [editable path="Hitbox"]
