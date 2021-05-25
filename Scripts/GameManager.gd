@@ -3,12 +3,13 @@ extends Node2D
 
 onready var player = get_node("KinematicBody2D")	# Player
 onready var tileMapGrass = get_node("Grass")		# Grass TileMap
-onready var arrow = load("res://Sprites/MousePointer.png")
+onready var mousePointer = load("res://Sprites/MousePointer.png")	#Mouse Pointer Texture
 
 var root = WorldVariables.getRoot()	# World root
-
+	
+"""Changes the how the Mouse Pointer looks"""
 func _ready():
-	Input.set_custom_mouse_cursor(arrow)
+	Input.set_custom_mouse_cursor(mousePointer)
 	
 """Gets called every time the Player moves"""
 func _on_KinematicBody2D_on_player_moved():
