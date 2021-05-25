@@ -12,11 +12,12 @@ var tileSizePixels : int = WorldVariables.getTileSizePixels()	# Tile Size in Pix
 var noise : OpenSimplexNoise = OpenSimplexNoise.new()	#Holds Noise Texture
 
 """Ready Method
-Generates first Chunk"""
+Sets the seed and the first Chunk as the next to generate"""
 func _ready():
 	WorldVariables.setNextToGenerate(WorldVariables.getRoot())
 	noise.seed = 1
 	
+"""Updates the Mouse Pointer Hitbox"""
 func _process(_delta):
 	var mousePointer = get_parent().get_node("MousePointer")
 	mousePointer.global_position = get_global_mouse_position()
