@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://HitHurtBoxes/Hitbox.tscn" type="PackedScene" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.34167
+
+[node name="MousePointer" type="Node2D"]
+
+[node name="Hitbox" parent="." instance=ExtResource( 2 )]
+collision_layer = 16
+collision_mask = 8
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2( 4, 4 )
+shape = SubResource( 1 )
+
+[editable path="Hitbox"]

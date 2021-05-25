@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://TilesetResources/GrassTileMap.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/TileMap.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Scripts/GameManager.gd" type="Script" id=6]
 [ext_resource path="res://TilesetResources/Dirt.png" type="Texture" id=7]
 [ext_resource path="res://TilesetResources/GrassTop.png" type="Texture" id=8]
+[ext_resource path="res://Mouse/MousePointer.tscn" type="PackedScene" id=9]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Dirt.png 0"
@@ -274,5 +275,8 @@ tile_set = SubResource( 7 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
+
+[node name="MousePointer" parent="." instance=ExtResource( 9 )]
+position = Vector2( 16, 16 )
 
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]

@@ -2,7 +2,7 @@ extends StaticBody2D
 
 """Creates an Effect and makes the Object disappear
 when the Object gets left clicked"""
-func _on_Rock_input_event(viewport, event, shape_idx):
+func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 	if Input.is_mouse_button_pressed(BUTTON_LEFT):
 		var RockBreakingEffect = load("res://Effects/RockBreakingEffect.tscn")
 		var rockBreakingEffect = RockBreakingEffect.instance()

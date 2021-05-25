@@ -17,6 +17,10 @@ func _ready():
 	WorldVariables.setNextToGenerate(WorldVariables.getRoot())
 	noise.seed = 1
 	
+func _process(_delta):
+	var mousePointer = get_parent().get_node("MousePointer")
+	mousePointer.global_position = get_global_mouse_position()
+	
 """Generates a Chunk and keeps track of the currently
 generated and next to generate Chunks"""
 func generateChunk(root):

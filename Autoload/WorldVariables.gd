@@ -6,7 +6,7 @@ const __chunkSizeTiles : int = 10	# Chunk Size in Tiles
 const __chunkSizePixels : int = __tileSizePixels * __chunkSizeTiles	# Chunk Size in Enigne Units
 
 var __root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
-var __renderDistance : int = 2	# Render distance in Chunks (Must be higher than 1)
+var __renderDistance : int = 5	# Render distance in Chunks (Must be higher than 1)
 var __generatedChunks = []	# Array that stores all generated Chunks
 var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
