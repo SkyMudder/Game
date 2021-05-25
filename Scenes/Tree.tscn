@@ -26,6 +26,7 @@ rotation = 1.5708
 shape = SubResource( 1 )
 
 [node name="Hurtbox" parent="." instance=ExtResource( 2 )]
+pause_mode = 2
 position = Vector2( 16.5303, 27.8891 )
 collision_layer = 8
 

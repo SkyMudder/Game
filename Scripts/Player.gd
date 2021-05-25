@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 
 var velocity = Vector2.ZERO	# Player Velocity
+
 const MAX_SPEED = 100
 const ACCELERATION = 500
 const FRICTION = 500
