@@ -3,7 +3,7 @@ extends Node2D
 
 onready var player = get_node("KinematicBody2D")	# Player
 onready var tileMapGrass = get_node("Grass")		# Grass TileMap
-onready var mousePointer = load("res://Sprites/MousePointer.png")	#Mouse Pointer Texture
+onready var mousePointer = preload("res://Sprites/MousePointer.png")	#Mouse Pointer Texture
 
 var root = WorldVariables.getRoot()	# World root
 	

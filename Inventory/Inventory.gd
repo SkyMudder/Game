@@ -1,19 +1,24 @@
-extends Node
+extends Resource
+class_name Inventory
 
-onready var InventorySlot = load("res://Inventory/InventorySlot.gd")
+signal items_changed(indexes)
 
-var inventorySlots = []
+export(Array, Resource) var items = [null, null, null, null, null, null, null, null, null]
 
-"""Adds new Resources to the Inventory"""
-func add(resourceType, resourceAmount):
-	for x in inventorySlots:	# Make a new Slot if Resource is not already in the Inventory
-		if resourceType == x.getResourceType():
-			x.setResourceAmount(resourceAmount)
-			return
-	var inventorySlot = InventorySlot.new(resourceType, resourceAmount)
-	inventorySlots.push_back(inventorySlot)
+func set(item, itemIndex):
+	var previousItem = items[itemIndex]
+	items[itemIndex] = item
+	emit_signal("items_changed", [itemIndex])
+	return previousItem
 	
 func swap(itemIndex, targetItemIndex):
-	var tmp = inventorySlots[targetItemIndex]
-	inventorySlots[targetItemIndex] = inventorySlots[itemIndex]
-	inventorySlots[itemIndex] = tmp
+	var tmp = items[targetItemIndex]
+	items[targetItemIndex] = items[itemIndex]
+	items[itemIndex] = tmp
+	emit_signal("items_changed", [itemIndex, targetItemIndex])
+	
+func remove(itemIndex):
+	var previousItem = items[itemIndex]
+	items[itemIndex] = null
+	emit_signal("items_changed", [itemIndex])
+	return previousItem
