@@ -1,6 +1,7 @@
 extends Resource
 class_name Inventory
 
+
 signal items_changed(indexes)
 
 export(Array, Resource) var items = []
