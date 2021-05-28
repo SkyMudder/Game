@@ -1,7 +1,9 @@
 extends StaticBody2D
 
 
-var resourceType = WorldVariables.type.TREE
+onready var inventory = preload("res://Inventory/Inventory.tres")
+
+var item = preload("res://Items/Wood.tres")
 var amount = 1
 var exists = 1
 
@@ -15,6 +17,6 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 		world.add_child(treeBreakingEffect)
 		treeBreakingEffect.global_position = global_position
 		queue_free()
-		#if exists == 1:
-			#Inventory.add(resourceType, amount)
+		if exists == 1:
+			inventory.add(item)
 		exists = 0

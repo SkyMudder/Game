@@ -1,9 +1,16 @@
 extends GridContainer
 
 
+onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
+var player = load("res://Scripts/Player.gd")
+
 var inventory = preload("res://Inventory/Inventory.tres")
 
+"""Adds the given Amount of Inventory Slots to the UI
+Connects Signal for when Items changed
+Updates the Inventory on the UI"""
 func _ready():
+	addInventorySlots(player.inventorySize)
 	inventory.connect("items_changed", self, "_on_items_changed")
 	updateInventoryDisplay()
 	
@@ -22,3 +29,9 @@ func updateInventorySlotDisplay(itemIndex):
 func _on_items_changed(indexes):
 	for itemIndex in indexes:
 		updateInventorySlotDisplay(itemIndex)
+	
+"""Create Inventory with a given Amount of Slots"""
+func addInventorySlots(amount):
+	for _x in range(amount):
+		var slot = InventorySlotDisplay.instance()
+		add_child(slot)

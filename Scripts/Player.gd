@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+const inventorySize = 20
+onready var inventory = preload("res://Inventory/Inventory.tres")
 
 var velocity = Vector2.ZERO	# Player Velocity
 
@@ -8,6 +10,9 @@ const ACCELERATION = 500
 const FRICTION = 500
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
+
+func _ready():
+	inventory.setInventorySize(inventorySize)
 
 """Gets User Input to determine Player Movement and collide with Objects
 Emits a Signal every time the Player moves"""
@@ -21,7 +26,7 @@ func _physics_process(delta):
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta) 
-
+		
 	velocity = move_and_slide(velocity)
 	emit_signal("on_player_moved")
 
