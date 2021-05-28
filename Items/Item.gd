@@ -5,5 +5,5 @@ export(String) var name
 export(Texture) var texture
 export(int) var amount
 
-func setItemAmount(itemAmount):
+func addToAmount(itemAmount):
 	amount += itemAmount

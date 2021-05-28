@@ -255,6 +255,7 @@ format = 1
 script = ExtResource( 2 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+position = Vector2( 8, 0 )
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_group_": true
@@ -272,6 +273,7 @@ texture = ExtResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="KinematicBody2D"]
 current = true
+zoom = Vector2( 0.2, 0.2 )
 limit_smoothed = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]

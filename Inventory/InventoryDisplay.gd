@@ -29,6 +29,7 @@ func updateInventorySlotDisplay(itemIndex):
 func _on_items_changed(indexes):
 	for itemIndex in indexes:
 		updateInventorySlotDisplay(itemIndex)
+		print(inventory.items)
 	
 """Create Inventory with a given Amount of Slots"""
 func addInventorySlots(amount):

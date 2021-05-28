@@ -9,8 +9,16 @@ export(Array, Resource) var items = []
 """Automatically determines where to add an Item to the Inventory and adds it"""
 func add(item):
 	for x in range(items.size()):
+		if items[x] != null:
+			if items[x].name == item.name:
+				items[x].addToAmount(1)
+				emit_signal("items_changed", [x])
+				return
+	for x in range(items.size()):
 		if items[x] == null:
 			set(item, x)
+			items[x].amount = 0
+			items[x].addToAmount(1)
 			emit_signal("items_changed", [x])
 			return
 	

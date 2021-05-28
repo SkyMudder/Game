@@ -6,6 +6,10 @@
 [node name="InventorySlotDisplay" type="CenterContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -4.23804
+margin_top = -2.1189
+margin_right = -4.23804
+margin_bottom = -2.1189
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 2 )
@@ -14,10 +18,25 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 496.0
-margin_top = 284.0
-margin_right = 528.0
-margin_bottom = 316.0
+margin_left = 944.0
+margin_top = 524.0
+margin_right = 976.0
+margin_bottom = 556.0
 rect_min_size = Vector2( 32, 32 )
 texture = ExtResource( 1 )
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemAmount" type="Label" parent="TextureRect"]
+margin_left = 19.0488
+margin_top = 24.2079
+margin_right = 43.0488
+margin_bottom = 38.2079
+rect_scale = Vector2( 0.5, 0.5 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
