@@ -26,7 +26,7 @@ func _physics_process(delta):
 		
 	velocity = move_and_slide(velocity)
 	emit_signal("on_player_moved")
-
+	
 """Checks if the Player is close to a Chunk
 Close is defined by the Render Distance"""
 func isCloseToChunk(chunk):

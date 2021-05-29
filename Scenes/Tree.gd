@@ -18,5 +18,6 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 		treeBreakingEffect.global_position = global_position
 		queue_free()
 		if exists == 1:
+			item.name = "Wood"
 			inventory.add(item)
 		exists = 0
