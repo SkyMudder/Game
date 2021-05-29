@@ -1,7 +1,7 @@
 extends Node2D
 
 
-onready var animatedSprite = get_node("AnimatedSprite")
+onready var animatedSprite = $AnimatedSprite
 
 """Plays the Animation"""
 func _ready():
