@@ -9,7 +9,7 @@ onready var inventory = get_node("KinematicBody2D/InventoryWrapper/InventoryCont
 
 var root = WorldVariables.getRoot()
 	
-"""Changes the how the Mouse Pointer looks"""
+"""Changes how the Mouse Pointer looks"""
 func _ready():
 	Input.set_custom_mouse_cursor(mousePointer)
 	

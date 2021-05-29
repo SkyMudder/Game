@@ -2,7 +2,8 @@ extends Node
 
 """Percentage of Spawnrates"""
 
-const __percentage : int = 1000	# Base Value, basically sets the Spawnrate precision
+# Base Value, basically sets the Spawnrate precision
+const __percentage : int = 1000
 
 """Getters"""
 

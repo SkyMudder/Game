@@ -47,7 +47,7 @@ func setGeneratedChunks(value):
 func setNextToGenerate(value):
 	__nextToGenerate.push_back(value)
 
-"""Methods to remove elements from Array"""
+"""Methods to remove Elements from Array"""
 
 func removeGeneratedChunks(value):
 	__generatedChunks.erase(value)
@@ -58,7 +58,7 @@ func removeNextToGenerate(value):
 """Other Methods"""
 
 """Remove Chunks that are too far away from
-the nextToGenerate Array"""
+the Next To Generate Array"""
 func updateNextToGenerate():
 	var rootLeft = Vector2.LEFT
 	var rootRight = Vector2.RIGHT
