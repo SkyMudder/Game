@@ -11,8 +11,9 @@ Connects Signal for when Items changed
 Updates the Inventory on the UI"""
 func _ready():
 	addInventorySlots(player.inventorySize)
-	inventory.connect("items_changed", self, "_on_items_changed")
+	inventory.setInventorySize(player.inventorySize)
 	updateInventoryDisplay()
+	inventory.connect("items_changed", self, "_on_items_changed")
 	
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay():
@@ -29,7 +30,6 @@ func updateInventorySlotDisplay(itemIndex):
 func _on_items_changed(indexes):
 	for itemIndex in indexes:
 		updateInventorySlotDisplay(itemIndex)
-		print(inventory.items)
 	
 """Create Inventory with a given Amount of Slots"""
 func addInventorySlots(amount):

@@ -11,9 +11,6 @@ const FRICTION = 500
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
 
-func _ready():
-	inventory.setInventorySize(inventorySize)
-
 """Gets User Input to determine Player Movement and collide with Objects
 Emits a Signal every time the Player moves"""
 func _physics_process(delta):

@@ -7,4 +7,4 @@
 script = ExtResource( 1 )
 name = "Stone"
 texture = ExtResource( 2 )
-amount = 0
+amount = 1
