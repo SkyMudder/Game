@@ -4,6 +4,7 @@
 [ext_resource path="res://Items/PickAxe.png" type="Texture" id=3]
 
 [node name="CraftingContainer" type="HBoxContainer"]
+anchor_bottom = 0.151852
 margin_right = 1920.0
 margin_bottom = 136.0
 script = ExtResource( 2 )

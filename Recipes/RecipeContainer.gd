@@ -33,7 +33,6 @@ func setNames():
 	for x in range(item.ingredients.size()):
 		if item.ingredients[x] != null:
 			ingredientNames.get_child(x).text = item.ingredients[x].name
-			print(item.ingredients[x].name)
 	
 func setAmounts():
 	for x in range(item.ingredientAmounts.size()):
