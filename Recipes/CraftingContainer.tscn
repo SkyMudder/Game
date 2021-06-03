@@ -14,23 +14,23 @@ __meta__ = {
 [node name="Recipes" type="VBoxContainer" parent="."]
 margin_bottom = 300.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="CraftingSection" type="VBoxContainer" parent="."]
 margin_left = 4.0
 margin_right = 260.0
 margin_bottom = 300.0
 
-[node name="ItemTexture" type="TextureRect" parent="VBoxContainer"]
+[node name="ItemTexture" type="TextureRect" parent="CraftingSection"]
 margin_right = 256.0
 margin_bottom = 256.0
 rect_min_size = Vector2( 256, 256 )
 texture = ExtResource( 3 )
 stretch_mode = 5
 
-[node name="CraftButton" type="Button" parent="VBoxContainer"]
+[node name="CraftButton" type="Button" parent="CraftingSection"]
 margin_top = 260.0
 margin_right = 256.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 256, 40 )
 text = "CRAFT"
 
-[connection signal="pressed" from="VBoxContainer/CraftButton" to="." method="_on_CraftButton_pressed"]
+[connection signal="pressed" from="CraftingSection/CraftButton" to="." method="_on_CraftButton_pressed"]

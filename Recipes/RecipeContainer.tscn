@@ -77,26 +77,26 @@ margin_bottom = 131.0
 rect_min_size = Vector2( 41, 41 )
 valign = 1
 
-[node name="Amount" type="VBoxContainer" parent="IngredientsAmount"]
+[node name="Amounts" type="VBoxContainer" parent="IngredientsAmount"]
 margin_left = 90.0
 margin_right = 131.0
 margin_bottom = 131.0
 
-[node name="Amount1" type="Label" parent="IngredientsAmount/Amount"]
+[node name="Amount1" type="Label" parent="IngredientsAmount/Amounts"]
 margin_right = 41.0
 margin_bottom = 41.0
 rect_min_size = Vector2( 41, 41 )
 text = "3"
 valign = 1
 
-[node name="Amount2" type="Label" parent="IngredientsAmount/Amount"]
+[node name="Amount2" type="Label" parent="IngredientsAmount/Amounts"]
 margin_top = 45.0
 margin_right = 41.0
 margin_bottom = 86.0
 rect_min_size = Vector2( 41, 41 )
 valign = 1
 
-[node name="Amount3" type="Label" parent="IngredientsAmount/Amount"]
+[node name="Amount3" type="Label" parent="IngredientsAmount/Amounts"]
 margin_top = 90.0
 margin_right = 41.0
 margin_bottom = 131.0
@@ -122,4 +122,4 @@ position = Vector2( 304, 64 )
 scale = Vector2( 9.625, 8.5 )
 texture = ExtResource( 5 )
 
-[connection signal="gui_input" from="." to="." method="_on_HBoxContainer_gui_input"]
+[connection signal="gui_input" from="." to="." method="_on_RecipeContainer_gui_input"]
