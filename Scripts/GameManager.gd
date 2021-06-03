@@ -4,8 +4,7 @@ extends Node2D
 onready var player = get_node("KinematicBody2D")
 onready var tileMapGrass = get_node("Grass")
 onready var mousePointer = preload("res://Sprites/MousePointer.png")
-onready var inventoryWrapper = get_node("KinematicBody2D/InventoryWrapper")
-onready var inventory = get_node("KinematicBody2D/InventoryWrapper/InventoryContainer")
+onready var inventory = get_node("KinematicBody2D/InventoryWrapper/InventoryTabs")
 
 var root = WorldVariables.getRoot()
 	
@@ -38,3 +37,7 @@ func checkRemoveChunk():
 	for x in WorldVariables.getGeneratedChunks():
 		if player.isFarFromChunk(x):
 			tileMapGrass.removeChunk(x)
+
+
+func _on_InventoryTabs_renamed():
+	pass # Replace with function body.

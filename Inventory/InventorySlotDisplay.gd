@@ -32,6 +32,7 @@ func get_drag_data(_position):
 			data.split = true
 			var dragPreview = TextureRect.new()
 			dragPreview.texture = item.texture
+			dragPreview.set_scale(Vector2(5, 5))
 			set_drag_preview(dragPreview)
 			return data
 	# For moving Items
@@ -44,6 +45,7 @@ func get_drag_data(_position):
 			data.previousAmount = item.amount
 			var dragPreview = TextureRect.new()
 			dragPreview.texture = item.texture
+			dragPreview.set_scale(Vector2(5, 5))
 			set_drag_preview(dragPreview)
 			return data
 		inventory.emit_signal("items_changed", [itemIndex])
