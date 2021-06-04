@@ -16,6 +16,7 @@ func displayItem(item):
 		itemAmount.text = ""
 		# Sets the Object to null because nothing is there anymore
 		inventory.items[inventory.items.find(item)] = null
+		#inventory.items.erase(item)
 	
 func get_drag_data(_position):
 	var itemIndex = get_index()
