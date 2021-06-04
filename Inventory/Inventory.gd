@@ -2,9 +2,8 @@ extends Resource
 class_name Inventory
 
 
-signal items_changed(inventory, indexes)
+signal items_changed(indexes)
 
-var id : int
 var items = []
 	
 var size
@@ -13,8 +12,7 @@ var columns
 var scheduledRemovalIndexes = []
 var scheduledRemovalAmounts = []
 	
-func _init(inventoryId, inventorySize, inventoryColumns):
-	id = inventoryId
+func _init(inventorySize, inventoryColumns):
 	size = inventorySize
 	columns = inventoryColumns
 	
@@ -24,14 +22,14 @@ func add(item):
 		if items[x] != null:
 			if items[x].name == item.name and items[x].amount < item.stackLimit:
 				items[x].amount += 1
-				emit_signal("items_changed", [id], [x])
+				emit_signal("items_changed", [x])
 				return
 	for x in range(items.size()):
 		if items[x] == null:
 			set(item.duplicate(), x)
 			items[x].amount = 0
 			items[x].amount += 1
-			emit_signal("items_changed", [id], [x])
+			emit_signal("items_changed", [x])
 			return
 	
 """Seeks a specific Amount of an Item in the Inventory
@@ -69,11 +67,11 @@ func set(item, itemIndex):
 	emit_signal("items_changed", [itemIndex])
 	return previousItem
 	
-func swap(inventory, targetInventory, itemIndex, targetItemIndex):
-	var tmp = targetInventory.items[targetItemIndex]
-	targetInventory.items[targetItemIndex] = inventory.items[itemIndex]
-	inventory.items[itemIndex] = tmp
-	emit_signal("items_changed", [inventory.id, targetInventory.id], [itemIndex, targetItemIndex])
+func swap(itemIndex, targetItemIndex):
+	var tmp = items[targetItemIndex]
+	items[targetItemIndex] = items[itemIndex]
+	items[itemIndex] = tmp
+	emit_signal("items_changed", [itemIndex, targetItemIndex])
 	
 func remove(itemIndex):
 	var previousItem = items[itemIndex]

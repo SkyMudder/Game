@@ -1,7 +1,6 @@
 extends CenterContainer
 
 var inventory
-var allInventories = Inventories.allInventories
 
 onready var textureRect = get_node("TextureRect")
 onready var itemAmount = get_node("TextureRect/ItemAmount")
@@ -10,7 +9,7 @@ onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
 If the Stack only has one Item, the Amount is not shown on the UI"""
-func displayItem(inventory, item):
+func displayItem(item):
 	if item is Item and item.amount > 0:
 		textureRect.texture = item.texture
 		itemAmount.text = str(item.amount)
@@ -20,7 +19,7 @@ func displayItem(inventory, item):
 		textureRect.texture = emptySlotTexture
 		itemAmount.text = ""
 		# Sets the Object to null because nothing is there anymore
-		allInventories[inventory].items[allInventories[inventory].items.find(item)] = null
+		inventory.items[inventory.items.find(item)] = null
 	
 func get_drag_data(_position):
 	var itemIndex = get_index()
@@ -33,7 +32,6 @@ func get_drag_data(_position):
 		if Input.is_action_pressed("ctrl"):
 			if item is Item:
 				var data = {}
-				data.inventory = inventory.id
 				data.previousAmount = item.amount
 				item.amount /= 2
 				data.item = item.duplicate()
@@ -47,7 +45,6 @@ func get_drag_data(_position):
 			item = inventory.remove(itemIndex)
 			if item is Item:
 				var data = {}
-				data.inventory = inventory.id
 				data.item = item
 				data.itemIndex = itemIndex
 				data.previousAmount = item.amount
@@ -60,7 +57,6 @@ func can_drop_data(_position, data):
 func drop_data(_position, data):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
-	var currentInventory = findInventorybyId(inventory.id)
 	
 	# Check if the Source is an Item and if it is of the same Type
 	if item is Item and item.name == data.item.name:
@@ -68,8 +64,8 @@ func drop_data(_position, data):
 		# The Item will not be moved and will restore it's previous Value
 		if itemIndex == data.itemIndex:
 			item.amount = data.previousAmount
-			currentInventory.set(item.duplicate(), itemIndex)
-			currentInventory.emit_signal("items_changed", [inventory.id, data.inventory][itemIndex])
+			inventory.set(item, itemIndex)
+			inventory.emit_signal("items_changed", [itemIndex])
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -99,8 +95,8 @@ func drop_data(_position, data):
 			else:
 				item.amount += space
 				data.item.amount = data.previousAmount - space
-		currentInventory.set(item.duplicate(), itemIndex)
-		#inventory.set(data.item.duplicate(), data.itemIndex)
+		inventory.set(item, itemIndex)
+		inventory.set(data.item, data.itemIndex)
 	# Check if the Source Stack was Split
 	elif data.has("split"):
 		# Check if the Item is not null
@@ -108,7 +104,7 @@ func drop_data(_position, data):
 		# To avoid merging different Types of Objects with each other
 		if item != null:
 			data.item.amount = data.previousAmount
-			currentInventory.set(data.item.duplicate(), data.itemIndex)
+			inventory.set(data.item, data.itemIndex)
 		# Check if the Target Slot is empty, add the split Stack to it
 		else:
 			# Add one if the Number of the full Stack was uneven
@@ -116,15 +112,10 @@ func drop_data(_position, data):
 			# Duplicate the Item in Order for it not to share the same value
 			# With the Source Stack
 			if data.previousAmount % 2 != 0:
-				#inventory.set(data.item.duplicate(), data.itemIndex)
+				inventory.set(data.item.duplicate(), data.itemIndex)
 				data.item.amount += 1
-			currentInventory.set(data.item.duplicate(), itemIndex)
+			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
-		inventory.swap(findInventorybyId(data.inventory), currentInventory, data.itemIndex, itemIndex)
-		currentInventory.set(data.item.duplicate(), itemIndex)
-	
-func findInventorybyId(id):
-	for x in range(allInventories.size()):
-		if allInventories[x].id == id:
-			return allInventories[x]
+		inventory.swap(itemIndex, data.itemIndex)
+		inventory.set(data.item, itemIndex)

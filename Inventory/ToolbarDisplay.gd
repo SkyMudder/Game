@@ -19,10 +19,10 @@ func _ready():
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay():
 	for itemIndex in inventory.items.size():
-		updateInventorySlotDisplay(inventory, itemIndex)
+		updateInventorySlotDisplay(itemIndex)
 	
 """Updayes an Inventory Slot at a given Index"""
-func updateInventorySlotDisplay(inventory, itemIndex):
+func updateInventorySlotDisplay(itemIndex):
 	var inventorySlotDisplay = get_child(itemIndex)
 	var item = inventory.items[itemIndex]
 	inventorySlotDisplay.displayItem(item)
@@ -32,7 +32,7 @@ func _on_items_changed(indexes):
 	print("TOOLBAR")
 	print(inventory.items)
 	for itemIndex in indexes:
-		updateInventorySlotDisplay(inventory, itemIndex)
+		updateInventorySlotDisplay(itemIndex)
 	
 """Create Inventory with a given Amount of Slots"""
 func addInventorySlots(amount):
