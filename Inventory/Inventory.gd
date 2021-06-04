@@ -4,17 +4,23 @@ class_name Inventory
 
 signal items_changed(indexes)
 
-export(Array, Resource) var items = []
-const stackLimit : int = 5
+var items = []
+	
+var size
+var columns
 	
 var scheduledRemovalIndexes = []
 var scheduledRemovalAmounts = []
+	
+func _init(inventorySize, inventoryColumns):
+	size = inventorySize
+	columns = inventoryColumns
 	
 """Automatically determines where to add an Item to the Inventory and adds it"""
 func add(item):
 	for x in range(items.size()):
 		if items[x] != null:
-			if items[x].name == item.name and items[x].amount < stackLimit:
+			if items[x].name == item.name and items[x].amount < item.stackLimit:
 				items[x].amount += 1
 				emit_signal("items_changed", [x])
 				return
@@ -34,56 +40,27 @@ But doesn't remove it directly
 Because more Items might not be found
 Returns True if enough Items have been found, False if not"""
 func seek(item, amount):
-	var amountTaken
-	for x in range(items.size()):
-		if items[x] != null:
+	var amountTaken = 0
+	var need = amount - amountTaken
+	var x = items.size() - 1
+	while x >= 0:
+		if items[x] != null and need:
 			if items[x].name == item.name:
-				if items[x].amount >= amount:
+				if items[x].amount >= need:
 					scheduledRemovalIndexes.push_back(x)
-					scheduledRemovalAmounts.push_back(amount)
-					amountTaken = amount
+					scheduledRemovalAmounts.push_back(need)
+					amountTaken += need
 					return true
 				else:
 					var available = items[x].amount
 					scheduledRemovalIndexes.push_back(x)
 					scheduledRemovalAmounts.push_back(available)
-					amountTaken = available
-					var takeMore = seekMore(item, amount - amountTaken, x + 1, items.size())
-					if takeMore == -1:
-						return false
-					amountTaken += takeMore
-					if amount == amountTaken:
-						return true
-					else:
-						return false
+					amountTaken += available
+		if amountTaken == amount:
+			return true
+		x -= 1
 	return false
-	
-"""Seeks more Items for the Seek Method
-Starts searching where the previous Search ended
-Returns -1 if no more Items have been found"""
-func seekMore(item, amount, indexStart, indexEnd):
-	var amountTaken
-	var x = indexStart
-	while x < indexEnd:
-		if items[x] != null:
-			if items[x].name == item.name:
-				if items[x].amount >= amount:
-					scheduledRemovalIndexes.push_back(x)
-					scheduledRemovalAmounts.push_back(amount)
-					amountTaken = amount
-					return amountTaken
-				else:
-					var available = items[x].amount
-					scheduledRemovalIndexes.push_back(x)
-					scheduledRemovalAmounts.push_back(available)
-					amountTaken = available
-					var takeMore = seekMore(item, amount - amountTaken, x + 1, items.size())
-					if takeMore == -1:
-						return -1
-					return amountTaken + takeMore
-		x += 1
-	return -1
-	
+
 func set(item, itemIndex):
 	var previousItem = items[itemIndex]
 	items[itemIndex] = item
@@ -111,6 +88,6 @@ func removeScheduled():
 	scheduledRemovalIndexes.clear()
 	scheduledRemovalAmounts.clear()
 	
-func setInventorySize(size):
-	for _x in range(size):
+func setInventorySize(inventorySize):
+	for _x in range(inventorySize):
 		items.push_back(null)
