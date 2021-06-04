@@ -1,7 +1,7 @@
 extends StaticBody2D
 
 
-onready var inventory = preload("res://Inventory/Inventory.tres")
+onready var inventory = Inventories.playerInventory
 
 var item = preload("res://Items/Wood.tres")
 var amount = 1

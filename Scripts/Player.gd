@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
-const inventorySize = 20
-onready var inventory = preload("res://Inventory/Inventory.tres")
+onready var inventory = Inventories.playerInventory
 
 var velocity = Vector2.ZERO	# Player Velocity
 
