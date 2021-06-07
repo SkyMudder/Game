@@ -2,7 +2,7 @@ extends Resource
 class_name Inventory
 
 
-signal items_changed(inventoryChanged, indexes)
+signal items_changed(inventoryChanged, index)
 
 var items = []
 	
@@ -29,7 +29,7 @@ func add(item):
 			if allInventories[x].items[y] != null:
 				if allInventories[x].items[y].name == item.name and allInventories[x].items[y].amount < item.stackLimit:
 					allInventories[x].items[y].amount += 1
-					allInventories[x].emit_signal("items_changed", allInventories[x].id, [y])
+					allInventories[x].emit_signal("items_changed", allInventories[x].id, y)
 					return
 		x -= 1
 	x = allInventories.size() - 1
@@ -39,7 +39,7 @@ func add(item):
 				allInventories[x].set(item.duplicate(), y)
 				allInventories[x].items[y].amount = 0
 				allInventories[x].items[y].amount += 1
-				emit_signal("items_changed", id, [y])
+				emit_signal("items_changed", id, y)
 				return
 		x -= 1
 	print("NO SPACE")
@@ -81,20 +81,20 @@ func seek(item, amount):
 func set(item, itemIndex):
 	var previousItem = items[itemIndex]
 	items[itemIndex] = item
-	emit_signal("items_changed", id, [itemIndex])
+	emit_signal("items_changed", id, itemIndex)
 	return previousItem
 	
 func swap(sourceInventory, targetInventory, itemIndex, targetItemIndex):
 	var tmp = allInventories[targetInventory].items[targetItemIndex]
 	allInventories[targetInventory].items[targetItemIndex] = allInventories[sourceInventory].items[itemIndex]
 	allInventories[sourceInventory].items[itemIndex] = tmp
-	emit_signal("items_changed", sourceInventory, [itemIndex])
-	emit_signal("items_changed", targetInventory, [targetItemIndex])
+	emit_signal("items_changed", sourceInventory, itemIndex)
+	emit_signal("items_changed", targetInventory, targetItemIndex)
 	
 func remove(itemIndex):
 	var previousItem = items[itemIndex]
 	items[itemIndex] = null
-	emit_signal("items_changed", id, [itemIndex])
+	emit_signal("items_changed", id, itemIndex)
 	return previousItem
 	
 """Removes scheduled Items from the Inventory
@@ -103,7 +103,7 @@ func removeScheduled():
 	for x in range(scheduledRemovalIndexes.size()):
 		allInventories[scheduledRemovalInventories[x]].items[scheduledRemovalIndexes[x]].amount -= scheduledRemovalAmounts[x]
 	for x in range(scheduledRemovalInventories.size()):
-		allInventories[scheduledRemovalInventories[x]].emit_signal("items_changed", scheduledRemovalInventories[x], [scheduledRemovalIndexes[x]])
+		allInventories[scheduledRemovalInventories[x]].emit_signal("items_changed", scheduledRemovalInventories[x], scheduledRemovalIndexes[x])
 	scheduledRemovalInventories.clear()
 	scheduledRemovalIndexes.clear()
 	scheduledRemovalAmounts.clear()

@@ -37,7 +37,7 @@ func get_drag_data(_position):
 				data.previousAmount = item.amount
 				item.amount /= 2
 				data.item = item.duplicate()
-				inventory.emit_signal("items_changed", inventory.id, [itemIndex])
+				inventory.emit_signal("items_changed", inventory.id, itemIndex)
 				data.itemIndex = itemIndex
 				data.split = true
 				set_drag_preview(dragPreview)

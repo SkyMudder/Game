@@ -30,10 +30,9 @@ func updateInventorySlotDisplay(inventoryChanged, itemIndex):
 	inventorySlotDisplay.displayItem(inventoryChanged, item)
 	
 """When Item changes, update the Inventory Slot Display"""
-func _on_items_changed(inventoryChanged, indexes):
+func _on_items_changed(inventoryChanged, index):
 	if inventoryChanged == inventory.id:
-		for itemIndex in indexes:
-			updateInventorySlotDisplay(inventoryChanged, itemIndex)
+		updateInventorySlotDisplay(inventoryChanged, index)
 	
 """Create Inventory with a given Amount of Slots"""
 func addInventorySlots(amount):
