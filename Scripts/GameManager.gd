@@ -37,7 +37,3 @@ func checkRemoveChunk():
 	for x in WorldVariables.getGeneratedChunks():
 		if player.isFarFromChunk(x):
 			tileMapGrass.removeChunk(x)
-
-
-func _on_InventoryTabs_renamed():
-	pass # Replace with function body.

@@ -47,26 +47,28 @@ Returns True if enough Items have been found, False if not"""
 func seek(item, amount):
 	var amountTaken = 0
 	var need = amount - amountTaken
-	for inventoryChanged in allInventories:
-		var x = inventoryChanged.items.size() - 1
-		while x >= 0:
-			if inventoryChanged.items[x] != null and need:
-				if inventoryChanged.items[x].name == item.name:
-					if inventoryChanged.items[x].amount >= need:
-						scheduledRemovalInventories.push_back(allInventories.find(inventoryChanged))
-						scheduledRemovalIndexes.push_back(x)
+	var x = allInventories.size() - 1
+	while x >= 0:
+		var y = allInventories[x].items.size() - 1
+		while y >= 0:
+			if allInventories[x].items[y] != null and need:
+				if allInventories[x].items[y].name == item.name:
+					if allInventories[x].items[y].amount >= need:
+						scheduledRemovalInventories.push_back(allInventories.find(allInventories[x]))
+						scheduledRemovalIndexes.push_back(y)
 						scheduledRemovalAmounts.push_back(need)
 						amountTaken += need
 						return true
 					else:
-						var available = inventoryChanged.items[x].amount
-						scheduledRemovalInventories.push_back(allInventories.find(inventoryChanged))
-						scheduledRemovalIndexes.push_back(x)
+						var available = allInventories[x].items[y].amount
+						scheduledRemovalInventories.push_back(allInventories.find(allInventories[x]))
+						scheduledRemovalIndexes.push_back(y)
 						scheduledRemovalAmounts.push_back(available)
 						amountTaken += available
 			if amountTaken == amount:
 				return true
-			x -= 1
+			y -= 1
+		x -= 1
 	return false
 
 func set(item, itemIndex):
