@@ -32,6 +32,7 @@ func checkCraft():
 	var currentItem = recipes.get_child(currentlySelected).item
 	for x in range(currentItem.ingredients.size()):
 		if inventory.seek(currentItem.ingredients[x], currentItem.ingredientAmounts[x]) == false:
+			inventory.scheduledRemovalInventories.clear()
 			inventory.scheduledRemovalIndexes.clear()
 			inventory.scheduledRemovalAmounts.clear()
 			return false
