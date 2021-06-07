@@ -98,27 +98,23 @@ func drop_data(_position, data):
 				item.amount += space
 				data.item.amount = data.previousAmount - space
 		inventory.set(item, itemIndex)
-		inventory.set(data.item, data.itemIndex)
+		allInventories[data.id].set(data.item, data.itemIndex)
 	# Check if the Source Stack was Split
 	elif data.has("split"):
-		print("1")
 		# Check if the Item is not null
 		# So it doesn't get merged and it's old Value gets restored
 		# To avoid merging different Types of Objects with each other
 		if item != null:
-			print("2")
 			data.item.amount = data.previousAmount	
 			allInventories[data.id].set(data.item, data.itemIndex)
 		# Check if the Target Slot is empty, add the split Stack to it
 		else:
-			print("3")
 			# Add one if the Number of the full Stack was uneven
 			# Due to the Integer Decimal part being discarded
 			# Duplicate the Item in Order for it not to share the same value
 			# With the Source Stack
 			if data.previousAmount % 2 != 0:
-				print("4")
-				allInventories[data.id].set(data.item.duplicate(), data.itemIndex)
+				allInventories[data.id].set(data.item, data.itemIndex)
 				data.item.amount += 1
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items

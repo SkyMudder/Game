@@ -8,4 +8,4 @@ script = ExtResource( 1 )
 name = "Wood"
 texture = ExtResource( 2 )
 amount = 1
-stackLimit = 50
+stackLimit = 2
