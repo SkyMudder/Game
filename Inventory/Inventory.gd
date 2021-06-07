@@ -49,6 +49,7 @@ func seek(item, amount):
 	var need = amount - amountTaken
 	var x = allInventories.size() - 1
 	while x >= 0:
+		print(x)
 		var y = allInventories[x].items.size() - 1
 		while y >= 0:
 			if allInventories[x].items[y] != null and need:
@@ -58,6 +59,9 @@ func seek(item, amount):
 						scheduledRemovalIndexes.push_back(y)
 						scheduledRemovalAmounts.push_back(need)
 						amountTaken += need
+						print(scheduledRemovalAmounts)
+						print(scheduledRemovalIndexes)
+						print(scheduledRemovalInventories)
 						return true
 					else:
 						var available = allInventories[x].items[y].amount
@@ -66,6 +70,9 @@ func seek(item, amount):
 						scheduledRemovalAmounts.push_back(available)
 						amountTaken += available
 			if amountTaken == amount:
+				print(scheduledRemovalAmounts)
+				print(scheduledRemovalIndexes)
+				print(scheduledRemovalInventories)
 				return true
 			y -= 1
 		x -= 1
@@ -97,6 +104,7 @@ func removeScheduled():
 		allInventories[scheduledRemovalInventories[x]].items[scheduledRemovalIndexes[x]].amount -= scheduledRemovalAmounts[x]
 	for x in range(scheduledRemovalInventories.size()):
 		allInventories[scheduledRemovalInventories[x]].emit_signal("items_changed", scheduledRemovalInventories[x], [scheduledRemovalIndexes[x]])
+	scheduledRemovalInventories.clear()
 	scheduledRemovalIndexes.clear()
 	scheduledRemovalAmounts.clear()
 	
