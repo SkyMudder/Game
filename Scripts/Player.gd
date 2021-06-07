@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
-onready var inventory = Inventories.playerInventory
+onready var inventory = Inventories.allInventories[0]
+onready var toolbar = Inventories.allInventories[1]
 
 var velocity = Vector2.ZERO	# Player Velocity
 
