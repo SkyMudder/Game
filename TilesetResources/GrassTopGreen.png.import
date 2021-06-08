@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/GrassTop.png-512b35fda87d8961c552e7c907893312.stex"
+path="res://.import/GrassTopGreen.png-ad61cc8c3f35b5f7a1951b044b51277b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TilesetResources/GrassTop.png"
-dest_files=[ "res://.import/GrassTop.png-512b35fda87d8961c552e7c907893312.stex" ]
+source_file="res://TilesetResources/GrassTopGreen.png"
+dest_files=[ "res://.import/GrassTopGreen.png-ad61cc8c3f35b5f7a1951b044b51277b.stex" ]
 
 [params]
 
