@@ -7,19 +7,21 @@ onready var tileMapGrassTopGreen = get_parent().get_node("GrassTopGreen")
 onready var tileMapGrassTopBrown= get_parent().get_node("GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
 
+var ww = WorldVariables
+
 # Chunk Size in Tiles
-var chunkSizeTiles : int = WorldVariables.getChunkSizeTiles()
+var chunkSizeTiles : int = ww.getChunkSizeTiles()
 # Chunk Size in Pixels
-var chunkSizePixels : int = WorldVariables.getChunkSizePixels()
+var chunkSizePixels : int = ww.getChunkSizePixels()
 # Tile Size in Pixels
-var tileSizePixels : int = WorldVariables.getTileSizePixels()
+var tileSizePixels : int = ww.getTileSizePixels()
 # Holds Noise Texture
 var noise : OpenSimplexNoise = OpenSimplexNoise.new()
 
 """Ready Method
 Sets the Seed and the First Chunk as the Next To Generate"""
 func _ready():
-	WorldVariables.setNextToGenerate(WorldVariables.getRoot())
+	ww.setNextToGenerate(ww.getRoot())
 	noise.seed = 1
 	
 """Updates the Mouse Pointer Hitbox"""
@@ -31,23 +33,23 @@ func _process(_delta):
 Generated and Next To Generate Chunks"""
 func generateChunk(root):
 	createNoiseAndGenerate(root)
-	WorldVariables.setGeneratedChunks(root)
-	WorldVariables.removeNextToGenerate(root)
+	ww.setGeneratedChunks(root)
+	ww.removeNextToGenerate(root)
 	var rootLeft = root + Vector2.LEFT
 	var rootRight = root + Vector2.RIGHT
 	var rootDown = root + Vector2.DOWN
 	var rootUp = root + Vector2.UP
 	
 	# Adds next to generate chunks if they are not already generated to an Array
-	if !WorldVariables.getGeneratedChunks().has(rootLeft):
-		WorldVariables.setNextToGenerate(rootLeft)
-	if !WorldVariables.getGeneratedChunks().has(rootRight):
-		WorldVariables.setNextToGenerate(rootRight)
-	if !WorldVariables.getGeneratedChunks().has(rootDown):
-		WorldVariables.setNextToGenerate(rootDown)
-	if !WorldVariables.getGeneratedChunks().has(rootUp):
-		WorldVariables.setNextToGenerate(rootUp)
-	WorldVariables.updateNextToGenerate()
+	if !ww.getGeneratedChunks().has(rootLeft):
+		ww.setNextToGenerate(rootLeft)
+	if !ww.getGeneratedChunks().has(rootRight):
+		ww.setNextToGenerate(rootRight)
+	if !ww.getGeneratedChunks().has(rootDown):
+		ww.setNextToGenerate(rootDown)
+	if !ww.getGeneratedChunks().has(rootUp):
+		ww.setNextToGenerate(rootUp)
+	ww.updateNextToGenerate()
 	
 """Creates a Noise Texture 
 Used generate specific Tiles based on the Noise Value"""
@@ -108,29 +110,42 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
+	var rng = RandomNumberGenerator.new()
+	var SpawnResource
+	var randCheck
+	var randResource
+	var resource
+	rng.randomize()
 	if type == 0:
+		randResource = rng.randi_range(0, 1)
+		if randResource == 0:
+			SpawnResource = preload("res://Scenes/Tree.tscn")
+			randCheck = SpawnRates.getTree()
+			resource = ww.type.TREE
+		if randResource == 1:
+			SpawnResource = preload("res://Scenes/Stick.tscn")
+			randCheck = SpawnRates.getStick()
 		if rand < SpawnRates.getTree():
-			var SpawnTree = preload("res://Scenes/Tree.tscn")
-			var tree = SpawnTree.instance()
+			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
-			world.add_child(tree)
-			tree.global_position = Vector2(posCurrent.x * tileSizePixels
+			world.add_child(spawnResource)
+			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
-			tree.add_to_group("Objects")
+			if resource != null:
+				spawnResource.assignVariables(ww.getObjectVariables(resource))
+			spawnResource.add_to_group("Objects")
 	if type == 1:
-		var rng = RandomNumberGenerator.new()
-		rng.randomize()
-		var randResource = rng.randi_range(0, 2)
-		var SpawnResource
-		var randCheck
+		randResource = rng.randi_range(0, 1)
 		if randResource == 0:
 			SpawnResource = preload("res://Scenes/Rock.tscn")
 			randCheck = SpawnRates.getRock()
-		else:
+			resource = ww.type.ROCK
+		elif randResource == 1:
 			SpawnResource = preload("res://Scenes/RockCopper.tscn")
 			randCheck = SpawnRates.getCopper()
+			resource = ww.type.ROCKCOPPER
 		if rand < randCheck:
 			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
@@ -139,6 +154,7 @@ func generateNature(type, posCurrent, root, rand):
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
+			spawnResource.assignVariables(ww.getObjectVariables(resource))
 			spawnResource.add_to_group("Objects")
 		
 	
@@ -148,7 +164,7 @@ func removeChunk(root):
 	removeGrass(root)
 	removeGrassTop(root)
 	removeNature()
-	WorldVariables.removeGeneratedChunks(root)
+	ww.removeGeneratedChunks(root)
 	
 """Removes the Dirt"""
 func removeDirt(root):

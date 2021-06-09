@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TreeBreakingEffect.png-0a535e8af63bc497971d2ba01ce6d5f6.stex"
+path="res://.import/Stick.png-04b23f5d4eab4811029753e844bc2947.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Effects/TreeBreakingEffect.png"
-dest_files=[ "res://.import/TreeBreakingEffect.png-0a535e8af63bc497971d2ba01ce6d5f6.stex" ]
+source_file="res://Sprites/Stick.png"
+dest_files=[ "res://.import/Stick.png-04b23f5d4eab4811029753e844bc2947.stex" ]
 
 [params]
 

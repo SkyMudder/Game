@@ -28,7 +28,7 @@ func add(item):
 		for y in range(allInventories[x].items.size()):
 			if allInventories[x].items[y] != null:
 				if allInventories[x].items[y].name == item.name and allInventories[x].items[y].amount < item.stackLimit:
-					allInventories[x].items[y].amount += 1
+					allInventories[x].items[y].amount += item.amount
 					allInventories[x].emit_signal("items_changed", allInventories[x].id, y)
 					return
 		x -= 1
@@ -38,7 +38,7 @@ func add(item):
 			if allInventories[x].items[y] == null:
 				allInventories[x].set(item.duplicate(), y)
 				allInventories[x].items[y].amount = 0
-				allInventories[x].items[y].amount += 1
+				allInventories[x].items[y].amount += item.amount
 				emit_signal("items_changed", id, y)
 				return
 		x -= 1
