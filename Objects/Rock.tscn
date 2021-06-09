@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://Sprites/Tree.png" type="Texture" id=1]
-[ext_resource path="res://HitHurtBoxes/Hurtbox.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/Object.gd" type="Script" id=3]
-[ext_resource path="res://Effects/TreeBreakingParticles.png" type="Texture" id=4]
+[ext_resource path="res://Effects/RockBreakingParticles.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/Rock.png" type="Texture" id=2]
+[ext_resource path="res://HitHurtBoxes/Hurtbox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Objects/Object.gd" type="Script" id=4]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 particles_animation = true
@@ -44,22 +44,22 @@ anim_offset = 1.0
 anim_offset_random = 1.0
 
 [sub_resource type="CapsuleShape2D" id=5]
-radius = 3.16116
-height = 6.21939
+radius = 5.38806
+height = 14.2334
 
 [sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 16, 16 )
 
-[node name="Tree" type="StaticBody2D"]
+[node name="Rock" type="StaticBody2D"]
 input_pickable = true
 collision_mask = 0
-script = ExtResource( 3 )
+script = ExtResource( 4 )
 
-[node name="Tree" type="Sprite" parent="."]
+[node name="Rock" type="Sprite" parent="."]
 position = Vector2( 16, 16 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 
-[node name="BreakingEffect" type="Particles2D" parent="Tree"]
+[node name="BreakingEffect" type="Particles2D" parent="Rock"]
 material = SubResource( 1 )
 scale = Vector2( 1.5, 1.5 )
 emitting = false
@@ -69,29 +69,27 @@ one_shot = true
 explosiveness = 0.8
 randomness = 1.0
 process_material = SubResource( 2 )
-texture = ExtResource( 4 )
+texture = ExtResource( 1 )
 
-[node name="DamagingEffect" type="Particles2D" parent="Tree"]
+[node name="DamagingEffect" type="Particles2D" parent="Rock"]
 material = SubResource( 3 )
 scale = Vector2( 1.5, 1.5 )
 emitting = false
 amount = 3
 lifetime = 0.8
 process_material = SubResource( 4 )
-texture = ExtResource( 4 )
+texture = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 16.3535, 27.8891 )
+position = Vector2( 17.0511, 21.0569 )
 rotation = 1.5708
 shape = SubResource( 5 )
 
-[node name="Hurtbox" parent="." instance=ExtResource( 2 )]
-pause_mode = 2
-position = Vector2( 16.5303, 27.8891 )
+[node name="Hurtbox" parent="." instance=ExtResource( 3 )]
 collision_layer = 8
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
-position = Vector2( -0.530334, -11.8891 )
+position = Vector2( 16, 16 )
 shape = SubResource( 6 )
 
 [connection signal="input_event" from="Hurtbox" to="." method="_on_Hurtbox_input_event"]
