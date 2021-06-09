@@ -2,15 +2,16 @@ extends StaticBody2D
 
 
 onready var inventory = Inventories.playerInventory
-onready var sprite = $Tree
-onready var collision = get_node("CollisionShape2D")
-onready var breakingEffect = get_node("Tree/BreakingEffect")
-onready var damagingEffect = get_node("Tree/DamagingEffect")
+onready var sprite = get_child(0)
+onready var collision = get_child(1)
+onready var breakingEffect = sprite.get_child(0)
+onready var damagingEffect = sprite.get_child(1)
 
-var hp = 400
+var hp
 
-var item = preload("res://Items/Wood.tres")
-var amount = 5
+var item
+var amount
+
 var exists = true
 
 func _ready():
@@ -24,7 +25,11 @@ func _process(delta):
 	if hp < 0:
 		damagingEffect.emitting = false
 		destroy()
-
+		set_process(false)
+	if !Input.is_mouse_button_pressed(BUTTON_LEFT):
+		set_process(false)
+		damagingEffect.emitting = false
+	
 """While LMB is held on the Object, it gets damaged
 Meaning the _process Method is active
 Emits Particles with the Colors of the Object while damaged"""
@@ -47,8 +52,13 @@ func destroy():
 		breakingEffect.emitting = true
 		yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
 		queue_free()
-
-
+	
+"""Assigns the Objects Values"""
+func assignVariables(vars):
+	hp = vars[0]
+	item = vars[1]
+	amount = vars[2]
+	
 func _on_Hurtbox_mouse_exited():
 	set_process(false)
 	damagingEffect.emitting = false
