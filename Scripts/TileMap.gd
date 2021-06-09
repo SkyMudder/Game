@@ -123,7 +123,6 @@ func generateNature(type, posCurrent, root, rand):
 		var rng = RandomNumberGenerator.new()
 		rng.randomize()
 		var randResource = rng.randi_range(0, 2)
-		print(randResource)
 		var SpawnResource
 		var randCheck
 		if randResource == 0:
