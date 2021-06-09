@@ -1,23 +1,51 @@
 extends StaticBody2D
 
 
-onready var inventory = Inventories.allInventories[0]
+onready var inventory = Inventories.playerInventory
+onready var sprite = $Rock
+onready var collision = get_node("CollisionShape2D")
+onready var breakingEffect = get_node("Rock/BreakingEffect")
+onready var damagingEffect = get_node("Rock/DamagingEffect")
+
+var hp = 400
 
 var item = preload("res://Items/Stone.tres")
 var amount = 1
 var exists = 1
 
-"""Creates an Effect and makes the Object disappear
-when the Object gets left clicked"""
+func _ready():
+	set_process(false)
+	
+"""While active, removes HP
+Unbound from Framerate
+When HP reach 0, the Particles stop emitting and the Object gets destroyed"""
+func _process(delta):
+	hp -= 60 * delta
+	if hp < 0:
+		damagingEffect.emitting = false
+		destroy()
+
+"""While LMB is held on the Object, it gets damaged
+Meaning the _process Method is active
+Emits Particles with the Colors of the Object while damaged"""
 func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 	if Input.is_mouse_button_pressed(BUTTON_LEFT):
-		var RockBreakingEffect = load("res://Effects/RockBreakingEffect.tscn")
-		var rockBreakingEffect = RockBreakingEffect.instance()
-		var world = get_tree().current_scene
-		world.add_child(rockBreakingEffect)
-		rockBreakingEffect.global_position = global_position
-		queue_free()
-		if exists == 1:
-			item.name = "Rock"
+		set_process(true)
+		damagingEffect.emitting = true
+	else:
+		damagingEffect.emitting = false
+		set_process(false)
+	
+"""On Destroy, the Resource of the Object gets added to the Inventory
+A new explosive Particle Effect gets emitted
+Texture and Collision of the Object get deactivated on Particel Emission
+The Object gets freed after the time the Particle Effect needs to process"""
+func destroy():
+	if exists == 1:
 			inventory.add(item)
-		exists = 0
+			exists = 0
+			sprite.texture = null
+			collision.shape = null
+			breakingEffect.emitting = true
+			yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
+			queue_free()

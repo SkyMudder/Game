@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://TilesetResources/GrassTileMap.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/TileMap.gd" type="Script" id=2]
@@ -7,10 +7,11 @@
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/GameManager.gd" type="Script" id=6]
 [ext_resource path="res://TilesetResources/Dirt.png" type="Texture" id=7]
-[ext_resource path="res://TilesetResources/GrassTop.png" type="Texture" id=8]
+[ext_resource path="res://TilesetResources/GrassTopGreen.png" type="Texture" id=8]
 [ext_resource path="res://Mouse/MousePointer.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Inventory/InventoryDisplay.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Recipes/CraftingContainer.tscn" type="PackedScene" id=11]
+[ext_resource path="res://TilesetResources/GrassTopBrown.png" type="Texture" id=12]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Dirt.png 0"
@@ -110,7 +111,7 @@
 0/z_index = 0
 
 [sub_resource type="TileSet" id=3]
-0/name = "GrassTop.png 0"
+0/name = "GrassTopGreen.png 0"
 0/texture = ExtResource( 8 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
@@ -124,7 +125,7 @@
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
-1/name = "GrassTop.png 1"
+1/name = "GrassTopGreen.png 1"
 1/texture = ExtResource( 8 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
@@ -138,7 +139,7 @@
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
-2/name = "GrassTop.png 2"
+2/name = "GrassTopGreen.png 2"
 2/texture = ExtResource( 8 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
@@ -152,7 +153,7 @@
 2/shape_one_way_margin = 0.0
 2/shapes = [  ]
 2/z_index = 0
-3/name = "GrassTop.png 3"
+3/name = "GrassTopGreen.png 3"
 3/texture = ExtResource( 8 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
@@ -166,7 +167,7 @@
 3/shape_one_way_margin = 0.0
 3/shapes = [  ]
 3/z_index = 0
-4/name = "GrassTop.png 4"
+4/name = "GrassTopGreen.png 4"
 4/texture = ExtResource( 8 )
 4/tex_offset = Vector2( 0, 0 )
 4/modulate = Color( 1, 1, 1, 1 )
@@ -181,16 +182,88 @@
 4/shapes = [  ]
 4/z_index = 0
 
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="TileSet" id=4]
+0/name = "GrassTopBrown.png 0"
+0/texture = ExtResource( 12 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 32, 32 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+1/name = "GrassTopBrown.png 1"
+1/texture = ExtResource( 12 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 0, 32, 32, 32 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape_one_way = false
+1/shape_one_way_margin = 0.0
+1/shapes = [  ]
+1/z_index = 0
+2/name = "GrassTopBrown.png 2"
+2/texture = ExtResource( 12 )
+2/tex_offset = Vector2( 0, 0 )
+2/modulate = Color( 1, 1, 1, 1 )
+2/region = Rect2( 0, 64, 32, 32 )
+2/tile_mode = 0
+2/occluder_offset = Vector2( 0, 0 )
+2/navigation_offset = Vector2( 0, 0 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape_one_way = false
+2/shape_one_way_margin = 0.0
+2/shapes = [  ]
+2/z_index = 0
+3/name = "GrassTopBrown.png 3"
+3/texture = ExtResource( 12 )
+3/tex_offset = Vector2( 0, 0 )
+3/modulate = Color( 1, 1, 1, 1 )
+3/region = Rect2( 0, 96, 32, 32 )
+3/tile_mode = 0
+3/occluder_offset = Vector2( 0, 0 )
+3/navigation_offset = Vector2( 0, 0 )
+3/shape_offset = Vector2( 0, 0 )
+3/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+3/shape_one_way = false
+3/shape_one_way_margin = 0.0
+3/shapes = [  ]
+3/z_index = 0
+4/name = "GrassTopBrown.png 4"
+4/texture = ExtResource( 12 )
+4/tex_offset = Vector2( 0, 0 )
+4/modulate = Color( 1, 1, 1, 1 )
+4/region = Rect2( 0, 128, 32, 32 )
+4/tile_mode = 0
+4/occluder_offset = Vector2( 0, 0 )
+4/navigation_offset = Vector2( 0, 0 )
+4/shape_offset = Vector2( 0, 0 )
+4/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+4/shape_one_way = false
+4/shape_one_way_margin = 0.0
+4/shapes = [  ]
+4/z_index = 0
+
+[sub_resource type="CircleShape2D" id=5]
 radius = 8.0
 
-[sub_resource type="ConvexPolygonShape2D" id=5]
+[sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 28.1153, 30.0534, 5.02001, 29.8919, 5.18152, 19.394, 28.1153, 19.717 )
 
-[sub_resource type="ConvexPolygonShape2D" id=6]
+[sub_resource type="ConvexPolygonShape2D" id=7]
 points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 21.9655, 24.7482 )
 
-[sub_resource type="TileSet" id=7]
+[sub_resource type="TileSet" id=8]
 0/name = "NatureObjects.png 0"
 0/texture = ExtResource( 3 )
 0/tex_offset = Vector2( 0, 0 )
@@ -201,14 +274,14 @@ points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 2
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape = SubResource( 5 )
+0/shape = SubResource( 6 )
 0/shape_one_way = false
 0/shape_one_way_margin = 1.0
 0/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 5 ),
+"shape": SubResource( 6 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 0/z_index = 0
@@ -222,14 +295,14 @@ points = PoolVector2Array( 21.9655, 31.1113, 10.579, 31.1113, 10.579, 24.7482, 2
 1/navigation_offset = Vector2( 0, 0 )
 1/shape_offset = Vector2( 0, 0 )
 1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-1/shape = SubResource( 6 )
+1/shape = SubResource( 7 )
 1/shape_one_way = false
 1/shape_one_way_margin = 1.0
 1/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 6 ),
+"shape": SubResource( 7 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 1/z_index = 0
@@ -249,8 +322,14 @@ cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
 
-[node name="GrassTop" type="TileMap" parent="."]
+[node name="GrassTopGreen" type="TileMap" parent="."]
 tile_set = SubResource( 3 )
+cell_size = Vector2( 32, 32 )
+format = 1
+script = ExtResource( 2 )
+
+[node name="GrassTopBrown" type="TileMap" parent="."]
+tile_set = SubResource( 4 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
@@ -356,10 +435,10 @@ scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="Nature" type="TileMap" parent="."]
-tile_set = SubResource( 7 )
+tile_set = SubResource( 8 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )

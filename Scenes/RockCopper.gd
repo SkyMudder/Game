@@ -2,14 +2,14 @@ extends StaticBody2D
 
 
 onready var inventory = Inventories.playerInventory
-onready var sprite = $Tree
+onready var sprite = $RockCopper
 onready var collision = get_node("CollisionShape2D")
-onready var breakingEffect = get_node("Tree/BreakingEffect")
-onready var damagingEffect = get_node("Tree/DamagingEffect")
+onready var breakingEffect = get_node("RockCopper/BreakingEffect")
+onready var damagingEffect = get_node("RockCopper/DamagingEffect")
 
-var hp = 400
+var hp = 600
 
-var item = preload("res://Items/Wood.tres")
+var item = preload("res://Items/Copper.tres")
 var amount = 1
 var exists = 1
 
