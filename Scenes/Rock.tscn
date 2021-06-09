@@ -93,5 +93,6 @@ position = Vector2( 16, 16 )
 shape = SubResource( 6 )
 
 [connection signal="input_event" from="Hurtbox" to="." method="_on_Hurtbox_input_event"]
+[connection signal="mouse_exited" from="Hurtbox" to="." method="_on_Hurtbox_mouse_exited"]
 
 [editable path="Hurtbox"]

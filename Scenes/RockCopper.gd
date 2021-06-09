@@ -32,9 +32,6 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 	if Input.is_mouse_button_pressed(BUTTON_LEFT):
 		set_process(true)
 		damagingEffect.emitting = true
-	else:
-		damagingEffect.emitting = false
-		set_process(false)
 	
 """On Destroy, the Resource of the Object gets added to the Inventory
 A new explosive Particle Effect gets emitted
@@ -50,3 +47,8 @@ func destroy():
 		breakingEffect.emitting = true
 		yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
 		queue_free()
+
+
+func _on_Hurtbox_mouse_exited():
+	set_process(false)
+	damagingEffect.emitting = false
