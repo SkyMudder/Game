@@ -10,8 +10,8 @@ onready var damagingEffect = get_node("RockCopper/DamagingEffect")
 var hp = 600
 
 var item = preload("res://Items/Copper.tres")
-var amount = 1
-var exists = 1
+var amount = 3
+var exists = true
 
 func _ready():
 	set_process(false)
@@ -41,11 +41,12 @@ A new explosive Particle Effect gets emitted
 Texture and Collision of the Object get deactivated on Particel Emission
 The Object gets freed after the time the Particle Effect needs to process"""
 func destroy():
-	if exists == 1:
-			inventory.add(item)
-			exists = 0
-			sprite.texture = null
-			collision.shape = null
-			breakingEffect.emitting = true
-			yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
-			queue_free()
+	if exists:
+		item.amount = amount
+		inventory.add(item)
+		exists = false
+		sprite.texture = null
+		collision.shape = null
+		breakingEffect.emitting = true
+		yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
+		queue_free()

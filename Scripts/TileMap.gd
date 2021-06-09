@@ -108,27 +108,34 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
+	var rng = RandomNumberGenerator.new()
+	var SpawnResource
+	var randCheck
+	var randResource
+	rng.randomize()
 	if type == 0:
+		randResource = rng.randi_range(0, 1)
+		if randResource == 0:
+			SpawnResource = preload("res://Scenes/Tree.tscn")
+			randCheck = SpawnRates.getTree()
+		if randResource == 1:
+			SpawnResource = preload("res://Scenes/Stick.tscn")
+			randCheck = SpawnRates.getStick()
 		if rand < SpawnRates.getTree():
-			var SpawnTree = preload("res://Scenes/Tree.tscn")
-			var tree = SpawnTree.instance()
+			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
-			world.add_child(tree)
-			tree.global_position = Vector2(posCurrent.x * tileSizePixels
+			world.add_child(spawnResource)
+			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
-			tree.add_to_group("Objects")
+			spawnResource.add_to_group("Objects")
 	if type == 1:
-		var rng = RandomNumberGenerator.new()
-		rng.randomize()
-		var randResource = rng.randi_range(0, 2)
-		var SpawnResource
-		var randCheck
+		randResource = rng.randi_range(0, 1)
 		if randResource == 0:
 			SpawnResource = preload("res://Scenes/Rock.tscn")
 			randCheck = SpawnRates.getRock()
-		else:
+		elif randResource == 1:
 			SpawnResource = preload("res://Scenes/RockCopper.tscn")
 			randCheck = SpawnRates.getCopper()
 		if rand < randCheck:
