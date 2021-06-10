@@ -6,6 +6,7 @@ var inventory
 onready var textureRect = get_node("TextureRect")
 onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
+onready var selected = get_node("Selected")
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -122,3 +123,9 @@ func drop_data(_position, data):
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		allInventories[data.id].set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
+	
+func select():
+	selected.show()
+	
+func deselect():
+	selected.hide()

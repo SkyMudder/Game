@@ -5,6 +5,8 @@ onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay
 onready var allInventories = Inventories.allInventories
 onready var inventory
 
+var currentlySelected = 0
+
 """Adds the given Amount of Inventory Slots to the UI
 Connects Signal for when Items changed
 Updates the Inventory on the UI"""
@@ -40,3 +42,21 @@ func addInventorySlots(amount):
 		var slot = InventorySlotDisplay.instance()
 		add_child(slot)
 	inventory.setInventorySize(inventory.size)
+	
+func _input(_event):
+	if Input.is_action_just_pressed("scroll_up"):
+		get_child(currentlySelected).deselect()
+		if !(currentlySelected + 1 > inventory.size - 1):
+			currentlySelected += 1
+		else:
+			currentlySelected = 0
+		if get_child(currentlySelected).inventory == allInventories[1]:
+			get_child(currentlySelected).select()
+	if Input.is_action_just_pressed("scroll_down"):
+		get_child(currentlySelected).deselect()
+		if !(currentlySelected - 1 < 0):
+			currentlySelected -= 1
+		else:
+			currentlySelected = inventory.size - 1
+		if get_child(currentlySelected).inventory == allInventories[1]:
+			get_child(currentlySelected).select()

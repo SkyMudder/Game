@@ -389,3 +389,4 @@ shape = SubResource( 5 )
 [node name="MousePointer" parent="." instance=ExtResource( 9 )]
 
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]
+[connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" method="_on_InventoryDisplay_gui_input"]
