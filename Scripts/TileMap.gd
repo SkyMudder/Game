@@ -114,38 +114,18 @@ func generateNature(type, posCurrent, root, rand):
 	var SpawnResource
 	var randCheck
 	var randResource
-	var resource
+	var objectType
 	rng.randomize()
 	if type == 0:
 		randResource = rng.randi_range(0, 1)
 		if randResource == 0:
-			SpawnResource = preload("res://Scenes/Tree.tscn")
+			SpawnResource = preload("res://Objects/Tree.tscn")
 			randCheck = SpawnRates.getTree()
-			resource = ww.type.TREE
+			objectType = ww.type.TREE
 		if randResource == 1:
-			SpawnResource = preload("res://Scenes/Stick.tscn")
+			SpawnResource = preload("res://Objects/Stick.tscn")
 			randCheck = SpawnRates.getStick()
-		if rand < SpawnRates.getTree():
-			var spawnResource = SpawnResource.instance()
-			var world = get_tree().current_scene
-			world.add_child(spawnResource)
-			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
-			+ root.x * chunkSizePixels,
-			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels)
-			if resource != null:
-				spawnResource.assignVariables(ww.getObjectVariables(resource))
-			spawnResource.add_to_group("Objects")
-	if type == 1:
-		randResource = rng.randi_range(0, 1)
-		if randResource == 0:
-			SpawnResource = preload("res://Scenes/Rock.tscn")
-			randCheck = SpawnRates.getRock()
-			resource = ww.type.ROCK
-		elif randResource == 1:
-			SpawnResource = preload("res://Scenes/RockCopper.tscn")
-			randCheck = SpawnRates.getCopper()
-			resource = ww.type.ROCKCOPPER
+			objectType = ww.type.STICK
 		if rand < randCheck:
 			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
@@ -154,7 +134,31 @@ func generateNature(type, posCurrent, root, rand):
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
-			spawnResource.assignVariables(ww.getObjectVariables(resource))
+			spawnResource.assignVariables(ww.getObjectVariables(objectType))
+			spawnResource.add_to_group("Objects")
+	if type == 1:
+		randResource = rng.randi_range(0, 2)
+		if randResource == 0:
+			SpawnResource = preload("res://Objects/Rock.tscn")
+			randCheck = SpawnRates.getRock()
+			objectType = ww.type.ROCK
+		elif randResource == 1:
+			SpawnResource = preload("res://Objects/RockCopper.tscn")
+			randCheck = SpawnRates.getCopper()
+			objectType = ww.type.ROCKCOPPER
+		elif randResource == 2:
+			SpawnResource = preload("res://Objects/RockSmall.tscn")
+			randCheck = SpawnRates.getRockSmall()
+			objectType = ww.type.ROCKSMALL
+		if rand < randCheck:
+			var spawnResource = SpawnResource.instance()
+			var world = get_tree().current_scene
+			world.add_child(spawnResource)
+			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
+			+ root.x * chunkSizePixels,
+			posCurrent.y * tileSizePixels
+			+ root.y * chunkSizePixels)
+			spawnResource.assignVariables(ww.getObjectVariables(objectType))
 			spawnResource.add_to_group("Objects")
 		
 	
