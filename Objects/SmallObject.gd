@@ -17,4 +17,4 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 			queue_free()
 	
 func assignVariables(vars):
-	item = vars[1]
+	item = vars[3]

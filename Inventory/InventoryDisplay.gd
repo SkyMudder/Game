@@ -18,6 +18,8 @@ func _ready():
 	for x in get_children():
 		x.inventory = inventory
 	updateInventoryDisplay(inventory.id)
+	if inventory == allInventories[1]:
+		get_child(currentlySelected).select()
 	inventory.connect("items_changed", self, "_on_items_changed")
 	
 """Goes through the whole Inventory and updates the Slots"""
@@ -46,17 +48,17 @@ func addInventorySlots(amount):
 func _input(_event):
 	if Input.is_action_just_pressed("scroll_up"):
 		get_child(currentlySelected).deselect()
-		if !(currentlySelected + 1 > inventory.size - 1):
-			currentlySelected += 1
-		else:
-			currentlySelected = 0
-		if get_child(currentlySelected).inventory == allInventories[1]:
-			get_child(currentlySelected).select()
-	if Input.is_action_just_pressed("scroll_down"):
-		get_child(currentlySelected).deselect()
 		if !(currentlySelected - 1 < 0):
 			currentlySelected -= 1
 		else:
 			currentlySelected = inventory.size - 1
+		if get_child(currentlySelected).inventory == allInventories[1]:
+			get_child(currentlySelected).select()
+	if Input.is_action_just_pressed("scroll_down"):
+		get_child(currentlySelected).deselect()
+		if !(currentlySelected + 1 > inventory.size - 1):
+			currentlySelected += 1
+		else:
+			currentlySelected = 0
 		if get_child(currentlySelected).inventory == allInventories[1]:
 			get_child(currentlySelected).select()

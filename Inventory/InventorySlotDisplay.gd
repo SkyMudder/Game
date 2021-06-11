@@ -1,5 +1,8 @@
 extends CenterContainer
 
+
+signal item_switched
+
 onready var allInventories = Inventories.allInventories
 var inventory
 
@@ -7,6 +10,7 @@ onready var textureRect = get_node("TextureRect")
 onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
+onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -22,6 +26,9 @@ func displayItem(inventoryDisplay, item):
 		itemAmount.text = ""
 		# Sets the Object to null because nothing is there anymore
 		allInventories[inventoryDisplay].items[allInventories[inventoryDisplay].items.find(item)] = null
+	if selected.visible:
+		select()
+		emit_signal("item_switched")
 	
 func get_drag_data(_position):
 	var itemIndex = get_index()
@@ -126,6 +133,11 @@ func drop_data(_position, data):
 	
 func select():
 	selected.show()
+	if inventory.items[get_parent().currentlySelected] != null:
+		playerItem.item = inventory.items[get_parent().currentlySelected]
+	else:
+		playerItem.item = null
+	emit_signal("item_switched")
 	
 func deselect():
 	selected.hide()
