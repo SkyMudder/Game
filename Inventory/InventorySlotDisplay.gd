@@ -80,7 +80,6 @@ func drop_data(_position, data):
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
 		if item.name == data.item.name and !data.has("split"):
-			print("1")
 			var space = item.stackLimit - item.amount
 			# Check if the split Stack has enough Space to be merged
 			# With the new Stack
@@ -93,7 +92,6 @@ func drop_data(_position, data):
 				data.item.amount -= space
 		# Check if the Source Item Stack was Split and had an uneven number
 		elif data.has("split") and data.item.name == item.name:
-			print("2")
 			var space = item.stackLimit - item.amount
 			# Check if the split Stack has enough Space to be merged
 			# With the new Stack
@@ -111,7 +109,6 @@ func drop_data(_position, data):
 		allInventories[data.id].set(data.item, data.itemIndex)
 	# Check if the Source Stack was Split
 	elif data.has("split"):
-		print("3")
 		# Check if the Item is not null
 		# So it doesn't get merged and it's old Value gets restored
 		# To avoid merging different Types of Objects with each other
@@ -130,7 +127,6 @@ func drop_data(_position, data):
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
-		print("4")
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		allInventories[data.id].set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
