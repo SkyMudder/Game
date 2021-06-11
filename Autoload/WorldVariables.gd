@@ -13,8 +13,8 @@ var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 var __objectVariables = [[type.TREE, 1, 400, preload("res://Items/Wood.tres"), 5],
 						 [type.ROCK, 1, 400, preload("res://Items/Stone.tres"), 5],
 						 [type.ROCK, 1, 600, preload("res://Items/Copper.tres"), 3],
-						 [type.TREE, 1, null, preload("res://Items/Wood.tres"), null],
-						 [type.ROCK, 1, null, preload("res://Items/Stone.tres"), null]
+						 [type.TREE, 1, null, preload("res://Items/Wood.tres"), 1],
+						 [type.ROCK, 1, null, preload("res://Items/Stone.tres"), 1]
 ]
 
 enum type{TREE, ROCK, ROCKCOPPER, STICK, ROCKSMALL}

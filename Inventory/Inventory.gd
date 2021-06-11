@@ -42,7 +42,6 @@ func add(item):
 				emit_signal("items_changed", id, y)
 				return
 		x -= 1
-	print("NO SPACE")
 	
 """Seeks a specific Amount of an Item in the Inventory/Toolbar
 If there is not enough in one Stack it searches in another Stack
