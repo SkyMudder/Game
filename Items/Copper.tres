@@ -11,4 +11,4 @@ amount = 1
 stackLimit = 50
 damageMultiplier = 0.1
 type = -1
-level = 0
+level = -1

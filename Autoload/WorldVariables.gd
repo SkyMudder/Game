@@ -10,14 +10,8 @@ var __renderDistance : int = 5	# Render distance in Chunks (Must be higher than 
 var __generatedChunks = []	# Array that stores all generated Chunks
 var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
-var __objectVariables = [[type.TREE, 1, 400, preload("res://Items/Wood.tres"), 5],
-						 [type.ROCK, 1, 400, preload("res://Items/Stone.tres"), 5],
-						 [type.ROCK, 1, 600, preload("res://Items/Copper.tres"), 3],
-						 [type.TREE, 1, null, preload("res://Items/Wood.tres"), 1],
-						 [type.ROCK, 1, null, preload("res://Items/Stone.tres"), 1]
-]
 
-enum type{TREE, ROCK, ROCKCOPPER, STICK, ROCKSMALL}
+enum type{WOOD, MINERAL}
 
 """Getter-Methods"""
 
@@ -77,12 +71,3 @@ func updateNextToGenerate():
 				if !__generatedChunks.has(x + rootDown):
 					if !__generatedChunks.has(x + rootUp):
 						removeNextToGenerate(x)
-	
-func getObjectVariables(type):
-	var tmp = []
-	tmp.push_back(__objectVariables[type][0])
-	tmp.push_back(__objectVariables[type][1])
-	tmp.push_back(__objectVariables[type][2])
-	tmp.push_back(__objectVariables[type][3])
-	tmp.push_back(__objectVariables[type][4])
-	return tmp

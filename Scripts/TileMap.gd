@@ -66,26 +66,21 @@ func createNoiseAndGenerate(root):
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles) + 1
 			if noise2D <= 1:
-				var randDirt = rng.randi_range(0, 3)
-				generateDirt(posCurrent, root, rand, randDirt)
+				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
+				tileMapDirt.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				y + root.y * chunkSizeTiles))
 			elif noise2D > 1:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
-				update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				tileMapGrass.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 	
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
-func generateDirt(posCurrent, root, rand, randDirt):
+func generateDirt(posCurrent, root, rand):
 	tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
-	if rand < SpawnRates.getDirt():
-		tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-		posCurrent.y + root.y * chunkSizeTiles, randDirt)
-	else:
-		tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-		posCurrent.y + root.y * chunkSizeTiles, 4)
 	generateNature(1, posCurrent, root, rand)
 	
 """Generates the Grass Floor
@@ -114,18 +109,15 @@ func generateNature(type, posCurrent, root, rand):
 	var SpawnResource
 	var randCheck
 	var randResource
-	var objectType
 	rng.randomize()
 	if type == 0:
 		randResource = rng.randi_range(0, 1)
 		if randResource == 0:
 			SpawnResource = preload("res://Objects/Tree.tscn")
 			randCheck = SpawnRates.getTree()
-			objectType = ww.type.TREE
 		if randResource == 1:
 			SpawnResource = preload("res://Objects/Stick.tscn")
 			randCheck = SpawnRates.getStick()
-			objectType = ww.type.STICK
 		if rand < randCheck:
 			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
@@ -134,22 +126,18 @@ func generateNature(type, posCurrent, root, rand):
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
-			spawnResource.assignVariables(ww.getObjectVariables(objectType))
 			spawnResource.add_to_group("Objects")
 	if type == 1:
 		randResource = rng.randi_range(0, 2)
 		if randResource == 0:
 			SpawnResource = preload("res://Objects/Rock.tscn")
 			randCheck = SpawnRates.getRock()
-			objectType = ww.type.ROCK
 		elif randResource == 1:
 			SpawnResource = preload("res://Objects/RockCopper.tscn")
 			randCheck = SpawnRates.getCopper()
-			objectType = ww.type.ROCKCOPPER
 		elif randResource == 2:
 			SpawnResource = preload("res://Objects/RockSmall.tscn")
 			randCheck = SpawnRates.getRockSmall()
-			objectType = ww.type.ROCKSMALL
 		if rand < randCheck:
 			var spawnResource = SpawnResource.instance()
 			var world = get_tree().current_scene
@@ -158,7 +146,6 @@ func generateNature(type, posCurrent, root, rand):
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
 			+ root.y * chunkSizePixels)
-			spawnResource.assignVariables(ww.getObjectVariables(objectType))
 			spawnResource.add_to_group("Objects")
 		
 	

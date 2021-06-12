@@ -4,7 +4,7 @@ extends StaticBody2D
 onready var inventory = Inventories.playerInventory
 
 var amount = 1
-var item = preload("res://Items/Wood.tres")
+var item = preload("res://Items/Stone.tres")
 var exists = true
 
 """While LMB is held on the Object, it gets damaged
