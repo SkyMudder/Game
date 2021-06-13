@@ -21,26 +21,36 @@ func _init(inventoryId, inventorySize, inventoryColumns):
 	size = inventorySize
 	columns = inventoryColumns
 	
-"""Automatically determines where to add an Item to the Inventory/Toolbar"""
+"""Automatically determines where to add an Item to the Inventory/Toolbar
+Splits Stacks automatically"""
 func add(item):
 	var x = allInventories.size() - 1
-	while x >= 0:
-		for y in range(allInventories[x].items.size()):
+	while x >= 0 and item.amount > 0:
+		var y = 0
+		while y <= allInventories[x].items.size() - 1 and item.amount > 0:
 			if allInventories[x].items[y] != null:
-				if allInventories[x].items[y].name == item.name and allInventories[x].items[y].amount < item.stackLimit:
+				if allInventories[x].items[y].name == item.name and allInventories[x].items[y].amount + item.amount < item.stackLimit:
 					allInventories[x].items[y].amount += item.amount
 					allInventories[x].emit_signal("items_changed", allInventories[x].id, y)
 					return
+				elif allInventories[x].items[y].name == item.name:
+					splitAdd(item, x, y)
+			y += 1
 		x -= 1
 	x = allInventories.size() - 1
 	while x >= 0:
-		for y in range(allInventories[x].items.size()):
+		var y = 0
+		while y <= allInventories[x].items.size() - 1 and item.amount > 0:
 			if allInventories[x].items[y] == null:
-				allInventories[x].set(item.duplicate(), y)
-				allInventories[x].items[y].amount = 0
-				allInventories[x].items[y].amount += item.amount
-				emit_signal("items_changed", id, y)
-				return
+				if item.amount <= item.stackLimit:
+					addNewItem(item, x, y)
+					allInventories[x].items[y].amount += item.amount
+					emit_signal("items_changed", id, y)
+					return
+				else:
+					addNewItem(item, x, y)
+					splitAdd(item, x, y)
+			y += 1
 		x -= 1
 	
 """Seeks a specific Amount of an Item in the Inventory/Toolbar
@@ -110,3 +120,16 @@ func removeScheduled():
 func setInventorySize(inventorySize):
 	for _x in range(inventorySize):
 		items.push_back(null)
+	
+"""If the Stack that gets added is too big,
+It splits up the Rest on the next Stack"""
+func splitAdd(item, inventoryIndex, itemsIndex):
+	var space = item.stackLimit - allInventories[inventoryIndex].items[itemsIndex].amount
+	allInventories[inventoryIndex].items[itemsIndex].amount += space
+	item.amount -= space
+	allInventories[inventoryIndex].emit_signal("items_changed", allInventories[inventoryIndex].id, itemsIndex)
+	
+"""Creates a new Item, meaning it duplicates the given one"""
+func addNewItem(item, inventoryIndex, itemsIndex):
+	allInventories[inventoryIndex].set(item.duplicate(), itemsIndex)
+	allInventories[inventoryIndex].items[itemsIndex].amount = 0
