@@ -1,7 +1,7 @@
 extends CenterContainer
 
 
-signal item_switched
+signal slot_updated(index)
 
 onready var allInventories = Inventories.allInventories
 var inventory
@@ -11,7 +11,7 @@ onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
-onready var tilemap = preload("res://Scripts/TileMap.gd")
+onready var tileMap = get_node("/root/Main/Dirt")
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -28,8 +28,7 @@ func displayItem(inventoryDisplay, item):
 		# Sets the Object to null because nothing is there anymore
 		allInventories[inventoryDisplay].items[allInventories[inventoryDisplay].items.find(item)] = null
 	if selected.visible:
-		select()
-		emit_signal("item_switched")
+		emit_signal("slot_updated", get_index())
 	
 func get_drag_data(_position):
 	var itemIndex = get_index()
@@ -132,15 +131,27 @@ func drop_data(_position, data):
 		allInventories[data.id].set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
 	
+"""Mark a Slot in the Toolbar as selected
+This is updated across Slots and shown on the UI
+If the Item is Placeable, initiate the Placement
+Update the Player Item if the Slot has one, otherwise set it to null"""
 func select():
 	selected.show()
 	if inventory.items[get_parent().currentlySelected] != null:
 		playerItem.item = inventory.items[get_parent().currentlySelected]
 		if playerItem.item.placeable:
-			tilemap.blueprint(inventory.items[get_parent().currentlySelected])
+			tileMap.connect("stopped_placing", self, "_on_stopped_placing")
+			tileMap.instancePlaceableObject(inventory.items[get_parent().currentlySelected], get_global_mouse_position())
 	else:
 		playerItem.item = null
-	emit_signal("item_switched")
 	
+"""Deselect a Slot"""
 func deselect():
 	selected.hide()
+	
+"""If the Player placed an Object, remove it from the Inventory
+And disconnect the Signals, otherwise only disconnect the Signals"""
+func _on_stopped_placing(placed):
+	if placed:
+		inventory.remove(get_parent().currentlySelected)
+	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")

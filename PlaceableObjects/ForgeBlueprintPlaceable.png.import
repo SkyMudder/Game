@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ForgeBlueprint.png-a3bcd5386d94b132798c946122b52de7.stex"
+path="res://.import/ForgeBlueprintPlaceable.png-91ba06b8b03e316da6619632781defd1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://PlaceableObjects/ForgeBlueprint.png"
-dest_files=[ "res://.import/ForgeBlueprint.png-a3bcd5386d94b132798c946122b52de7.stex" ]
+source_file="res://PlaceableObjects/ForgeBlueprintPlaceable.png"
+dest_files=[ "res://.import/ForgeBlueprintPlaceable.png-91ba06b8b03e316da6619632781defd1.stex" ]
 
 [params]
 

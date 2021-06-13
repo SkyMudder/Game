@@ -9,3 +9,7 @@ export(float) var damageMultiplier
 export(int) var type
 export(int) var level
 export(bool) var placeable
+export(int) var object
+
+func getObject():
+	return WorldVariables.placeableObjects[object]

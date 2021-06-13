@@ -1,11 +1,15 @@
 extends GridContainer
 
-onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
 
+signal item_switched(flag)	# Flag: 0 if the Player Item should be updated
+							# Flag: 1 if the Building Object should be updated
+
+onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
+onready var tileMap = get_node("/root/Main/Dirt")
 onready var allInventories = Inventories.allInventories
 onready var inventory
 
-var currentlySelected = 0
+var currentlySelected = 1
 
 """Adds the given Amount of Inventory Slots to the UI
 Connects Signal for when Items changed
@@ -20,7 +24,12 @@ func _ready():
 	updateInventoryDisplay(inventory.id)
 	if inventory == allInventories[1]:
 		get_child(currentlySelected).select()
+	inventory.add(preload("res://Items/Forge.tres"))
 	inventory.connect("items_changed", self, "_on_items_changed")
+	inventory.emit_signal("items_changed", 0, 0)
+	inventory.emit_signal("items_changed", 1, 0)
+	for x in get_children():
+		x.connect("slot_updated", self, "_on_slot_updated")
 	
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay(inventoryChanged):
@@ -45,8 +54,9 @@ func addInventorySlots(amount):
 		add_child(slot)
 	inventory.setInventorySize(inventory.size)
 	
-func _input(_event):
-	if Input.is_action_just_pressed("scroll_up"):
+"""Update Slots when a new Slot is selected"""
+func _input(event):
+	if event.is_action_pressed("scroll_up"):
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected - 1 < 0):
 			currentlySelected -= 1
@@ -54,7 +64,8 @@ func _input(_event):
 			currentlySelected = inventory.size - 1
 		if get_child(currentlySelected).inventory == allInventories[1]:
 			get_child(currentlySelected).select()
-	if Input.is_action_just_pressed("scroll_down"):
+		emit_signal("item_switched", 1)
+	if event.is_action_pressed("scroll_down"):
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected + 1 > inventory.size - 1):
 			currentlySelected += 1
@@ -62,3 +73,10 @@ func _input(_event):
 			currentlySelected = 0
 		if get_child(currentlySelected).inventory == allInventories[1]:
 			get_child(currentlySelected).select()
+		emit_signal("item_switched", 1)
+	
+"""For updating the Player Item
+When an Item is placed in an already selected Slot"""
+func _on_slot_updated(index):
+	get_child(index).select()
+	emit_signal("item_switched", 0)
