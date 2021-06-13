@@ -1,15 +1,15 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Items/Item.gd" type="Script" id=1]
-[ext_resource path="res://Items/PickAxe.png" type="Texture" id=2]
+[ext_resource path="res://Items/Forge.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
-name = "Pickaxe"
+name = "Forge"
 texture = ExtResource( 2 )
 amount = 1
 stackLimit = 1
-damageMultiplier = 1.25
-type = 1
-level = 1
-placeable = false
+damageMultiplier = 0.0
+type = -1
+level = -1
+placeable = true

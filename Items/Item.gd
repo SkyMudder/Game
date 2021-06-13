@@ -8,3 +8,4 @@ export(int) var stackLimit
 export(float) var damageMultiplier
 export(int) var type
 export(int) var level
+export(bool) var placeable

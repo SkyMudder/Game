@@ -183,3 +183,10 @@ func removeNature():
 	for x in get_tree().get_nodes_in_group("Objects"):
 		if player.isFarFromObject(x.global_position):
 			x.queue_free()
+	
+func blueprint(object):
+	var posXRest = fmod(get_global_mouse_position().x, 32)
+	var posYRest = fmod(get_global_mouse_position().y, 32)
+	var posX = get_global_mouse_position().x - posXRest
+	var posY = get_global_mouse_position().y - posYRest
+	object.texture.global_position = Vector2(posX, posY)

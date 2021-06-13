@@ -11,6 +11,7 @@ onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
+onready var tilemap = preload("res://Scripts/TileMap.gd")
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -135,6 +136,8 @@ func select():
 	selected.show()
 	if inventory.items[get_parent().currentlySelected] != null:
 		playerItem.item = inventory.items[get_parent().currentlySelected]
+		if playerItem.item.placeable:
+			tilemap.blueprint(inventory.items[get_parent().currentlySelected])
 	else:
 		playerItem.item = null
 	emit_signal("item_switched")
