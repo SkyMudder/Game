@@ -8,6 +8,9 @@ onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
 onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay")
+onready var raycast = get_parent().get_node("ObjectPlacementCollision")
+
+var raycastOffset = Vector2(1, 1)
 
 var ww = WorldVariables
 
@@ -190,7 +193,6 @@ Switches between different Textures
 Depending on if the Object can be placed or not
 Uses the Blueprint Textures which must be included in the Object Scene"""
 func blueprint(object):
-	var placeable = true
 	var posXRest = fmod(get_global_mouse_position().x, tileSizePixels)
 	var posYRest = fmod(get_global_mouse_position().y, tileSizePixels)
 	var posX = get_global_mouse_position().x - posXRest - tileSizePixels
@@ -200,16 +202,13 @@ func blueprint(object):
 	if get_global_mouse_position().y > 0:
 		posY += tileSizePixels
 	var pos = Vector2(posX, posY)
-	for x in get_tree().get_nodes_in_group("Objects"):
-		if x.global_position == pos:
-			placeable = false
-			break
-	if placeable:
-		object.setBlueprintState(1)
-		areaClear = true
-	else:
+	raycast.set_position(pos + raycastOffset)
+	if raycast.is_colliding():
 		object.setBlueprintState(0)
 		areaClear = false
+	else:
+		object.setBlueprintState(1)
+		areaClear = true
 	positionObject(object, pos)
 	
 """Instances an Object and adds it to the Scene Tree

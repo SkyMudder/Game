@@ -94,7 +94,19 @@ collision_layer = 8
 position = Vector2( -0.530334, -11.8891 )
 shape = SubResource( 6 )
 
+[node name="Hurtbox2" parent="." instance=ExtResource( 3 )]
+pause_mode = 2
+position = Vector2( 16.5303, 27.8891 )
+collision_layer = 8
+
+[node name="CollisionShape2D" parent="Hurtbox2" index="0"]
+position = Vector2( -0.530334, -11.8891 )
+shape = SubResource( 6 )
+
 [connection signal="input_event" from="Hurtbox" to="." method="_on_Hurtbox_input_event"]
 [connection signal="mouse_exited" from="Hurtbox" to="." method="_on_Hurtbox_mouse_exited"]
+[connection signal="input_event" from="Hurtbox2" to="." method="_on_Hurtbox_input_event"]
+[connection signal="mouse_exited" from="Hurtbox2" to="." method="_on_Hurtbox_mouse_exited"]
 
 [editable path="Hurtbox"]
+[editable path="Hurtbox2"]

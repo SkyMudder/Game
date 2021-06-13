@@ -345,5 +345,12 @@ script = ExtResource( 3 )
 
 [node name="MousePointer" parent="." instance=ExtResource( 9 )]
 
+[node name="ObjectPlacementCollision" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 1, 1 )
+collision_mask = 8
+collide_with_areas = true
+collide_with_bodies = false
+
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]
 [connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" method="_on_InventoryDisplay_gui_input"]
