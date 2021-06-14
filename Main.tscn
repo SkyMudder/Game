@@ -360,5 +360,7 @@ collision_mask = 8
 collide_with_areas = true
 collide_with_bodies = false
 
+[node name="Objects" type="YSort" parent="."]
+
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]
 [connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" method="_on_InventoryDisplay_gui_input"]

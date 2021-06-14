@@ -9,6 +9,7 @@ onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
 onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 onready var raycast = get_parent().get_node("ObjectPlacementCollision")
+onready var objects = get_parent().get_node("Objects")
 
 var raycastOffset = Vector2(1, 1)
 
@@ -215,8 +216,7 @@ func blueprint(object):
 Adds it to a Group of created Objects"""
 func instanceAndAddObject(objectScene, position):
 	var newObject = objectScene.instance()
-	var world = get_tree().current_scene
-	world.add_child(newObject)
+	objects.add_child(newObject)
 	positionObject(newObject, position)
 	newObject.add_to_group("Objects")
 	return newObject
@@ -230,8 +230,7 @@ Show its Blueprint Texture which should be in the Scene"""
 func instancePlaceableObject(item, position):
 	var objectScene = item.getObject()
 	var newObject = objectScene.instance()
-	var world = get_tree().current_scene
-	world.add_child(newObject)
+	objects.add_child(newObject)
 	positionObject(newObject, position)
 	newObject.setCollision(0)
 	currentObject = newObject

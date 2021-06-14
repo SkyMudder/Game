@@ -56,7 +56,7 @@ func getFurnaceInventoryByID(inventoryID):
 		if x.id == inventoryID:
 			return x
 	
-func notifyMoving(inventoryID, status):
+func notifyMoving(_inventoryID, status):
 	if status:
 		moving = true
 	else:
