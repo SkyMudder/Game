@@ -10,7 +10,7 @@ var __renderDistance : int = 5	# Render distance in Chunks (Must be higher than 
 var __generatedChunks = []	# Array that stores all generated Chunks
 var __nextToGenerate = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
-var placeableObjects = [preload("res://PlaceableObjects/Forge.tscn")]
+var placeableObjects = [preload("res://PlaceableObjects/Furnace.tscn")]
 
 enum type{WOOD, MINERAL}
 

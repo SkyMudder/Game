@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://TilesetResources/GrassTileMap.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/TileMap.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Inventory/InventoryDisplay.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Recipes/CraftingContainer.tscn" type="PackedScene" id=11]
 [ext_resource path="res://TilesetResources/GrassTopBrown.png" type="Texture" id=12]
+[ext_resource path="res://Inventory/ToolbarDisplay.gd" type="Script" id=13]
 
 [sub_resource type="TileSet" id=1]
 0/name = "DirtTileMap.png 0"
@@ -240,9 +241,6 @@ script = ExtResource( 2 )
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 collision_layer = 2
 script = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="InventoryWrapper" type="CanvasLayer" parent="KinematicBody2D"]
 layer = 128
@@ -305,6 +303,15 @@ margin_bottom = -4.0
 margin_right = 452.0
 margin_bottom = 471.0
 
+[node name="Remote" type="Tabs" parent="KinematicBody2D/InventoryWrapper/InventoryTabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
 [node name="CenterPlayerInventory" type="CenterContainer" parent="KinematicBody2D/InventoryWrapper"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -318,7 +325,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InventoryDisplay" parent="KinematicBody2D/InventoryWrapper/CenterPlayerInventory" instance=ExtResource( 10 )]
+[node name="ToolbarDisplay" parent="KinematicBody2D/InventoryWrapper/CenterPlayerInventory" instance=ExtResource( 10 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -327,6 +334,7 @@ margin_left = 898.0
 margin_top = 92.0
 margin_right = 898.0
 margin_bottom = 92.0
+script = ExtResource( 13 )
 
 [node name="Camera2D" type="Camera2D" parent="KinematicBody2D"]
 current = true
@@ -353,4 +361,4 @@ collide_with_areas = true
 collide_with_bodies = false
 
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]
-[connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay" method="_on_InventoryDisplay_gui_input"]
+[connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" method="_on_InventoryDisplay_gui_input"]

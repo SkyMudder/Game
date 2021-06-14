@@ -3,7 +3,7 @@ extends CenterContainer
 
 signal slot_updated(index)
 
-onready var allInventories = Inventories.allInventories
+onready var playerInventories = Inventories.playerInventories
 var inventory
 
 onready var textureRect = get_node("TextureRect")
@@ -12,6 +12,7 @@ onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 onready var tileMap = get_node("/root/Main/Dirt")
+onready var furnaceView = get_parent().get_parent().get_parent()
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -26,7 +27,7 @@ func displayItem(inventoryDisplay, item):
 		textureRect.texture = emptySlotTexture
 		itemAmount.text = ""
 		# Sets the Object to null because nothing is there anymore
-		allInventories[inventoryDisplay].items[allInventories[inventoryDisplay].items.find(item)] = null
+		inventoryDisplay.items[inventoryDisplay.items.find(item)] = null
 	if selected.visible:
 		emit_signal("slot_updated", get_index())
 	
@@ -34,6 +35,8 @@ func get_drag_data(_position):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
 	if item != null:
+		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
+			Inventories.notifyMoving(inventory.id, true)
 		var dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
@@ -68,7 +71,7 @@ func can_drop_data(_position, data):
 func drop_data(_position, data):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
-	
+	var tmpInventory = Inventories.getFurnaceInventoryByID(data.id)
 	# Check if the Source is an Item and if it is of the same Type
 	if item is Item and item.name == data.item.name:
 		# Check if the Source Slot is the same as the Target Slot
@@ -76,6 +79,8 @@ func drop_data(_position, data):
 		if itemIndex == data.itemIndex:
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
+			if tmpInventory != null:
+				Inventories.notifyMoving(data.id, false)
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -106,7 +111,7 @@ func drop_data(_position, data):
 				item.amount += space
 				data.item.amount = data.previousAmount - space
 		inventory.set(item, itemIndex)
-		allInventories[data.id].set(data.item, data.itemIndex)
+		Inventories.getInventoryByID(data.id).set(data.item, data.itemIndex)
 	# Check if the Source Stack was Split
 	elif data.has("split"):
 		# Check if the Item is not null
@@ -114,7 +119,7 @@ func drop_data(_position, data):
 		# To avoid merging different Types of Objects with each other
 		if item != null:
 			data.item.amount = data.previousAmount	
-			allInventories[data.id].set(data.item, data.itemIndex)
+			Inventories.getInventoryByID(data.id).set(data.item, data.itemIndex)
 		# Check if the Target Slot is empty, add the split Stack to it
 		else:
 			# Add one if the Number of the full Stack was uneven
@@ -122,14 +127,16 @@ func drop_data(_position, data):
 			# Duplicate the Item in Order for it not to share the same value
 			# With the Source Stack
 			if data.previousAmount % 2 != 0:
-				allInventories[data.id].set(data.item.duplicate(), data.itemIndex)
+				Inventories.getInventoryByID(data.id).set(data.item.duplicate(), data.itemIndex)
 				data.item.amount += 1
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
-		allInventories[data.id].set(item, data.itemIndex)
+		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
+	if tmpInventory != null:
+		Inventories.notifyMoving(data.id, false)
 	
 """Mark a Slot in the Toolbar as selected
 This is updated across Slots and shown on the UI

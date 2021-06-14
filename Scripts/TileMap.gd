@@ -7,7 +7,7 @@ onready var tileMapGrass = get_node("../Grass")
 onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
-onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/InventoryDisplay")
+onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 onready var raycast = get_parent().get_node("ObjectPlacementCollision")
 
 var raycastOffset = Vector2(1, 1)
@@ -240,6 +240,7 @@ func instancePlaceableObject(item, position):
 """Gets called when placing an Object is interrupted by an Item Switch"""
 func _on_items_switched(flag):
 	if currentObject != null and flag == 1:
+		Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
 		currentObject.queue_free()
 		currentObject = null
 		emit_signal("stopped_placing", false)

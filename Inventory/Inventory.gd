@@ -6,7 +6,8 @@ signal items_changed(inventoryChanged, index)
 
 var items = []
 	
-var allInventories
+var playerInventories
+var remoteInventories
 	
 var id
 var size
@@ -24,27 +25,27 @@ func _init(inventoryId, inventorySize, inventoryColumns):
 """Automatically determines where to add an Item to the Inventory/Toolbar
 Splits Stacks automatically"""
 func add(item):
-	var x = allInventories.size() - 1
+	var x = playerInventories.size() - 1
 	while x >= 0 and item.amount > 0:
 		var y = 0
-		while y <= allInventories[x].items.size() - 1 and item.amount > 0:
-			if allInventories[x].items[y] != null:
-				if allInventories[x].items[y].name == item.name and allInventories[x].items[y].amount + item.amount < item.stackLimit:
-					allInventories[x].items[y].amount += item.amount
-					allInventories[x].emit_signal("items_changed", allInventories[x].id, y)
+		while y <= playerInventories[x].items.size() - 1 and item.amount > 0:
+			if playerInventories[x].items[y] != null:
+				if playerInventories[x].items[y].name == item.name and playerInventories[x].items[y].amount + item.amount < item.stackLimit:
+					playerInventories[x].items[y].amount += item.amount
+					playerInventories[x].emit_signal("items_changed", playerInventories[x].id, y)
 					return
-				elif allInventories[x].items[y].name == item.name:
+				elif playerInventories[x].items[y].name == item.name:
 					splitAdd(item, x, y)
 			y += 1
 		x -= 1
-	x = allInventories.size() - 1
+	x = playerInventories.size() - 1
 	while x >= 0:
 		var y = 0
-		while y <= allInventories[x].items.size() - 1 and item.amount > 0:
-			if allInventories[x].items[y] == null:
+		while y <= playerInventories[x].items.size() - 1 and item.amount > 0:
+			if playerInventories[x].items[y] == null:
 				if item.amount <= item.stackLimit:
 					addNewItem(item, x, y)
-					allInventories[x].items[y].amount += item.amount
+					playerInventories[x].items[y].amount += item.amount
 					emit_signal("items_changed", id, y)
 					return
 				else:
@@ -63,21 +64,21 @@ Returns True if enough Items have been found, False if not"""
 func seek(item, amount):
 	var amountTaken = 0
 	var need = amount - amountTaken
-	var x = allInventories.size() - 1
+	var x = playerInventories.size() - 1
 	while x >= 0:
-		var y = allInventories[x].items.size() - 1
+		var y = playerInventories[x].items.size() - 1
 		while y >= 0:
-			if allInventories[x].items[y] != null and need:
-				if allInventories[x].items[y].name == item.name:
-					if allInventories[x].items[y].amount >= need:
-						scheduledRemovalInventories.push_back(allInventories.find(allInventories[x]))
+			if playerInventories[x].items[y] != null and need:
+				if playerInventories[x].items[y].name == item.name:
+					if playerInventories[x].items[y].amount >= need:
+						scheduledRemovalInventories.push_back(playerInventories.find(playerInventories[x]))
 						scheduledRemovalIndexes.push_back(y)
 						scheduledRemovalAmounts.push_back(need)
 						amountTaken += need
 						return true
 					else:
-						var available = allInventories[x].items[y].amount
-						scheduledRemovalInventories.push_back(allInventories.find(allInventories[x]))
+						var available = playerInventories[x].items[y].amount
+						scheduledRemovalInventories.push_back(playerInventories.find(playerInventories[x]))
 						scheduledRemovalIndexes.push_back(y)
 						scheduledRemovalAmounts.push_back(available)
 						amountTaken += available
@@ -94,9 +95,9 @@ func set(item, itemIndex):
 	return previousItem
 	
 func swap(sourceInventory, targetInventory, itemIndex, targetItemIndex):
-	var tmp = allInventories[targetInventory].items[targetItemIndex]
-	allInventories[targetInventory].items[targetItemIndex] = allInventories[sourceInventory].items[itemIndex]
-	allInventories[sourceInventory].items[itemIndex] = tmp
+	var tmp = Inventories.getInventoryByID(targetInventory).items[targetItemIndex]
+	Inventories.getInventoryByID(targetInventory).items[targetItemIndex] = Inventories.getInventoryByID(sourceInventory).items[itemIndex]
+	Inventories.getInventoryByID(sourceInventory).items[itemIndex] = tmp
 	emit_signal("items_changed", sourceInventory, itemIndex)
 	emit_signal("items_changed", targetInventory, targetItemIndex)
 	
@@ -110,9 +111,9 @@ func remove(itemIndex):
 Clears the Arrays after the Action is complete"""
 func removeScheduled():
 	for x in range(scheduledRemovalIndexes.size()):
-		allInventories[scheduledRemovalInventories[x]].items[scheduledRemovalIndexes[x]].amount -= scheduledRemovalAmounts[x]
+		playerInventories[scheduledRemovalInventories[x]].items[scheduledRemovalIndexes[x]].amount -= scheduledRemovalAmounts[x]
 	for x in range(scheduledRemovalInventories.size()):
-		allInventories[scheduledRemovalInventories[x]].emit_signal("items_changed", scheduledRemovalInventories[x], scheduledRemovalIndexes[x])
+		playerInventories[scheduledRemovalInventories[x]].emit_signal("items_changed", scheduledRemovalInventories[x], scheduledRemovalIndexes[x])
 	scheduledRemovalInventories.clear()
 	scheduledRemovalIndexes.clear()
 	scheduledRemovalAmounts.clear()
@@ -124,12 +125,13 @@ func setInventorySize(inventorySize):
 """If the Stack that gets added is too big,
 It splits up the Rest on the next Stack"""
 func splitAdd(item, inventoryIndex, itemsIndex):
-	var space = item.stackLimit - allInventories[inventoryIndex].items[itemsIndex].amount
-	allInventories[inventoryIndex].items[itemsIndex].amount += space
+	var space = item.stackLimit - playerInventories[inventoryIndex].items[itemsIndex].amount
+	playerInventories[inventoryIndex].items[itemsIndex].amount += space
 	item.amount -= space
-	allInventories[inventoryIndex].emit_signal("items_changed", allInventories[inventoryIndex].id, itemsIndex)
+	playerInventories[inventoryIndex].emit_signal("items_changed", playerInventories[inventoryIndex].id, itemsIndex)
 	
 """Creates a new Item, meaning it duplicates the given one"""
 func addNewItem(item, inventoryIndex, itemsIndex):
-	allInventories[inventoryIndex].set(item.duplicate(), itemsIndex)
-	allInventories[inventoryIndex].items[itemsIndex].amount = 0
+	playerInventories[inventoryIndex].set(item.duplicate(), itemsIndex)
+	playerInventories[inventoryIndex].items[itemsIndex].amount = 0
+	

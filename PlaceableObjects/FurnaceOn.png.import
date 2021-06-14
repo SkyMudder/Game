@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ForgeOff.png-6a4338226179e997010cb0485506131b.stex"
+path="res://.import/FurnaceOn.png-3938e60173bd995d6fe5458658af7aa7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://PlaceableObjects/ForgeOff.png"
-dest_files=[ "res://.import/ForgeOff.png-6a4338226179e997010cb0485506131b.stex" ]
+source_file="res://PlaceableObjects/FurnaceOn.png"
+dest_files=[ "res://.import/FurnaceOn.png-3938e60173bd995d6fe5458658af7aa7.stex" ]
 
 [params]
 

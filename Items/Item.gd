@@ -7,9 +7,12 @@ export(int) var amount = 1
 export(int) var stackLimit
 export(float) var damageMultiplier
 export(int) var type
+export(bool) var burnable
+export(bool) var smeltable
+export(Resource) var smeltProduct
 export(int) var level
 export(bool) var placeable
-export(int) var object
+export(int) var placeableObject
 
 func getObject():
-	return WorldVariables.placeableObjects[object]
+	return WorldVariables.placeableObjects[placeableObject]

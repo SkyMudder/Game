@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 
-onready var inventory = Inventories.allInventories[0]
+onready var inventory = Inventories.playerInventories[0]
 
 onready var craftingSection = get_node("CraftingSection")
 onready var itemTexture = get_node("CraftingSection/ItemTexture")

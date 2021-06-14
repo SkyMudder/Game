@@ -1,7 +1,7 @@
 extends Sprite
 
 
-onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/InventoryDisplay")
+onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 var item
 
 func _ready():
