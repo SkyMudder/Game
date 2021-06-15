@@ -29,6 +29,7 @@ func _ready():
 	updateInventoryDisplay(self, productInventory, productInventory.id)
 	sourceInventory.connect("items_changed", self, "_on_items_changed")
 	productInventory.connect("items_changed", self, "_on_items_changed")
+	###### CHECK IF ONE CONNECT WORKS ######
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):
@@ -40,6 +41,10 @@ func _on_items_changed(inventoryChanged, index):
 			emit_signal("queue_updated", index, 1)
 	elif inventoryChanged == productInventory.id:
 		updateInventorySlotDisplay(self, productInventory, inventoryChanged, index)
+		if Inventories.getInventoryByID(inventoryChanged).items[index] != null:
+			emit_signal("queue_updated", index, 0)
+		else:
+			emit_signal("queue_updated", index, 1)
 	
 func addInventorySlotsFurnace(targetInventory, targetContainer, amount):
 	for _x in range(amount):

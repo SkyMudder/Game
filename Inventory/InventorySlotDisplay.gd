@@ -14,6 +14,8 @@ onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 onready var tileMap = get_node("/root/Main/Dirt")
 onready var furnaceView = get_parent().get_parent().get_parent()
 
+var picking = false
+
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
 If the Stack only has one Item, the Amount is not shown on the UI"""
@@ -34,16 +36,17 @@ func displayItem(inventoryDisplay, item):
 func get_drag_data(_position):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
+	var data = {}
 	if item != null:
+		picking = true
 		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
-			Inventories.notifyMoving(inventory.id, true)
+			Inventories.notifyMoving(true)
 		var dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
 		# For half-splitting Item Stacks
 		if Input.is_action_pressed("ctrl"):
 			if item is Item:
-				var data = {}
 				data.id = inventory.id
 				data.previousAmount = item.amount
 				item.amount /= 2
@@ -57,7 +60,6 @@ func get_drag_data(_position):
 		else:
 			item = inventory.remove(itemIndex)
 			if item is Item:
-				var data = {}
 				data.id = inventory.id
 				data.item = item
 				data.itemIndex = itemIndex
@@ -80,7 +82,7 @@ func drop_data(_position, data):
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
 			if tmpInventory != null:
-				Inventories.notifyMoving(data.id, false)
+				Inventories.notifyMoving(false)
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -136,7 +138,7 @@ func drop_data(_position, data):
 		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
 	if tmpInventory != null:
-		Inventories.notifyMoving(data.id, false)
+		Inventories.notifyMoving(false)
 	
 """Mark a Slot in the Toolbar as selected
 This is updated across Slots and shown on the UI

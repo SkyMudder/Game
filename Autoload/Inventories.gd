@@ -1,9 +1,9 @@
 extends Node
 
 
-const Inventory = preload("res://Inventory/Inventory.gd")
-
 signal resume
+
+const Inventory = preload("res://Inventory/Inventory.gd")
 
 onready var currentInventory = 0
 var currentFurnace = 0
@@ -56,8 +56,11 @@ func getFurnaceInventoryByID(inventoryID):
 		if x.id == inventoryID:
 			return x
 	
-func notifyMoving(_inventoryID, status):
-	if status:
+func notifyMoving(state):
+	if state:
 		moving = true
+		print("PAUSED")
 	else:
+		moving = false
 		emit_signal("resume")
+		print("RESUMED")

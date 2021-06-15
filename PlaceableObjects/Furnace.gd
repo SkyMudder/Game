@@ -11,9 +11,6 @@ onready var hurtbox = get_node("Hurtbox").get_child(0)
 onready var ui = get_node("FurnaceView")
 onready var fuelProgress = get_node("FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
-var threadBurn
-var threadSmelt
-
 var queue = []
 
 var previousCollisionShape
@@ -21,12 +18,16 @@ var previousHurtboxShape
 
 var currentlyBurning = false
 var currentlySmelting = false
-var waiting
+
 var fuel = 0
 
-const burnDuration = 1.0
-const smeltDuration = 4.0
+const burnDuration = 0.5
+const smeltDuration = 1.0
 
+"""Deactivate _process, meaning Burning or Smelting
+Connect the Signal for updating the Queue
+Make the Furnace ready for Blueprint
+Collisions and UI are deactivated"""
 func _ready():
 	set_process(false)
 	ui.hide()
@@ -35,33 +36,35 @@ func _ready():
 	previousHurtboxShape = hurtbox.shape
 	furnace.texture = furnaceNotPlaceable
 	
+"""Runs while there are Items in the Queue"""
 func _process(_delta):
-	if queue != null:
-		if !currentlyBurning:
-			for x in queue:
-				burn(x)
-				if getAmount(ui.sourceInventory, x) == null:
-					queue.erase(x)
-		if !currentlySmelting:
-			for x in queue:
-				smelt(x)
-				if getAmount(ui.sourceInventory, x) == null:
-					queue.erase(x)
+	var start = OS.get_ticks_usec()
+	if queue.size() > 0:
+		if readyToBurn():
+			burn()
+		if readyToSmelt():
+			smelt()
 	else:
+		print(queue)
 		set_process(false)
+	var end = OS.get_ticks_usec()
+	print(end - start)
 	
+"""Set the Texture using a Blueprint State"""
 func setBlueprintState(state):
 	if state == 0:
 		furnace.texture = furnaceNotPlaceable
 	elif state == 1:
 		furnace.texture = furnacePlaceable
 	
+"""Set the Texture using a Furnace State"""
 func setState(state):
 	if state == 0:
 		furnace.texture = furnaceOff
 	elif state == 1:
 		furnace.texture = furnaceOn
 	
+"""Toggle Collision"""
 func setCollision(state):
 	if state == 0:
 		collision.shape = null
@@ -70,96 +73,126 @@ func setCollision(state):
 		collision.shape = previousCollisionShape
 		hurtbox.shape = previousHurtboxShape
 	
-func checkItemBurnable(itemIndex):
-	if ui.sourceInventory.items[itemIndex] != null:
-		if ui.sourceInventory.items[itemIndex].burnable:
-			return true
-	
-func checkItemSmeltable(itemIndex):
-	if ui.sourceInventory.items[itemIndex] != null:
-		if ui.sourceInventory.items[itemIndex].smeltable:
-			return true
-	
-func burn(itemIndex):
-	if checkItemBurnable(itemIndex):
+"""Burn a Stack until the Fuel has reached its max Value
+Or until the Stack has no Items"""
+func burn():
+	var sourceItems = ui.sourceInventory.items
+	var index = findBurnable()
+	if index != null:
 		currentlyBurning = true
-		while ui.sourceInventory.items[itemIndex].amount > 0 and fuel < 100:
+		while fuel < 100 and sourceItems[index].amount > 0:
 			yield(get_tree().create_timer(burnDuration), "timeout")
+			if !checkBurnable(sourceItems[index]):
+				break
+			sourceItems[index].amount -= 1
 			fuel += 20
-			removeOne(itemIndex)
 			fuelProgress.value = fuel
-			if getAmount(ui.sourceInventory, itemIndex) > 0:
-				ui.sourceInventory.emit_signal("items_changed", ui.sourceInventory.id, itemIndex)
-		currentlyBurning = false
-		if getAmount(ui.sourceInventory, itemIndex) == 0:
-			ui.sourceInventory.remove(itemIndex)
-	
-func smelt(itemIndex):
-	var amount = 0
-	var item
-	if checkItemSmeltable(itemIndex):
-		currentlySmelting = true
-		while getAmount(ui.sourceInventory, itemIndex) > 0 and fuel > 0 and checkSpace():
-			print("TARRO")
-			yield(get_tree().create_timer(burnDuration), "timeout")
-			if Inventories.moving:
-				set_process(false)
-				print("moving")
-				yield(Inventories, "resume")
-				Inventories.moving = false
-				print("not moving")
-				set_process(true)
-			fuel -= 20
-			removeOne(itemIndex)
-			fuelProgress.value = fuel
-			if getAmount(ui.sourceInventory, itemIndex) > 0:
-				ui.sourceInventory.emit_signal("items_changed", ui.sourceInventory.id, itemIndex)
-			amount = getAmount(ui.productInventory, 0)
-			if amount != null:
-				item = ui.sourceInventory.items[itemIndex].smeltProduct
-				item.amount = ui.productInventory.items[0].amount + 1
-				ui.productInventory.set(item.duplicate(), 0)
+			if sourceItems[index].amount > 0:
+				ui.sourceInventory.set(sourceItems[index], index)
 			else:
-				item = ui.sourceInventory.items[itemIndex].smeltProduct
+				ui.sourceInventory.remove(index)
+				break
+		currentlyBurning = false
+	
+"""Burn a Stack until there is no Fuel anymore,
+Until the Stack has no Items
+Or until the Product Inventory is full
+Also does multiple Checks to guarantee that an Item like Wood
+Does not have its value incremented when put in the Product Inventory
+"""
+func smelt():
+	var sourceItems = ui.sourceInventory.items
+	var targetItems = ui.productInventory.items
+	var index = findSmeltable()
+	if index != null:
+		var item = getProductFromSource(sourceItems[index])
+		currentlySmelting = true
+		while fuel > 0 and sourceItems[index].amount > 0:
+			if targetItems[0] != null:
+				if targetItems[0].amount == item.stackLimit:
+						break
+			yield(get_tree().create_timer(smeltDuration), "timeout")
+			if Inventories.moving:
+				yield(Inventories, "resume")
+			if !checkSmeltable(sourceItems[index]) or checkSmeltable(targetItems[0]) or checkBurnable(targetItems[0]):
+				break
+			sourceItems[index].amount -= 1
+			fuel -= 20
+			fuelProgress.value = fuel
+			if sourceItems[index].amount > 0:
+				ui.sourceInventory.set(sourceItems[index], index)
+			else:
+				ui.sourceInventory.remove(index)
+			if targetItems[0] == null:
 				item.amount = 1
 				ui.productInventory.set(item.duplicate(), 0)
+			else:
+				item = targetItems[0]
+				item.amount += 1
+				ui.productInventory.set(item.duplicate(), 0)
 		currentlySmelting = false
-		var tmp = getAmount(ui.sourceInventory, itemIndex)
-		if tmp != null:
-			if tmp == 0:
-				ui.sourceInventory.remove(itemIndex)
 	
-func removeOne(itemIndex):
-	if ui.sourceInventory.items[itemIndex] != null:
-		ui.sourceInventory.items[itemIndex].amount -= 1
+"""Return the first burnable Item Index found in the Queue
+If no Item is found, null is returned"""
+func findBurnable():
+	for x in queue:
+		if checkBurnable(ui.sourceInventory.items[x]):
+			return x
 	
-func getAmount(inventory, itemIndex):
-	if inventory.items[itemIndex] != null:
-		return inventory.items[itemIndex].amount
+"""Checks if a specific Item is Burnable
+Returns a Boolean"""
+func checkBurnable(item):
+	if item != null:
+		return item.burnable
+	return false
 	
-func checkSpace():
-	if ui.productInventory.items[0] != null:
-		if ui.productInventory.items[0].amount < ui.productInventory.items[0].stackLimit:
-			return true
-	if ui.productInventory.items[0] == null:
+"""Return the first smeltable Item Index found in the Queue
+If no Item is found, null is returned"""
+func findSmeltable():
+	for x in queue:
+		if checkSmeltable(ui.sourceInventory.items[x]):
+			return x
+	
+"""Checks if a specific Item is Smeltable
+Returns a Boolean"""
+func checkSmeltable(item):
+	if item != null:
+		return item.smeltable
+	return false
+	
+"""Check if Items are already being burned"""
+func readyToBurn():
+	if !currentlyBurning:
 		return true
 	return false
 	
+"""Check if Items are already being smelted"""
+func readyToSmelt():
+	if !currentlySmelting:
+		return true
+	return false
+	
+func getProductFromSource(item):
+	return item.smeltProduct
+	
+"""This gets called when Items enter or leave the Furnace
+They are added or removed from the Queue accordingly"""
 func _on_queue_updated(itemIndex, flag):
 	if flag == 0:
 		if !itemIndex in queue:
 			queue.push_back(itemIndex)
-		set_process(true)
+			set_process(true)
 	else:
-		if itemIndex in queue:
-			queue.erase(itemIndex)
-		set_process(true)
+		queue.erase(itemIndex)
 	print(queue)
 	
+"""For closing the Furnace Inventory when opening the Main Inventory
+Or right Clicking anywhere"""
 func _input(_event):
 	if Input.is_action_just_pressed("ui_focus_next") or Input.is_action_just_pressed("mouse_right"):
 		ui.hide()
 	
+"""Toggle the Furnace UI Visibility"""
 func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 	if Input.is_action_just_pressed("mouse_right"):
 		if ui.visible:
