@@ -17,7 +17,8 @@ func _ready():
 	updateInventoryDisplay(self, inventory, inventory.id)
 	if inventory == playerInventories[1]:
 		get_child(currentlySelected).select()
-	inventory.add(preload("res://Items/Furnace.tres"))
+	for _x in range(3):
+		inventory.add(preload("res://Items/Furnace.tres"))
 	inventory.connect("items_changed", self, "_on_items_changed")
 	inventory.emit_signal("items_changed", 0, 0)
 	inventory.emit_signal("items_changed", 1, 0)

@@ -14,8 +14,6 @@ onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 onready var tileMap = get_node("/root/Main/Dirt")
 onready var furnaceView = get_parent().get_parent().get_parent()
 
-var picking = false
-
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
 If the Stack only has one Item, the Amount is not shown on the UI"""
@@ -38,7 +36,6 @@ func get_drag_data(_position):
 	var item = inventory.items[itemIndex]
 	var data = {}
 	if item != null:
-		picking = true
 		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
 			Inventories.notifyMoving(true)
 		var dragPreview = TextureRect.new()
@@ -146,21 +143,24 @@ If the Item is Placeable, initiate the Placement
 Update the Player Item if the Slot has one, otherwise set it to null"""
 func select():
 	selected.show()
-	if inventory.items[get_parent().currentlySelected] != null:
-		playerItem.item = inventory.items[get_parent().currentlySelected]
+	if inventory.items[get_index()] != null:
+		playerItem.item = inventory.items[get_index()]
 		if playerItem.item.placeable:
-			tileMap.connect("stopped_placing", self, "_on_stopped_placing")
-			tileMap.instancePlaceableObject(inventory.items[get_parent().currentlySelected], get_global_mouse_position())
+			if tileMap.currentObject != null:
+				tileMap.cancel()
+			if tileMap.currentObject == null:
+				tileMap.instancePlaceableObject(inventory.items[get_index()], get_global_mouse_position())
+			tileMap.connect("stopped_placing", self, "_on_stopped_placing", [], CONNECT_ONESHOT)
 	else:
+		if tileMap.currentObject != null:
+			tileMap.cancel()
 		playerItem.item = null
 	
 """Deselect a Slot"""
 func deselect():
 	selected.hide()
-	
-"""If the Player placed an Object, remove it from the Inventory
-And disconnect the Signals, otherwise only disconnect the Signals"""
+
 func _on_stopped_placing(placed):
 	if placed:
-		inventory.remove(get_parent().currentlySelected)
-	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")
+		playerInventories[1].remove(get_index())
+		print(get_index())

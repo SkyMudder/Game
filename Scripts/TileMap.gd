@@ -231,24 +231,14 @@ func instancePlaceableObject(item, position):
 	var objectScene = item.getObject()
 	var newObject = objectScene.instance()
 	objects.add_child(newObject)
+	print("Created and added to Tree")
 	positionObject(newObject, position)
 	newObject.setCollision(0)
 	currentObject = newObject
-	blueprint(newObject)
-	
-"""Gets called when placing an Object is interrupted by an Item Switch"""
-func _on_items_switched(flag):
-	if currentObject != null and flag == 1:
-		Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
-		currentObject.queue_free()
-		currentObject = null
-		emit_signal("stopped_placing", false)
-		toolbar.disconnect("item_switched", self, "_on_items_switched")
+	blueprint(currentObject)
 	
 """Checks if the Player clicked LMB to place an object"""
 func checkPlaceObject():
-	if !toolbar.is_connected("item_switched", self, "_on_items_switched"):
-		toolbar.connect("item_switched", self, "_on_items_switched")
 	blueprint(currentObject)
 	if Input.is_mouse_button_pressed(BUTTON_LEFT) and areaClear:
 		return true
@@ -256,9 +246,14 @@ func checkPlaceObject():
 """Places an Object"""
 func placeObject():
 	if checkPlaceObject():
-		emit_signal("stopped_placing", true)
 		currentObject.setState(0)
 		currentObject.setCollision(1)
 		currentObject.add_to_group("Objects")
 		currentObject = null
-		toolbar.disconnect("item_switched", self, "_on_items_switched")
+		emit_signal("stopped_placing", true)
+	
+func cancel():
+	Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
+	currentObject.queue_free()
+	currentObject = null
+	emit_signal("stopped_placing", false)

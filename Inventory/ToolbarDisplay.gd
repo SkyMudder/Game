@@ -6,6 +6,7 @@ signal item_switched(flag)	# Flag: 0 if the Player Item should be updated
 
 onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
 onready var inventory = Inventories.toolbar
+
 var currentlySelected = 1
 
 """Adds the given Amount of Inventory Slots to the UI
@@ -39,7 +40,6 @@ func _input(event):
 			currentlySelected = inventory.size - 1
 		if get_child(currentlySelected).inventory == playerInventories[1]:
 			get_child(currentlySelected).select()
-		emit_signal("item_switched", 1)
 	if event.is_action_pressed("scroll_down"):
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected + 1 > inventory.size - 1):
@@ -48,7 +48,6 @@ func _input(event):
 			currentlySelected = 0
 		if get_child(currentlySelected).inventory == playerInventories[1]:
 			get_child(currentlySelected).select()
-		emit_signal("item_switched", 1)
 	
 """For updating the Player Item
 When an Item is placed in an already selected Slot"""
