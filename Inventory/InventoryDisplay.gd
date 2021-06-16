@@ -17,19 +17,6 @@ func _ready():
 	updateInventoryDisplay(self, inventory, inventory.id)
 	if inventory == playerInventories[1]:
 		get_child(currentlySelected).select()
-	for _x in range(3):
-		inventory.add(preload("res://Items/Furnace.tres"))
-	inventory.connect("items_changed", self, "_on_items_changed")
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
-	for _x in range(50):
-		inventory.add(preload("res://Items/Copper.tres"))
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
-	for _x in range(50):
-		inventory.add(preload("res://Items/Wood.tres"))
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):

@@ -41,11 +41,12 @@ func get_drag_data(_position):
 		var dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
+		data.id = inventory.id
+		data.previousAmount = item.amount
+		Inventories.setUnhandledData(inventory, item, itemIndex)
 		# For half-splitting Item Stacks
 		if Input.is_action_pressed("ctrl"):
 			if item is Item:
-				data.id = inventory.id
-				data.previousAmount = item.amount
 				item.amount /= 2
 				data.item = item.duplicate()
 				inventory.emit_signal("items_changed", inventory.id, itemIndex)
@@ -57,10 +58,8 @@ func get_drag_data(_position):
 		else:
 			item = inventory.remove(itemIndex)
 			if item is Item:
-				data.id = inventory.id
 				data.item = item
 				data.itemIndex = itemIndex
-				data.previousAmount = item.amount
 				set_drag_preview(dragPreview)
 				return data
 	
@@ -80,6 +79,7 @@ func drop_data(_position, data):
 			inventory.set(item, itemIndex)
 			if tmpInventory != null:
 				Inventories.notifyMoving(false)
+			Inventories.setUnhandledData(null, null, null)
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -136,6 +136,7 @@ func drop_data(_position, data):
 		inventory.set(data.item, itemIndex)
 	if tmpInventory != null:
 		Inventories.notifyMoving(false)
+	Inventories.setUnhandledData(null, null, null)
 	
 """Mark a Slot in the Toolbar as selected
 This is updated across Slots and shown on the UI

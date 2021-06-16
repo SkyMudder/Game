@@ -9,6 +9,7 @@ onready var currentInventory = 0
 var currentFurnace = 0
 
 var moving
+var unhandledData = {}
 
 var playerInventory = Inventory.new(0, 24, 6)
 var toolbar = Inventory.new(1, 10, 10)
@@ -69,3 +70,8 @@ func notifyMoving(state):
 		moving = false
 		emit_signal("resume")
 		print("RESUMED")
+	
+func setUnhandledData(inventory, item, index):
+	unhandledData.inventory = inventory
+	unhandledData.item = item
+	unhandledData.index = index

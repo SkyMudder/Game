@@ -32,3 +32,10 @@ func loadInventorySlots(object, amount):
 		if object.inventory.items[x] != null:
 			object.get_child(x).textureRect.texture = object.inventory.items[x].texture
 			object.get_child(x).itemAmount.text = str(object.inventory.items[x].amount)
+	
+func _unhandled_input(event):
+	var data = Inventories.unhandledData
+	if event.is_action_released("mouse_left"):
+		if data.has("inventory"):
+			if data.inventory != null:
+				data.inventory.set(data.item, data.index)

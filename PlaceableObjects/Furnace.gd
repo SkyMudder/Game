@@ -23,8 +23,8 @@ var exists = true
 
 var fuel = 0
 
-const burnDuration = 0.5
-const smeltDuration = 1.0
+const burnDuration = 0.3
+const smeltDuration = 0.7
 
 """Deactivate _process, meaning Burning or Smelting
 Connect the Signal for updating the Queue
@@ -104,7 +104,9 @@ func smelt():
 	var targetItems = ui.productInventory.items
 	var index = findSmeltable()
 	if index != null:
-		var item = getProductFromSource(sourceItems[index])
+		var item = getProductFromSource(sourceItems[index]).duplicate()
+		if item == null:
+			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		item.amount = 1
 		currentlySmelting = true
 		while fuel > 0 and sourceItems[index].amount > 0:
@@ -122,7 +124,7 @@ func smelt():
 			fuel -= 20
 			fuelProgress.value = fuel
 			if sourceItems[index].amount > 0:
-				ui.sourceInventory.set(sourceItems[index], index)
+				ui.sourceInventory.set(sourceItems[index].duplicate(), index)
 			else:
 				ui.sourceInventory.remove(index)
 			if targetItems[0] == null:

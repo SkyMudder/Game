@@ -7,7 +7,7 @@ signal item_switched(flag)	# Flag: 0 if the Player Item should be updated
 onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
 onready var inventory = Inventories.toolbar
 
-var currentlySelected = 1
+var currentlySelected = 9
 
 """Adds the given Amount of Inventory Slots to the UI
 Connects Signal for when Items changed
@@ -24,6 +24,19 @@ func _ready():
 	inventory.connect("items_changed", self, "_on_items_changed")
 	for x in get_children():
 		x.connect("slot_updated", self, "_on_slot_updated")
+	for _x in range(7):
+		inventory.add(preload("res://Items/Furnace.tres"))
+	inventory.connect("items_changed", self, "_on_items_changed")
+	inventory.emit_signal("items_changed", 0, 0)
+	inventory.emit_signal("items_changed", 1, 0)
+	for _x in range(50):
+		inventory.add(preload("res://Items/Copper.tres"))
+	inventory.emit_signal("items_changed", 0, 0)
+	inventory.emit_signal("items_changed", 1, 0)
+	for _x in range(50):
+		inventory.add(preload("res://Items/Wood.tres"))
+	inventory.emit_signal("items_changed", 0, 0)
+	inventory.emit_signal("items_changed", 1, 0)
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):
