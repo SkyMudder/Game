@@ -131,7 +131,6 @@ func smelt():
 				item.amount = 1
 				ui.productInventory.set(item.duplicate(), 0)
 			else:
-				item = targetItems[0]
 				item.amount += 1
 				ui.productInventory.set(item.duplicate(), 0)
 		currentlySmelting = false

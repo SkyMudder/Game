@@ -42,8 +42,9 @@ func get_drag_data(_position):
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
 		data.id = inventory.id
+		data.name = item.name
 		data.previousAmount = item.amount
-		Inventories.setUnhandledData(inventory, item, itemIndex)
+		Inventories.setUnhandledData(inventory, item, item.amount, itemIndex)
 		# For half-splitting Item Stacks
 		if Input.is_action_pressed("ctrl"):
 			if item is Item:
@@ -53,6 +54,7 @@ func get_drag_data(_position):
 				data.itemIndex = itemIndex
 				data.split = true
 				set_drag_preview(dragPreview)
+				print(inventory)
 				return data
 		# For moving Items
 		else:
@@ -67,6 +69,7 @@ func can_drop_data(_position, data):
 	return data is Dictionary and data.has("item")
 	
 func drop_data(_position, data):
+	print("FRRRRRRR")
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
 	var tmpInventory = Inventories.getFurnaceInventoryByID(data.id)
@@ -79,7 +82,7 @@ func drop_data(_position, data):
 			inventory.set(item, itemIndex)
 			if tmpInventory != null:
 				Inventories.notifyMoving(false)
-			Inventories.setUnhandledData(null, null, null)
+			Inventories.setUnhandledData(null, null, null, null)
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -136,7 +139,7 @@ func drop_data(_position, data):
 		inventory.set(data.item, itemIndex)
 	if tmpInventory != null:
 		Inventories.notifyMoving(false)
-	Inventories.setUnhandledData(null, null, null)
+	Inventories.setUnhandledData(null, null, null, null)
 	
 """Mark a Slot in the Toolbar as selected
 This is updated across Slots and shown on the UI

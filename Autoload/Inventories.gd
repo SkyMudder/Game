@@ -71,7 +71,8 @@ func notifyMoving(state):
 		emit_signal("resume")
 		print("RESUMED")
 	
-func setUnhandledData(inventory, item, index):
+func setUnhandledData(inventory, item, amount, index):
 	unhandledData.inventory = inventory
 	unhandledData.item = item
+	unhandledData.amount = amount
 	unhandledData.index = index

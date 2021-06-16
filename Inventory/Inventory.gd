@@ -88,7 +88,7 @@ func seek(item, amount):
 		x -= 1
 	return false
 
-func set(item, itemIndex):
+func set(item, itemIndex):	
 	var previousItem = items[itemIndex]
 	items[itemIndex] = item
 	emit_signal("items_changed", id, itemIndex)

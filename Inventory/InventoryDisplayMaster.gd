@@ -4,7 +4,7 @@ extends GridContainer
 onready var playerInventories = Inventories.playerInventories
 onready var furnaceInventories = Inventories.furnaceInventories
 onready var tileMap = get_node("/root/Main/Dirt")
-	
+
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay(object, inventory, inventoryChanged):
 	for itemIndex in inventory.size:
@@ -38,4 +38,7 @@ func _unhandled_input(event):
 	if event.is_action_released("mouse_left"):
 		if data.has("inventory"):
 			if data.inventory != null:
-				data.inventory.set(data.item, data.index)
+				var item = data.item
+				item.amount = data.amount
+				data.inventory.set(item, data.index)
+				Inventories.notifyMoving(false)

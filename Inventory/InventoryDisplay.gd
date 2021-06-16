@@ -17,6 +17,7 @@ func _ready():
 	updateInventoryDisplay(self, inventory, inventory.id)
 	if inventory == playerInventories[1]:
 		get_child(currentlySelected).select()
+	inventory.connect("items_changed", self, "_on_items_changed")
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):

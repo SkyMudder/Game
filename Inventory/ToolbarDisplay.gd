@@ -26,7 +26,6 @@ func _ready():
 		x.connect("slot_updated", self, "_on_slot_updated")
 	for _x in range(7):
 		inventory.add(preload("res://Items/Furnace.tres"))
-	inventory.connect("items_changed", self, "_on_items_changed")
 	inventory.emit_signal("items_changed", 0, 0)
 	inventory.emit_signal("items_changed", 1, 0)
 	for _x in range(50):
