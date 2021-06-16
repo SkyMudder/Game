@@ -8,8 +8,8 @@ onready var furnaceNotPlaceable = preload("res://PlaceableObjects/FurnaceBluepri
 onready var furnacePlaceable = preload("res://PlaceableObjects/FurnaceBlueprintPlaceable.png")
 onready var collision = get_node("CollisionShape2D")
 onready var hurtbox = get_node("Hurtbox").get_child(0)
-onready var ui = get_node("FurnaceView")
-onready var fuelProgress = get_node("FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
+onready var ui = get_node("FurnaceViewWrapper/FurnaceView")
+onready var fuelProgress = get_node("FurnaceViewWrapper/FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
 var queue = []
 
@@ -18,6 +18,8 @@ var previousHurtboxShape
 
 var currentlyBurning = false
 var currentlySmelting = false
+
+var exists = true
 
 var fuel = 0
 
@@ -106,6 +108,7 @@ func smelt():
 	var index = findSmeltable()
 	if index != null:
 		var item = getProductFromSource(sourceItems[index])
+		item.amount = 1
 		currentlySmelting = true
 		while fuel > 0 and sourceItems[index].amount > 0:
 			if targetItems[0] != null:
@@ -127,7 +130,7 @@ func smelt():
 				item.amount = 1
 				ui.productInventory.set(item.duplicate(), 0)
 			else:
-				item = targetItems[0].duplicate()
+				item = targetItems[0]
 				item.amount += 1
 				ui.productInventory.set(item.duplicate(), 0)
 		currentlySmelting = false
@@ -199,3 +202,10 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 			ui.hide()
 		else:
 			ui.show()
+	if Input.is_action_just_pressed("mouse_left"):
+		if Input.is_action_pressed("ctrl"):
+			if exists:
+				Inventories.playerInventory.add(preload("res://Items/Furnace.tres"))
+				Inventories.removeFurnaceInventory(ui.sourceInventory.id)
+				queue_free()
+				exists = false

@@ -117,7 +117,7 @@ func drop_data(_position, data):
 		# So it doesn't get merged and it's old Value gets restored
 		# To avoid merging different Types of Objects with each other
 		if item != null:
-			data.item.amount = data.previousAmount	
+			data.item.amount = data.previousAmount
 			Inventories.getInventoryByID(data.id).set(data.item, data.itemIndex)
 		# Check if the Target Slot is empty, add the split Stack to it
 		else:
@@ -163,4 +163,3 @@ func deselect():
 func _on_stopped_placing(placed):
 	if placed:
 		playerInventories[1].remove(get_index())
-		print(get_index())

@@ -16,20 +16,7 @@ onready var fuelLabel = get_node("FurnaceHBoxContainer/InventoryVBoxContainer/Fu
 Connects Signal for when Items changed
 Updates the Inventory on the UI"""
 func _ready():
-	sourceInventory.remoteInventories = Inventories.furnaceInventories
-	productInventory.remoteInventories = Inventories.furnaceInventories
-	addInventorySlotsFurnace(sourceInventory, sourceContainer, sourceInventory.size)
-	addInventorySlotsFurnace(productInventory, productContainer, productInventory.size)
-	columns = sourceInventory.columns
-	for x in sourceContainer.get_children():
-		x.inventory = sourceInventory
-	for x in productContainer.get_children():
-		x.inventory = productInventory
-	updateInventoryDisplay(self, sourceInventory, sourceInventory.id)
-	updateInventoryDisplay(self, productInventory, productInventory.id)
-	sourceInventory.connect("items_changed", self, "_on_items_changed")
-	productInventory.connect("items_changed", self, "_on_items_changed")
-	###### CHECK IF ONE CONNECT WORKS ######
+	tileMap.connect("stopped_placing", self, "_on_stopped_placing")
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):
@@ -53,7 +40,28 @@ func addInventorySlotsFurnace(targetInventory, targetContainer, amount):
 	targetInventory.setInventorySize(targetInventory.size)
 	
 func getSlot(index, inventoryChanged):
+	print("1")
 	if inventoryChanged == sourceInventory.id:
 		return sourceContainer.get_child(index)
 	elif inventoryChanged == productInventory.id:
 		return productContainer.get_child(index)
+	
+"""Adds the given Amount of Inventory Slots to the UI
+Connects Signal for when Items changed
+Updates the Inventory on the UI"""
+func _on_stopped_placing(placed):
+	if placed:
+		print(sourceContainer)
+		print(productContainer)
+		addInventorySlotsFurnace(sourceInventory, sourceContainer, sourceInventory.size)
+		addInventorySlotsFurnace(productInventory, productContainer, productInventory.size)
+		columns = sourceInventory.columns
+		for x in sourceContainer.get_children():
+			x.inventory = sourceInventory
+		for x in productContainer.get_children():
+			x.inventory = productInventory
+		updateInventoryDisplay(self, sourceInventory, sourceInventory.id)
+		updateInventoryDisplay(self, productInventory, productInventory.id)
+		sourceInventory.connect("items_changed", self, "_on_items_changed")
+		productInventory.connect("items_changed", self, "_on_items_changed")
+	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")

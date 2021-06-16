@@ -240,12 +240,13 @@ func instancePlaceableObject(item, position):
 """Checks if the Player clicked LMB to place an object"""
 func checkPlaceObject():
 	blueprint(currentObject)
-	if Input.is_mouse_button_pressed(BUTTON_LEFT) and areaClear:
+	if Input.is_mouse_button_pressed(BUTTON_LEFT) and !Input.is_action_pressed("ctrl") and areaClear:
 		return true
 	
 """Places an Object"""
 func placeObject():
 	if checkPlaceObject():
+		print("PLACED")
 		currentObject.setState(0)
 		currentObject.setCollision(1)
 		currentObject.add_to_group("Objects")

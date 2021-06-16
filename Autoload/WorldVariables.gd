@@ -1,6 +1,5 @@
 extends Node
 
-
 const __tileSizePixels : int = 32	# Tile Size in Engine Units
 const __chunkSizeTiles : int = 10	# Chunk Size in Tiles
 const __chunkSizePixels : int = __tileSizePixels * __chunkSizeTiles	# Chunk Size in Enigne Units

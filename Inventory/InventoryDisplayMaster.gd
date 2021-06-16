@@ -7,7 +7,7 @@ onready var tileMap = get_node("/root/Main/Dirt")
 	
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay(object, inventory, inventoryChanged):
-	for itemIndex in inventory.items.size():
+	for itemIndex in inventory.size:
 		object.updateInventorySlotDisplay(object, inventory, inventoryChanged, itemIndex)
 	
 """Updates an Inventory Slot at a given Index"""

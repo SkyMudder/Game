@@ -98,8 +98,6 @@ func swap(sourceInventory, targetInventory, itemIndex, targetItemIndex):
 	var tmp = Inventories.getInventoryByID(targetInventory).items[targetItemIndex]
 	Inventories.getInventoryByID(targetInventory).items[targetItemIndex] = Inventories.getInventoryByID(sourceInventory).items[itemIndex]
 	Inventories.getInventoryByID(sourceInventory).items[itemIndex] = tmp
-	emit_signal("items_changed", sourceInventory, itemIndex)
-	emit_signal("items_changed", targetInventory, targetItemIndex)
 	
 func remove(itemIndex):
 	var previousItem = items[itemIndex]

@@ -24,19 +24,24 @@ func _ready():
 	
 func newFurnaceInventory():
 	furnaceInventories.push_back(Inventory.new(currentInventory, 3, 1))
+	print("NEW INVENTORY " + str(currentInventory))
 	currentInventory += 1
 	furnaceInventories.push_back(Inventory.new(currentInventory, 1, 1))
+	print("NEW INVENTORY " + str(currentInventory))
 	currentInventory += 1
+	print("NEW INVENTORY FURNACE " + str(currentFurnace))
 	currentFurnace += 2
+	print(furnaceInventories)
 	return currentFurnace - 2
 	
 func removeFurnaceInventory(inventoryID):
-	for x in furnaceInventories:
-		if x.id == inventoryID:
-			furnaceInventories.remove(inventoryID - currentInventory + currentFurnace)
-			furnaceInventories.remove(inventoryID - currentInventory + currentFurnace)
-			currentFurnace -= 2
-			currentInventory -= 2
+	furnaceInventories.erase(getInventoryByID(inventoryID))
+	print("REMOVE INVENTORY " + str(inventoryID))
+	furnaceInventories.erase(getInventoryByID(inventoryID + 1))
+	print("REMOVE INVENTORY " + str(inventoryID + 1))
+	currentInventory -= 2
+	currentFurnace -= 2
+	print(furnaceInventories)
 	
 func getInventoryByID(inventoryID):
 	var inventory = getPlayerInventoryByID(inventoryID)

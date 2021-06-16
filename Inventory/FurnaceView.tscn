@@ -5,13 +5,12 @@
 [ext_resource path="res://Inventory/FurnaceView.gd" type="Script" id=4]
 
 [node name="FurnaceView" instance=ExtResource( 1 )]
+rect_clip_content = true
 script = ExtResource( 4 )
 
 [node name="FurnaceHBoxContainer" type="HBoxContainer" parent="." index="0"]
-margin_right = 1920.0
+margin_right = 104.0
 margin_bottom = 28.0
-size_flags_horizontal = 3
-size_flags_vertical = 2
 
 [node name="RemotePlayerInventoryDisplay" parent="FurnaceHBoxContainer" index="0" instance=ExtResource( 1 )]
 anchor_left = 0.0
@@ -27,21 +26,20 @@ script = ExtResource( 2 )
 
 [node name="InventoryVBoxContainer" type="VBoxContainer" parent="FurnaceHBoxContainer" index="1"]
 margin_left = 4.0
-margin_right = 1920.0
+margin_right = 104.0
 margin_bottom = 28.0
-size_flags_horizontal = 3
+size_flags_horizontal = 13
 size_flags_vertical = 5
 
 [node name="SourceHBoxContainer" type="HBoxContainer" parent="FurnaceHBoxContainer/InventoryVBoxContainer" index="0"]
-margin_left = 958.0
-margin_right = 958.0
+margin_left = 50.0
+margin_right = 50.0
 size_flags_horizontal = 6
 size_flags_vertical = 3
 
 [node name="FuelHBoxContainer" type="HBoxContainer" parent="FurnaceHBoxContainer/InventoryVBoxContainer" index="1"]
-margin_left = 908.0
 margin_top = 4.0
-margin_right = 1008.0
+margin_right = 100.0
 margin_bottom = 24.0
 rect_clip_content = true
 size_flags_horizontal = 6
@@ -55,9 +53,9 @@ size_flags_vertical = 6
 percent_visible = false
 
 [node name="ProductHBoxContainer" type="HBoxContainer" parent="FurnaceHBoxContainer/InventoryVBoxContainer" index="2"]
-margin_left = 958.0
+margin_left = 50.0
 margin_top = 28.0
-margin_right = 958.0
+margin_right = 50.0
 margin_bottom = 28.0
 size_flags_horizontal = 4
 size_flags_vertical = 7

@@ -31,36 +31,23 @@ collision_layer = 8
 position = Vector2( 16, 8 )
 shape = SubResource( 2 )
 
-[node name="FurnaceView" parent="." instance=ExtResource( 4 )]
+[node name="FurnaceViewWrapper" type="CanvasLayer" parent="."]
+layer = 128
+offset = Vector2( 500, 300 )
+scale = Vector2( 5, 5 )
+transform = Transform2D( 5, 0, 0, 5, 500, 300 )
+
+[node name="FurnaceView" parent="FurnaceViewWrapper" instance=ExtResource( 4 )]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = -32.0
-margin_right = 1243.0
-margin_bottom = 688.0
+margin_left = -1920.0
+margin_top = -1080.0
+margin_right = -1816.0
+margin_bottom = -1052.0
 rect_scale = Vector2( 0.2, 0.2 )
-
-[node name="FurnaceHBoxContainer" parent="FurnaceView" index="0"]
-margin_right = 1211.0
-
-[node name="InventoryVBoxContainer" parent="FurnaceView/FurnaceHBoxContainer" index="1"]
-margin_right = 1211.0
-
-[node name="SourceHBoxContainer" parent="FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer" index="0"]
-margin_left = 603.0
-margin_right = 603.0
-
-[node name="FuelHBoxContainer" parent="FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer" index="1"]
-margin_left = 553.0
-margin_right = 653.0
-
-[node name="ProductHBoxContainer" parent="FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer" index="2"]
-margin_left = 603.0
-margin_right = 603.0
 
 [connection signal="input_event" from="Hurtbox" to="." method="_on_Hurtbox_input_event"]
 
 [editable path="Hurtbox"]
-[editable path="FurnaceView"]
