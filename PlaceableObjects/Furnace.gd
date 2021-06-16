@@ -40,7 +40,6 @@ func _ready():
 	
 """Runs while there are Items in the Queue"""
 func _process(_delta):
-	var start = OS.get_ticks_usec()
 	if queue.size() > 0:
 		if readyToBurn():
 			burn()
@@ -49,8 +48,6 @@ func _process(_delta):
 	else:
 		print(queue)
 		set_process(false)
-	var end = OS.get_ticks_usec()
-	print(end - start)
 	
 """Set the Texture using a Blueprint State"""
 func setBlueprintState(state):
@@ -111,6 +108,8 @@ func smelt():
 		item.amount = 1
 		currentlySmelting = true
 		while fuel > 0 and sourceItems[index].amount > 0:
+			print("[" + str(ui.sourceInventory.id) + "] " + " ITEM " + str(item))
+			print("[" + str(ui.sourceInventory.id) + "] " + " ITEMAMOUNT " + str(item.amount))
 			if targetItems[0] != null:
 				if targetItems[0].amount == item.stackLimit:
 						break

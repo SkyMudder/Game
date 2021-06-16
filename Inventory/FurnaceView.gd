@@ -28,10 +28,8 @@ func _on_items_changed(inventoryChanged, index):
 			emit_signal("queue_updated", index, 1)
 	elif inventoryChanged == productInventory.id:
 		updateInventorySlotDisplay(self, productInventory, inventoryChanged, index)
-		if Inventories.getInventoryByID(inventoryChanged).items[index] != null:
-			emit_signal("queue_updated", index, 0)
-		else:
-			emit_signal("queue_updated", index, 1)
+		if Inventories.getInventoryByID(inventoryChanged).items[index] == null:
+			furnace.set_process(true)
 	
 func addInventorySlotsFurnace(targetInventory, targetContainer, amount):
 	for _x in range(amount):
