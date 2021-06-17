@@ -12,6 +12,7 @@ onready var ui = get_node("FurnaceViewWrapper/FurnaceView")
 onready var fuelProgress = get_node("FurnaceViewWrapper/FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
 var queue = []
+var productItem
 
 var previousCollisionShape
 var previousHurtboxShape
@@ -23,8 +24,8 @@ var exists = true
 
 var fuel = 0
 
-const burnDuration = 0.3
-const smeltDuration = 0.7
+const burnDuration = 0.5
+const smeltDuration = 1
 
 """Deactivate _process, meaning Burning or Smelting
 Connect the Signal for updating the Queue
@@ -34,6 +35,7 @@ func _ready():
 	set_process(false)
 	ui.hide()
 	ui.connect("queue_updated", self, "_on_queue_updated")
+	productItem = ui.productInventory.items
 	previousCollisionShape = collision.shape
 	previousHurtboxShape = hurtbox.shape
 	furnace.texture = furnaceNotPlaceable
@@ -44,7 +46,11 @@ func _process(_delta):
 		if readyToBurn():
 			burn()
 		if readyToSmelt():
-			smelt()
+			if productItem[0] != null:
+				if productItem[0].amount < productItem[0].stackLimit:
+					smelt()
+			else:
+				smelt()
 	else:
 		print(queue)
 		set_process(false)
@@ -105,34 +111,22 @@ func smelt():
 	var index = findSmeltable()
 	if index != null:
 		var item = getProductFromSource(sourceItems[index]).duplicate()
-		if item == null:
-			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		item.amount = 1
 		currentlySmelting = true
-		while fuel > 0 and sourceItems[index].amount > 0:
-			print("[" + str(ui.sourceInventory.id) + "] " + " ITEM " + str(item))
-			print("[" + str(ui.sourceInventory.id) + "] " + " ITEMAMOUNT " + str(item.amount))
-			if targetItems[0] != null:
-				if targetItems[0].amount == item.stackLimit:
-						break
-			yield(get_tree().create_timer(smeltDuration), "timeout")
-			if Inventories.moving:
-				yield(Inventories, "resume")
-			if !checkSmeltable(sourceItems[index]) or checkSmeltable(targetItems[0]) or checkBurnable(targetItems[0]):
-				break
+		yield(get_tree().create_timer(smeltDuration), "timeout")
+		if Inventories.moving:
+			yield(Inventories, "resume")
+		if checkSmeltable(sourceItems[index]) or !checkSmeltable(targetItems[0]) or !checkBurnable(targetItems[0]):
 			sourceItems[index].amount -= 1
 			fuel -= 20
 			fuelProgress.value = fuel
-			if sourceItems[index].amount > 0:
-				ui.sourceInventory.set(sourceItems[index].duplicate(), index)
-			else:
-				ui.sourceInventory.remove(index)
 			if targetItems[0] == null:
-				item.amount = 1
 				ui.productInventory.set(item.duplicate(), 0)
 			else:
+				item = targetItems[0]
 				item.amount += 1
-				ui.productInventory.set(item.duplicate(), 0)
+				ui.productInventory.set(item, 0)
+			ui.sourceInventory.set(sourceItems[index], index)
 		currentlySmelting = false
 	
 """Return the first burnable Item Index found in the Queue

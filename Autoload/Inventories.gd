@@ -65,11 +65,9 @@ func getFurnaceInventoryByID(inventoryID):
 func notifyMoving(state):
 	if state:
 		moving = true
-		print("PAUSED")
 	else:
 		moving = false
 		emit_signal("resume")
-		print("RESUMED")
 	
 func setUnhandledData(inventory, item, amount, index):
 	unhandledData.inventory = inventory

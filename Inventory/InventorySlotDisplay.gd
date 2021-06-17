@@ -69,7 +69,6 @@ func can_drop_data(_position, data):
 	return data is Dictionary and data.has("item")
 	
 func drop_data(_position, data):
-	print("FRRRRRRR")
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
 	var tmpInventory = Inventories.getFurnaceInventoryByID(data.id)
