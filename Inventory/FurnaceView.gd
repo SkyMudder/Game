@@ -62,10 +62,4 @@ func _on_stopped_placing(placed):
 		updateInventoryDisplay(self, productInventory, productInventory.id)
 		sourceInventory.connect("items_changed", self, "_on_items_changed")
 		productInventory.connect("items_changed", self, "_on_items_changed")
-#		var item = preload("res://Items/Copper.tres").duplicate()
-#		var item2 = preload("res://Items/Wood.tres").duplicate()
-#		item.amount = 20
-#		item2.amount = 20
-#		sourceInventory.set(item, 0)
-#		sourceInventory.set(item2, 1)
 	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")

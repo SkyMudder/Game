@@ -79,7 +79,7 @@ func drop_data(_position, data):
 	if item is Item and item.name == data.item.name:
 		# Check if the Source Slot is the same as the Target Slot
 		# The Item will not be moved and will restore it's previous Value
-		if itemIndex == data.itemIndex:
+		if itemIndex == data.itemIndex and inventory.id == tmpInventory.id:
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
 			# Notify specific Objects that an Item has been dropped
@@ -93,6 +93,7 @@ func drop_data(_position, data):
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
 		if item.name == data.item.name and !data.has("split"):
+			print("YARABBO")
 			var space = item.stackLimit - item.amount
 			# Check if the split Stack has enough Space to be merged
 			# With the new Stack
@@ -140,9 +141,10 @@ func drop_data(_position, data):
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
+		print("YARABBI")
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
-		inventory.set(data.item, itemIndex)
+		inventory.set(data.item.duplicate(), itemIndex)
 	# Notify specific Objects that an Item has been dropped
 	# so they can continue working
 	if tmpInventory != null:

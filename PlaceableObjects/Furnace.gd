@@ -213,7 +213,7 @@ func _on_queue_updated(itemIndex, flag):
 """For closing the Furnace Inventory when opening the Main Inventory
 Or right Clicking anywhere"""
 func _input(_event):
-	if Input.is_action_just_pressed("ui_focus_next") or Input.is_action_just_pressed("mouse_right"):
+	if Input.is_action_just_pressed("ui_focus_next") or Input.is_action_just_pressed("mouse_right") or Input.is_action_just_pressed("ui_cancel"):
 		ui.hide()
 	
 """Handles the Furnace Input"""
