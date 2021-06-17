@@ -14,8 +14,10 @@ func _ready():
 	
 func _input(_event):
 	if Input.is_action_pressed("ui_focus_next"):
+		Inventories.open = true
 		inventory.show()
 	else:
+		Inventories.open = false
 		inventory.hide()
 	
 """Gets called every time the Player moves"""

@@ -36,6 +36,8 @@ func get_drag_data(_position):
 	var item = inventory.items[itemIndex]
 	var data = {}
 	if item != null:
+		# Notify specific Objects that an Item has been picked up
+		# so they stop working
 		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
 			Inventories.notifyMoving(true)
 		var dragPreview = TextureRect.new()
@@ -44,6 +46,7 @@ func get_drag_data(_position):
 		data.id = inventory.id
 		data.name = item.name
 		data.previousAmount = item.amount
+		# Set unhandled data in case the Item doesn't get dropped anywhere
 		Inventories.setUnhandledData(inventory, item, item.amount, itemIndex)
 		# For half-splitting Item Stacks
 		if Input.is_action_pressed("ctrl"):
@@ -79,8 +82,12 @@ func drop_data(_position, data):
 		if itemIndex == data.itemIndex:
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
+			# Notify specific Objects that an Item has been dropped
+			# so they can continue working
 			if tmpInventory != null:
 				Inventories.notifyMoving(false)
+			# Set unhandled data to null
+			# Meaning the Item has been dropped in a valid Place
 			Inventories.setUnhandledData(null, null, null, null)
 			return
 		# Check if the items are of the same Type
@@ -136,18 +143,24 @@ func drop_data(_position, data):
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
+	# Notify specific Objects that an Item has been dropped
+	# so they can continue working
 	if tmpInventory != null:
 		Inventories.notifyMoving(false)
+	# Set unhandled data to null
+	# Meaning the Item has been dropped in a valid Place
 	Inventories.setUnhandledData(null, null, null, null)
 	
-"""Mark a Slot in the Toolbar as selected
-This is updated across Slots and shown on the UI
-If the Item is Placeable, initiate the Placement
-Update the Player Item if the Slot has one, otherwise set it to null"""
+"""Handle Item Selection"""
 func select():
+	# Mark the Slot as selected
 	selected.show()
+	# If the Slot contains an Item, set it on the Player
 	if inventory.items[get_index()] != null:
 		playerItem.item = inventory.items[get_index()]
+		# If the Item is Placeable, start the Placement
+		# If another Placement is already in Progress 
+		# but didn't finish, cancel it
 		if playerItem.item.placeable:
 			if tileMap.currentObject != null:
 				tileMap.cancel()
@@ -155,14 +168,19 @@ func select():
 				tileMap.instancePlaceableObject(inventory.items[get_index()], get_global_mouse_position())
 			tileMap.connect("stopped_placing", self, "_on_stopped_placing", [], CONNECT_ONESHOT)
 	else:
+		# If an Item was being placed and a new Slot has been selected
+		# Cancel the Placement
 		if tileMap.currentObject != null:
 			tileMap.cancel()
 		playerItem.item = null
+	get_parent().emit_signal("item_switched", 0)
 	
 """Deselect a Slot"""
 func deselect():
 	selected.hide()
-
+	
+"""Get notified when the Player stopped placing the Item"""
 func _on_stopped_placing(placed):
+	# Remove it from the Inventory if it was actually placed
 	if placed:
 		playerInventories[1].remove(get_index())

@@ -5,6 +5,14 @@
 [ext_resource path="res://Inventory/FurnaceView.gd" type="Script" id=4]
 
 [node name="FurnaceView" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 1920.0
+margin_bottom = 1080.0
 rect_clip_content = true
 script = ExtResource( 4 )
 

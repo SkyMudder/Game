@@ -24,13 +24,13 @@ var exists = true
 
 var fuel = 0
 
-const burnDuration = 0.5
-const smeltDuration = 1
+const burnDuration = 1
+const smeltDuration = 4
 
 """Deactivate _process, meaning Burning or Smelting
 Connect the Signal for updating the Queue
-Make the Furnace ready for Blueprint
-Collisions and UI are deactivated"""
+Make the Furnace ready for Blueprinting
+Meaning Collisions and UI are deactivated"""
 func _ready():
 	set_process(false)
 	ui.hide()
@@ -44,8 +44,10 @@ func _ready():
 func _process(_delta):
 	if queue.size() > 0:
 		if readyToBurn():
+			setState(1)
 			burn()
 		if readyToSmelt():
+			setState(1)
 			if productItem[0] != null:
 				if productItem[0].amount < productItem[0].stackLimit:
 					smelt()
@@ -53,6 +55,7 @@ func _process(_delta):
 				smelt()
 	else:
 		print(queue)
+		setState(0)
 		set_process(false)
 	
 """Set the Texture using a Blueprint State"""
@@ -82,21 +85,29 @@ func setCollision(state):
 Or until the Stack has no Items"""
 func burn():
 	var sourceItems = ui.sourceInventory.items
-	var index = findBurnable()
-	if index != null:
+	var index = findBurnable()	# First Slot with a burnable Item
+	if index != null:	# Only burn if an Item was found
 		currentlyBurning = true
-		while fuel < 100 and sourceItems[index].amount > 0:
+		# Only burn if there is enough Space for Fuel
+		# And if there are enough burnable Resources
+		if fuel < 100 and sourceItems[index].amount > 0:
+			# Wait a specific Amount of Time to simulate the Furnace burning
 			yield(get_tree().create_timer(burnDuration), "timeout")
-			if !checkBurnable(sourceItems[index]):
-				break
-			sourceItems[index].amount -= 1
-			fuel += 20
-			fuelProgress.value = fuel
-			if sourceItems[index].amount > 0:
-				ui.sourceInventory.set(sourceItems[index], index)
-			else:
-				ui.sourceInventory.remove(index)
-				break
+			# Only smelt if the Item is burnable
+			# The Check has to be done again in case the Item was removed while
+			# the Furnace was burning the Item
+			if checkBurnable(sourceItems[index]):
+				# Remove the burnt Item and add it as Fuel
+				sourceItems[index].amount -= 1
+				fuel += 20
+				# Update the Fuel on the UI
+				fuelProgress.value = fuel
+				# Set the new Item Value on the UI unless the Amount is 0
+				# Then the Item gets removed from the Inventory
+				if sourceItems[index].amount > 0:
+					ui.sourceInventory.set(sourceItems[index], index)
+				else:
+					ui.sourceInventory.remove(index)
 		currentlyBurning = false
 	
 """Burn a Stack until there is no Fuel anymore,
@@ -109,23 +120,38 @@ func smelt():
 	var sourceItems = ui.sourceInventory.items
 	var targetItems = ui.productInventory.items
 	var index = findSmeltable()
-	if index != null:
+	# Check if there is enough Fuel and a smeltable Item was found
+	if index != null and fuel > 0:
+		# Get the Source Item and determine what the Product is
 		var item = getProductFromSource(sourceItems[index]).duplicate()
-		item.amount = 1
 		currentlySmelting = true
+		# Wait a specific Amount of Time to simulate the Furnace smelting
 		yield(get_tree().create_timer(smeltDuration), "timeout")
+		# If an Item is currently being moved, wait until it's dropped again
+		# To avoid Bugs regarding the Amount of the Product
 		if Inventories.moving:
 			yield(Inventories, "resume")
-		if checkSmeltable(sourceItems[index]) or !checkSmeltable(targetItems[0]) or !checkBurnable(targetItems[0]):
+		# Check if the Item is smeltable
+		# and make sure that the Item in the Product Inventory is actually
+		# a smelted Item
+		# To avoid that any Resource being placed there
+		# can have its Amount incremented
+		if checkSmeltable(sourceItems[index]) and !checkSmeltable(targetItems[0]) and !checkBurnable(targetItems[0]):
+			# Remove the smelted Item and the Fuel
 			sourceItems[index].amount -= 1
 			fuel -= 20
+			# Update the Fuel on the UI
 			fuelProgress.value = fuel
+			# If there is no Item in the Product Inventory, add one
+			# Else, increment its Value
+			# Set the Items
 			if targetItems[0] == null:
 				ui.productInventory.set(item.duplicate(), 0)
 			else:
 				item = targetItems[0]
 				item.amount += 1
 				ui.productInventory.set(item, 0)
+			# Set the Source Item, as its Value was decremented earlier
 			ui.sourceInventory.set(sourceItems[index], index)
 		currentlySmelting = false
 	
@@ -173,7 +199,8 @@ func getProductFromSource(item):
 	return item.smeltProduct
 	
 """This gets called when Items enter or leave the Furnace
-They are added or removed from the Queue accordingly"""
+They are added or removed from the Queue accordingly
+Starts the Process when something entered the Queue"""
 func _on_queue_updated(itemIndex, flag):
 	if flag == 0:
 		if !itemIndex in queue:
@@ -189,13 +216,15 @@ func _input(_event):
 	if Input.is_action_just_pressed("ui_focus_next") or Input.is_action_just_pressed("mouse_right"):
 		ui.hide()
 	
-"""Toggle the Furnace UI Visibility"""
+"""Handles the Furnace Input"""
 func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
+	# Toggle the Furnace UI Visibility
 	if Input.is_action_just_pressed("mouse_right"):
 		if ui.visible:
 			ui.hide()
 		else:
 			ui.show()
+	# Destroy the Furnace
 	if Input.is_action_just_pressed("mouse_left"):
 		if Input.is_action_pressed("ctrl"):
 			if exists:

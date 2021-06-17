@@ -33,6 +33,8 @@ func loadInventorySlots(object, amount):
 			object.get_child(x).textureRect.texture = object.inventory.items[x].texture
 			object.get_child(x).itemAmount.text = str(object.inventory.items[x].amount)
 	
+"""Handle Items not being dropped anywhere
+Return them to their original Slot"""
 func _unhandled_input(event):
 	var data = Inventories.unhandledData
 	if event.is_action_released("mouse_left"):

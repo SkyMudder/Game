@@ -6,7 +6,7 @@ Unbound from Framerate
 When HP reaches 0, the Particles stop emitting and the Object gets destroyed"""
 func damage(object, delta):
 	if object.playerItem.item != null:
-		if object.type == object.playerItem.item.type and object.level >= object.playerItem.item.level:
+		if object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level:
 			object.damagingEffect.emitting = true
 			var remove = 60 * delta
 			if object.playerItem.item != null:

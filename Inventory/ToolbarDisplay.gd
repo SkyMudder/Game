@@ -24,18 +24,6 @@ func _ready():
 	inventory.connect("items_changed", self, "_on_items_changed")
 	for x in get_children():
 		x.connect("slot_updated", self, "_on_slot_updated")
-	for _x in range(7):
-		inventory.add(preload("res://Items/Furnace.tres"))
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
-	for _x in range(50):
-		inventory.add(preload("res://Items/Copper.tres"))
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
-	for _x in range(50):
-		inventory.add(preload("res://Items/Wood.tres"))
-	inventory.emit_signal("items_changed", 0, 0)
-	inventory.emit_signal("items_changed", 1, 0)
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index):
@@ -44,7 +32,7 @@ func _on_items_changed(inventoryChanged, index):
 	
 """Update Slots when a new Slot is selected"""
 func _input(event):
-	if event.is_action_pressed("scroll_up"):
+	if event.is_action_pressed("scroll_up") and !Inventories.open:
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected - 1 < 0):
 			currentlySelected -= 1
@@ -52,7 +40,7 @@ func _input(event):
 			currentlySelected = inventory.size - 1
 		if get_child(currentlySelected).inventory == playerInventories[1]:
 			get_child(currentlySelected).select()
-	if event.is_action_pressed("scroll_down"):
+	if event.is_action_pressed("scroll_down") and !Inventories.open:
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected + 1 > inventory.size - 1):
 			currentlySelected += 1

@@ -9,6 +9,7 @@ onready var currentInventory = 0
 var currentFurnace = 0
 
 var moving
+var open = false
 var unhandledData = {}
 
 var playerInventory = Inventory.new(0, 24, 6)

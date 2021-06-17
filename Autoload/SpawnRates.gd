@@ -16,8 +16,8 @@ const __dirt : int = 300
 const __grass : int = 100
 const __rock : int = 60
 const __tree : int = 60
-const __copper : int = 20
-const __stick : int = 20
+const __copper : int = 30
+const __stick : int = 30
 const __rockSmall : int = 30
 
 """Getters"""
