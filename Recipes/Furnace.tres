@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://Items/Furnace.tres" type="Resource" id=1]
+[ext_resource path="res://Recipes/Recipe.gd" type="Script" id=2]
+[ext_resource path="res://Items/Wood.tres" type="Resource" id=3]
+[ext_resource path="res://Items/Stone.tres" type="Resource" id=4]
+
+[resource]
+script = ExtResource( 2 )
+product = ExtResource( 1 )
+description = "A Furnace can be used to smelt different Minerals and use them for more advanced Crafting"
+ingredients = [ ExtResource( 4 ), ExtResource( 3 ) ]
+ingredientAmounts = [ 50, 5 ]

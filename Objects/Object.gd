@@ -1,73 +1,36 @@
 extends StaticBody2D
 
 
-onready var inventory = Inventories.playerInventory
-onready var sprite = get_child(0)
-onready var collision = get_child(1)
-onready var breakingEffect = sprite.get_child(0)
-onready var damagingEffect = sprite.get_child(1)
-onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
-
-var type
-var level
-var hp
-var item
-var amount
-
-var exists = true
-
-func _ready():
-	set_process(false)
-	
 """While active, removes HP
 Unbound from Framerate
-When HP reach 0, the Particles stop emitting and the Object gets destroyed"""
-func _process(delta):
-	if playerItem.item != null:
-		if type == playerItem.item.type and level >= playerItem.item.level:
-			damagingEffect.emitting = true
+When HP reaches 0, the Particles stop emitting and the Object gets destroyed"""
+func damage(object, delta):
+	if object.playerItem.item != null:
+		if object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level:
+			object.damagingEffect.emitting = true
 			var remove = 60 * delta
-			if playerItem.item != null:
-				remove *= playerItem.item.damageMultiplier
-			hp -= remove
-			if hp < 0:
-				damagingEffect.emitting = false
-				destroy()
-				set_process(false)
+			if object.playerItem.item != null:
+				remove *= object.playerItem.item.damageMultiplier
+			object.hp -= remove
+			if object.hp < 0:
+				object.damagingEffect.emitting = false
+				destroy(object)
+				object.set_process(false)
 			if !Input.is_mouse_button_pressed(BUTTON_LEFT):
-				set_process(false)
-				damagingEffect.emitting = false
-	
-"""While LMB is held on the Object, it gets damaged
-Meaning the _process Method is active
-Emits Particles with the Colors of the Object while damaged"""
-func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
-	if Input.is_mouse_button_pressed(BUTTON_LEFT):
-		set_process(true)
+				object.set_process(false)
+				object.damagingEffect.emitting = false
 	
 """On Destroy, the Resource of the Object gets added to the Inventory
 A new explosive Particle Effect gets emitted
-Texture and Collision of the Object get deactivated on Particel Emission
+Texture and Collision of the Object get deactivated on Particle Emission
 The Object gets freed after the time the Particle Effect needs to process"""
-func destroy():
-	if exists:
-		item.amount = amount
-		inventory.add(item)
-		exists = false
-		sprite.texture = null
-		collision.shape = null
-		breakingEffect.emitting = true
-		yield(get_tree().create_timer(breakingEffect.lifetime), "timeout")
-		queue_free()
-	
-"""Assigns the Objects Values"""
-func assignVariables(vars):
-	type = vars[0]
-	level = vars[1]
-	hp = vars[2]
-	item = vars[3]
-	amount = vars[4]
-	
-func _on_Hurtbox_mouse_exited():
-	set_process(false)
-	damagingEffect.emitting = false
+func destroy(object):
+	if object.exists:
+		object.item.amount = object.amount
+		object.inventory.add(object.item)
+		object.exists = false
+		object.sprite.texture = null
+		object.collision.shape = null
+		object.breakingEffect.emitting = true
+		yield(get_tree().create_timer(object.breakingEffect.lifetime), "timeout")
+		object.queue_free()

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Dirt.png-8904828417fff1e2ff5e5861d517fc98.stex"
+path="res://.import/FurnaceOn.png-3938e60173bd995d6fe5458658af7aa7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TilesetResources/Dirt.png"
-dest_files=[ "res://.import/Dirt.png-8904828417fff1e2ff5e5861d517fc98.stex" ]
+source_file="res://PlaceableObjects/FurnaceOn.png"
+dest_files=[ "res://.import/FurnaceOn.png-3938e60173bd995d6fe5458658af7aa7.stex" ]
 
 [params]
 

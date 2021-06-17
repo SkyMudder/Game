@@ -3,7 +3,7 @@
 [ext_resource path="res://Sprites/Tree.png" type="Texture" id=1]
 [ext_resource path="res://Effects/TreeBreakingParticles.png" type="Texture" id=2]
 [ext_resource path="res://HitHurtBoxes/Hurtbox.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Objects/Object.gd" type="Script" id=4]
+[ext_resource path="res://Objects/Tree.gd" type="Script" id=4]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 particles_animation = true
@@ -56,7 +56,7 @@ collision_mask = 0
 script = ExtResource( 4 )
 
 [node name="Tree" type="Sprite" parent="."]
-position = Vector2( 16, 16 )
+position = Vector2( 16, 8 )
 texture = ExtResource( 1 )
 
 [node name="BreakingEffect" type="Particles2D" parent="Tree"]
@@ -94,7 +94,19 @@ collision_layer = 8
 position = Vector2( -0.530334, -11.8891 )
 shape = SubResource( 6 )
 
+[node name="Hurtbox2" parent="." instance=ExtResource( 3 )]
+pause_mode = 2
+position = Vector2( 16.5303, 27.8891 )
+collision_layer = 8
+
+[node name="CollisionShape2D" parent="Hurtbox2" index="0"]
+position = Vector2( -0.530334, -11.8891 )
+shape = SubResource( 6 )
+
 [connection signal="input_event" from="Hurtbox" to="." method="_on_Hurtbox_input_event"]
 [connection signal="mouse_exited" from="Hurtbox" to="." method="_on_Hurtbox_mouse_exited"]
+[connection signal="input_event" from="Hurtbox2" to="." method="_on_Hurtbox_input_event"]
+[connection signal="mouse_exited" from="Hurtbox2" to="." method="_on_Hurtbox_mouse_exited"]
 
 [editable path="Hurtbox"]
+[editable path="Hurtbox2"]

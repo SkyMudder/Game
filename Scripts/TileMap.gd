@@ -1,13 +1,22 @@
 extends TileMap
 
+signal stopped_placing(placed)
 
-onready var tileMapDirt = get_parent().get_node("Dirt")
-onready var tileMapGrass = get_parent().get_node("Grass")
-onready var tileMapGrassTopGreen = get_parent().get_node("GrassTopGreen")
-onready var tileMapGrassTopBrown= get_parent().get_node("GrassTopBrown")
+onready var tileMapDirt = get_node("../Dirt")
+onready var tileMapGrass = get_node("../Grass")
+onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
+onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
+onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
+onready var raycast = get_parent().get_node("ObjectPlacementCollision")
+onready var objects = get_parent().get_node("Objects")
+
+var raycastOffset = Vector2(1, 1)
 
 var ww = WorldVariables
+
+var areaClear = true
+var currentObject = null
 
 # Chunk Size in Tiles
 var chunkSizeTiles : int = ww.getChunkSizeTiles()
@@ -24,11 +33,14 @@ func _ready():
 	ww.setNextToGenerate(ww.getRoot())
 	noise.seed = 1
 	
-"""Updates the Mouse Pointer Hitbox"""
+"""Updates the Mouse Pointer Hitbox
+Handles Object Placement if an Object is currently getting placed"""
 func _process(_delta):
 	var mousePointer = get_parent().get_node("MousePointer")
 	mousePointer.global_position = get_global_mouse_position()
-	
+	if currentObject != null:
+		placeObject()
+
 """Generates a Chunk and keeps track of the Currently
 Generated and Next To Generate Chunks"""
 func generateChunk(root):
@@ -66,26 +78,21 @@ func createNoiseAndGenerate(root):
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles) + 1
 			if noise2D <= 1:
-				var randDirt = rng.randi_range(0, 3)
-				generateDirt(posCurrent, root, rand, randDirt)
+				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
+				tileMapDirt.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				y + root.y * chunkSizeTiles))
 			elif noise2D > 1:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
-				update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				tileMapGrass.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 	
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
-func generateDirt(posCurrent, root, rand, randDirt):
+func generateDirt(posCurrent, root, rand):
 	tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
-	if rand < SpawnRates.getDirt():
-		tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-		posCurrent.y + root.y * chunkSizeTiles, randDirt)
-	else:
-		tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-		posCurrent.y + root.y * chunkSizeTiles, 4)
 	generateNature(1, posCurrent, root, rand)
 	
 """Generates the Grass Floor
@@ -111,55 +118,39 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
 	var rng = RandomNumberGenerator.new()
-	var SpawnResource
+	var spawnResource
 	var randCheck
 	var randResource
-	var objectType
 	rng.randomize()
 	if type == 0:
 		randResource = rng.randi_range(0, 1)
 		if randResource == 0:
-			SpawnResource = preload("res://Objects/Tree.tscn")
+			spawnResource = preload("res://Objects/Tree.tscn")
 			randCheck = SpawnRates.getTree()
-			objectType = ww.type.TREE
 		if randResource == 1:
-			SpawnResource = preload("res://Objects/Stick.tscn")
+			spawnResource = preload("res://Objects/Stick.tscn")
 			randCheck = SpawnRates.getStick()
-			objectType = ww.type.STICK
 		if rand < randCheck:
-			var spawnResource = SpawnResource.instance()
-			var world = get_tree().current_scene
-			world.add_child(spawnResource)
-			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
+			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels)
-			spawnResource.assignVariables(ww.getObjectVariables(objectType))
-			spawnResource.add_to_group("Objects")
+			+ root.y * chunkSizePixels))
 	if type == 1:
 		randResource = rng.randi_range(0, 2)
 		if randResource == 0:
-			SpawnResource = preload("res://Objects/Rock.tscn")
+			spawnResource = preload("res://Objects/Rock.tscn")
 			randCheck = SpawnRates.getRock()
-			objectType = ww.type.ROCK
 		elif randResource == 1:
-			SpawnResource = preload("res://Objects/RockCopper.tscn")
+			spawnResource = preload("res://Objects/RockCopper.tscn")
 			randCheck = SpawnRates.getCopper()
-			objectType = ww.type.ROCKCOPPER
 		elif randResource == 2:
-			SpawnResource = preload("res://Objects/RockSmall.tscn")
+			spawnResource = preload("res://Objects/RockSmall.tscn")
 			randCheck = SpawnRates.getRockSmall()
-			objectType = ww.type.ROCKSMALL
 		if rand < randCheck:
-			var spawnResource = SpawnResource.instance()
-			var world = get_tree().current_scene
-			world.add_child(spawnResource)
-			spawnResource.global_position = Vector2(posCurrent.x * tileSizePixels
+			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
 			+ root.x * chunkSizePixels,
 			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels)
-			spawnResource.assignVariables(ww.getObjectVariables(objectType))
-			spawnResource.add_to_group("Objects")
+			+ root.y * chunkSizePixels))
 		
 	
 """Removes a Chunk from the World and from the Generated Chunks Array"""
@@ -196,3 +187,74 @@ func removeNature():
 	for x in get_tree().get_nodes_in_group("Objects"):
 		if player.isFarFromObject(x.global_position):
 			x.queue_free()
+	
+"""Places the Blueprint of an Object in Increments of the Tile Size in Pixels
+So they can only be placed in specific Increments of the World
+Switches between different Textures
+Depending on if the Object can be placed or not
+Uses the Blueprint Textures which must be included in the Object Scene"""
+func blueprint(object):
+	var posXRest = fmod(get_global_mouse_position().x, tileSizePixels)
+	var posYRest = fmod(get_global_mouse_position().y, tileSizePixels)
+	var posX = get_global_mouse_position().x - posXRest - tileSizePixels
+	var posY = get_global_mouse_position().y - posYRest - tileSizePixels
+	if get_global_mouse_position().x > 0:
+		posX += tileSizePixels
+	if get_global_mouse_position().y > 0:
+		posY += tileSizePixels
+	var pos = Vector2(posX, posY)
+	raycast.set_position(pos + raycastOffset)
+	if raycast.is_colliding():
+		object.setBlueprintState(0)
+		areaClear = false
+	else:
+		object.setBlueprintState(1)
+		areaClear = true
+	positionObject(object, pos)
+	
+"""Instances an Object and adds it to the Scene Tree
+Adds it to a Group of created Objects"""
+func instanceAndAddObject(objectScene, position):
+	var newObject = objectScene.instance()
+	objects.add_child(newObject)
+	positionObject(newObject, position)
+	newObject.add_to_group("Objects")
+	return newObject
+	
+"""Places an Object at a specific Position"""
+func positionObject(instance, position):
+	instance.global_position = position
+	
+"""Instance a new Object, add it to the Scene Tree
+Show its Blueprint Texture which should be in the Scene"""
+func instancePlaceableObject(item, position):
+	var objectScene = item.getObject()
+	var newObject = objectScene.instance()
+	objects.add_child(newObject)
+	print("Created and added to Tree")
+	positionObject(newObject, position)
+	newObject.setCollision(0)
+	currentObject = newObject
+	blueprint(currentObject)
+	
+"""Checks if the Player clicked LMB to place an object"""
+func checkPlaceObject():
+	blueprint(currentObject)
+	if Input.is_mouse_button_pressed(BUTTON_LEFT) and !Input.is_action_pressed("ctrl") and areaClear:
+		return true
+	
+"""Places an Object"""
+func placeObject():
+	if checkPlaceObject():
+		print("PLACED")
+		currentObject.setState(0)
+		currentObject.setCollision(1)
+		currentObject.add_to_group("Objects")
+		currentObject = null
+		emit_signal("stopped_placing", true)
+	
+func cancel():
+	Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
+	currentObject.queue_free()
+	currentObject = null
+	emit_signal("stopped_placing", false)

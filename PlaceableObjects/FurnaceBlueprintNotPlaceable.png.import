@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/RockCopper.png-577c580b833a5007b83f4d94b8baa77c.stex"
+path="res://.import/FurnaceBlueprintNotPlaceable.png-5be33b5df78d20892b058e72f4a453e7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TilesetResources/RockCopper.png"
-dest_files=[ "res://.import/RockCopper.png-577c580b833a5007b83f4d94b8baa77c.stex" ]
+source_file="res://PlaceableObjects/FurnaceBlueprintNotPlaceable.png"
+dest_files=[ "res://.import/FurnaceBlueprintNotPlaceable.png-5be33b5df78d20892b058e72f4a453e7.stex" ]
 
 [params]
 

@@ -1,9 +1,9 @@
 extends CenterContainer
 
 
-signal item_switched
+signal slot_updated(index)
 
-onready var allInventories = Inventories.allInventories
+onready var playerInventories = Inventories.playerInventories
 var inventory
 
 onready var textureRect = get_node("TextureRect")
@@ -11,6 +11,8 @@ onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
+onready var tileMap = get_node("/root/Main/Dirt")
+onready var furnaceView = get_parent().get_parent().get_parent()
 
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
@@ -25,40 +27,44 @@ func displayItem(inventoryDisplay, item):
 		textureRect.texture = emptySlotTexture
 		itemAmount.text = ""
 		# Sets the Object to null because nothing is there anymore
-		allInventories[inventoryDisplay].items[allInventories[inventoryDisplay].items.find(item)] = null
+		inventoryDisplay.items[inventoryDisplay.items.find(item)] = null
 	if selected.visible:
-		select()
-		emit_signal("item_switched")
+		emit_signal("slot_updated", get_index())
 	
 func get_drag_data(_position):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
+	var data = {}
 	if item != null:
+		# Notify specific Objects that an Item has been picked up
+		# so they stop working
+		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
+			Inventories.notifyMoving(true)
 		var dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
+		data.id = inventory.id
+		data.name = item.name
+		data.previousAmount = item.amount
+		# Set unhandled data in case the Item doesn't get dropped anywhere
+		Inventories.setUnhandledData(inventory, item, item.amount, itemIndex)
 		# For half-splitting Item Stacks
 		if Input.is_action_pressed("ctrl"):
 			if item is Item:
-				var data = {}
-				data.id = inventory.id
-				data.previousAmount = item.amount
 				item.amount /= 2
 				data.item = item.duplicate()
 				inventory.emit_signal("items_changed", inventory.id, itemIndex)
 				data.itemIndex = itemIndex
 				data.split = true
 				set_drag_preview(dragPreview)
+				print(inventory)
 				return data
 		# For moving Items
 		else:
 			item = inventory.remove(itemIndex)
 			if item is Item:
-				var data = {}
-				data.id = inventory.id
 				data.item = item
 				data.itemIndex = itemIndex
-				data.previousAmount = item.amount
 				set_drag_preview(dragPreview)
 				return data
 	
@@ -68,7 +74,7 @@ func can_drop_data(_position, data):
 func drop_data(_position, data):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
-	
+	var tmpInventory = Inventories.getFurnaceInventoryByID(data.id)
 	# Check if the Source is an Item and if it is of the same Type
 	if item is Item and item.name == data.item.name:
 		# Check if the Source Slot is the same as the Target Slot
@@ -76,6 +82,13 @@ func drop_data(_position, data):
 		if itemIndex == data.itemIndex:
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
+			# Notify specific Objects that an Item has been dropped
+			# so they can continue working
+			if tmpInventory != null:
+				Inventories.notifyMoving(false)
+			# Set unhandled data to null
+			# Meaning the Item has been dropped in a valid Place
+			Inventories.setUnhandledData(null, null, null, null)
 			return
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
@@ -106,15 +119,15 @@ func drop_data(_position, data):
 				item.amount += space
 				data.item.amount = data.previousAmount - space
 		inventory.set(item, itemIndex)
-		allInventories[data.id].set(data.item, data.itemIndex)
+		Inventories.getInventoryByID(data.id).set(data.item, data.itemIndex)
 	# Check if the Source Stack was Split
 	elif data.has("split"):
 		# Check if the Item is not null
 		# So it doesn't get merged and it's old Value gets restored
 		# To avoid merging different Types of Objects with each other
 		if item != null:
-			data.item.amount = data.previousAmount	
-			allInventories[data.id].set(data.item, data.itemIndex)
+			data.item.amount = data.previousAmount
+			Inventories.getInventoryByID(data.id).set(data.item, data.itemIndex)
 		# Check if the Target Slot is empty, add the split Stack to it
 		else:
 			# Add one if the Number of the full Stack was uneven
@@ -122,22 +135,52 @@ func drop_data(_position, data):
 			# Duplicate the Item in Order for it not to share the same value
 			# With the Source Stack
 			if data.previousAmount % 2 != 0:
-				allInventories[data.id].set(data.item.duplicate(), data.itemIndex)
+				Inventories.getInventoryByID(data.id).set(data.item.duplicate(), data.itemIndex)
 				data.item.amount += 1
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
-		allInventories[data.id].set(item, data.itemIndex)
+		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
 		inventory.set(data.item, itemIndex)
+	# Notify specific Objects that an Item has been dropped
+	# so they can continue working
+	if tmpInventory != null:
+		Inventories.notifyMoving(false)
+	# Set unhandled data to null
+	# Meaning the Item has been dropped in a valid Place
+	Inventories.setUnhandledData(null, null, null, null)
 	
+"""Handle Item Selection"""
 func select():
+	# Mark the Slot as selected
 	selected.show()
-	if inventory.items[get_parent().currentlySelected] != null:
-		playerItem.item = inventory.items[get_parent().currentlySelected]
+	# If the Slot contains an Item, set it on the Player
+	if inventory.items[get_index()] != null:
+		playerItem.item = inventory.items[get_index()]
+		# If the Item is Placeable, start the Placement
+		# If another Placement is already in Progress 
+		# but didn't finish, cancel it
+		if playerItem.item.placeable:
+			if tileMap.currentObject != null:
+				tileMap.cancel()
+			if tileMap.currentObject == null:
+				tileMap.instancePlaceableObject(inventory.items[get_index()], get_global_mouse_position())
+			tileMap.connect("stopped_placing", self, "_on_stopped_placing", [], CONNECT_ONESHOT)
 	else:
+		# If an Item was being placed and a new Slot has been selected
+		# Cancel the Placement
+		if tileMap.currentObject != null:
+			tileMap.cancel()
 		playerItem.item = null
-	emit_signal("item_switched")
+	get_parent().emit_signal("item_switched", 0)
 	
+"""Deselect a Slot"""
 func deselect():
 	selected.hide()
+	
+"""Get notified when the Player stopped placing the Item"""
+func _on_stopped_placing(placed):
+	# Remove it from the Inventory if it was actually placed
+	if placed:
+		playerInventories[1].remove(get_index())

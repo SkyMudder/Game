@@ -1,12 +1,12 @@
 extends HBoxContainer
 
 
-onready var inventory = Inventories.allInventories[0]
+onready var inventory = Inventories.playerInventories[0]
 
 onready var craftingSection = get_node("CraftingSection")
 onready var itemTexture = get_node("CraftingSection/ItemTexture")
 
-onready var recipes = $Recipes
+onready var recipes = get_node("ScrollContainer/Recipes")
 onready var RecipeContainer = preload("res://Recipes/RecipeContainer.tscn")
 
 var currentlySelected = null
@@ -16,6 +16,7 @@ var previouslySelected = null
 Adds all the Recipes to the Recipe Section
 Connects the Signal for detecting when one got selected"""
 func _ready():
+	rect_clip_content = true
 	craftingSection.hide()
 	for x in range(Recipes.allRecipes.size()):
 		var newRecipeContainer = RecipeContainer.instance()
