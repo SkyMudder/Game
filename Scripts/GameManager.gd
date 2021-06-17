@@ -4,7 +4,7 @@ extends Node2D
 onready var player = get_node("KinematicBody2D")
 onready var tileMapGrass = get_node("Grass")
 onready var mousePointer = preload("res://Sprites/MousePointer.png")
-onready var inventory = get_node("KinematicBody2D/InventoryWrapper/InventoryTabs")
+onready var inventory = get_node("InventoryWrapper/InventoryTabs")
 
 var root = WorldVariables.getRoot()
 	

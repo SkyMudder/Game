@@ -132,28 +132,35 @@ func smelt():
 		if Inventories.moving:
 			yield(Inventories, "resume")
 		# Check if the Item is smeltable
-		# and make sure that the Item in the Product Inventory is actually
-		# a smelted Item
+		# and make sure that the Item in the Product Inventory is
+		# the Smelting Product of the Source Item
 		# To avoid that any Resource being placed there
 		# can have its Amount incremented
-		if checkSmeltable(sourceItems[index]) and !checkSmeltable(targetItems[0]) and !checkBurnable(targetItems[0]):
-			# Remove the smelted Item and the Fuel
-			sourceItems[index].amount -= 1
-			fuel -= 20
-			# Update the Fuel on the UI
-			fuelProgress.value = fuel
-			# If there is no Item in the Product Inventory, add one
-			# Else, increment its Value
-			# Set the Items
-			if targetItems[0] == null:
-				ui.productInventory.set(item.duplicate(), 0)
+		if checkSmeltable(sourceItems[index]):
+			if targetItems[0] != null:
+				if targetItems[0].name == getProductFromSource(sourceItems[index]).name:
+					smeltUpdateValues(sourceItems[index], index, targetItems[0], item)
 			else:
-				item = targetItems[0]
-				item.amount += 1
-				ui.productInventory.set(item.duplicate(), 0)
-			# Set the Source Item, as its Value was decremented earlier
-			ui.sourceInventory.set(sourceItems[index], index)
+				smeltUpdateValues(sourceItems[index], index, targetItems[0], item)
 		currentlySmelting = false
+	
+func smeltUpdateValues(sourceItem, index, targetItem, item):
+	# Remove the smelted Item and the Fuel
+	sourceItem.amount -= 1
+	fuel -= 20
+	# Update the Fuel on the UI
+	fuelProgress.value = fuel
+	# If there is no Item in the Product Inventory, add one
+	# Else, increment its Value
+	# Set the Items
+	if targetItem == null:
+		ui.productInventory.set(item.duplicate(), 0)
+	else:
+		item = targetItem
+		item.amount += 1
+		ui.productInventory.set(item, 0)
+	# Set the Source Item, as its Value was decremented earlier
+	ui.sourceInventory.set(sourceItem, index)
 	
 """Return the first burnable Item Index found in the Queue
 If no Item is found, null is returned"""
@@ -162,19 +169,19 @@ func findBurnable():
 		if checkBurnable(ui.sourceInventory.items[x]):
 			return x
 	
-"""Checks if a specific Item is Burnable
-Returns a Boolean"""
-func checkBurnable(item):
-	if item != null:
-		return item.burnable
-	return false
-	
 """Return the first smeltable Item Index found in the Queue
 If no Item is found, null is returned"""
 func findSmeltable():
 	for x in queue:
 		if checkSmeltable(ui.sourceInventory.items[x]):
 			return x
+	
+"""Checks if a specific Item is Burnable
+Returns a Boolean"""
+func checkBurnable(item):
+	if item != null:
+		return item.burnable
+	return false
 	
 """Checks if a specific Item is Smeltable
 Returns a Boolean"""
@@ -196,7 +203,7 @@ func readyToSmelt():
 	return false
 	
 func getProductFromSource(item):
-	return item.smeltProduct
+	return item.smeltingProduct
 	
 """This gets called when Items enter or leave the Furnace
 They are added or removed from the Queue accordingly

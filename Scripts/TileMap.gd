@@ -7,7 +7,7 @@ onready var tileMapGrass = get_node("../Grass")
 onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
-onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
+onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 onready var raycast = get_parent().get_node("ObjectPlacementCollision")
 onready var objects = get_parent().get_node("Objects")
 
@@ -117,6 +117,15 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
+	### MAKE SIMPLER ###
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	### MAKE SIMPLER ###
 	var rng = RandomNumberGenerator.new()
 	var spawnResource
 	var randCheck

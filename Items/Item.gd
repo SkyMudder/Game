@@ -9,7 +9,7 @@ export(float) var damageMultiplier
 export(int) var type
 export(bool) var burnable
 export(bool) var smeltable
-export(Resource) var smeltProduct
+export(Resource) var smeltingProduct
 export(int) var level
 export(bool) var placeable
 export(int) var placeableObject

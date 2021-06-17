@@ -58,6 +58,7 @@ func get_drag_data(_position):
 				data.split = true
 				set_drag_preview(dragPreview)
 				print(inventory)
+				print(dragPreview)
 				return data
 		# For moving Items
 		else:
