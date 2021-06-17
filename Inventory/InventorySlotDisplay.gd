@@ -158,12 +158,12 @@ func select():
 	# If the Slot contains an Item, set it on the Player
 	if inventory.items[get_index()] != null:
 		playerItem.item = inventory.items[get_index()]
-		# If the Item is Placeable, start the Placement
 		# If another Placement is already in Progress 
 		# but didn't finish, cancel it
-		if playerItem.item.placeable:
-			if tileMap.currentObject != null:
+		if tileMap.currentObject != null:
 				tileMap.cancel()
+		# If the Item is Placeable, start the Placement
+		if playerItem.item.placeable:
 			if tileMap.currentObject == null:
 				tileMap.instancePlaceableObject(inventory.items[get_index()], get_global_mouse_position())
 			tileMap.connect("stopped_placing", self, "_on_stopped_placing", [], CONNECT_ONESHOT)

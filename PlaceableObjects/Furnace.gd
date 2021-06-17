@@ -150,7 +150,7 @@ func smelt():
 			else:
 				item = targetItems[0]
 				item.amount += 1
-				ui.productInventory.set(item, 0)
+				ui.productInventory.set(item.duplicate(), 0)
 			# Set the Source Item, as its Value was decremented earlier
 			ui.sourceInventory.set(sourceItems[index], index)
 		currentlySmelting = false
