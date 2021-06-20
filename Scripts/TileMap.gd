@@ -7,7 +7,7 @@ onready var tileMapGrass = get_node("../Grass")
 onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
-onready var toolbar = get_node("../KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
+onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 onready var raycast = get_parent().get_node("ObjectPlacementCollision")
 onready var objects = get_parent().get_node("Objects")
 
@@ -110,47 +110,51 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 		tileMap = tileMapGrassTopGreen
 	elif type == 1:
 		tileMap = tileMapGrassTopBrown
-	if rand < SpawnRates.getGrass():
+	if rand < SpawnRates.grassTop:
 		tileMap.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 		posCurrent.y + root.y * chunkSizeTiles, randGrass)
 	
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
+	### MAKE SIMPLER ###
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	### MAKE SIMPLER ###
 	var rng = RandomNumberGenerator.new()
 	var spawnResource
 	var randCheck
 	var randResource
 	rng.randomize()
 	if type == 0:
-		randResource = rng.randi_range(0, 1)
+		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Tree.tscn")
-			randCheck = SpawnRates.getTree()
-		if randResource == 1:
+			randCheck = SpawnRates.grass.tree
+		elif randResource == 1:
 			spawnResource = preload("res://Objects/Stick.tscn")
-			randCheck = SpawnRates.getStick()
-		if rand < randCheck:
-			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
-			+ root.x * chunkSizePixels,
-			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels))
-	if type == 1:
-		randResource = rng.randi_range(0, 2)
+			randCheck = SpawnRates.grass.stick
+	elif type == 1:
+		randResource = rng.randi_range(0, SpawnRates.dirt.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Rock.tscn")
-			randCheck = SpawnRates.getRock()
+			randCheck = SpawnRates.dirt.rock
 		elif randResource == 1:
 			spawnResource = preload("res://Objects/RockCopper.tscn")
-			randCheck = SpawnRates.getCopper()
+			randCheck = SpawnRates.dirt.copper
 		elif randResource == 2:
 			spawnResource = preload("res://Objects/RockSmall.tscn")
-			randCheck = SpawnRates.getRockSmall()
-		if rand < randCheck:
-			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
-			+ root.x * chunkSizePixels,
-			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels))
+			randCheck = SpawnRates.dirt.rocksmall
+	if rand < randCheck:
+		instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
+		+ root.x * chunkSizePixels,
+		posCurrent.y * tileSizePixels
+		+ root.y * chunkSizePixels))
 		
 	
 """Removes a Chunk from the World and from the Generated Chunks Array"""

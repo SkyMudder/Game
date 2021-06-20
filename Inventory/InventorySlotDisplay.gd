@@ -34,15 +34,17 @@ func displayItem(inventoryDisplay, item):
 func get_drag_data(_position):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
+	var dragPreview
 	var data = {}
 	if item != null:
 		# Notify specific Objects that an Item has been picked up
 		# so they stop working
 		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
 			Inventories.notifyMoving(true)
-		var dragPreview = TextureRect.new()
+		dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
+		print(dragPreview)
 		data.id = inventory.id
 		data.name = item.name
 		data.previousAmount = item.amount
@@ -79,7 +81,7 @@ func drop_data(_position, data):
 	if item is Item and item.name == data.item.name:
 		# Check if the Source Slot is the same as the Target Slot
 		# The Item will not be moved and will restore it's previous Value
-		if itemIndex == data.itemIndex:
+		if itemIndex == data.itemIndex and inventory.id == tmpInventory.id:
 			item.amount = data.previousAmount
 			inventory.set(item, itemIndex)
 			# Notify specific Objects that an Item has been dropped
@@ -142,7 +144,7 @@ func drop_data(_position, data):
 	else:
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
-		inventory.set(data.item, itemIndex)
+		inventory.set(data.item.duplicate(), itemIndex)
 	# Notify specific Objects that an Item has been dropped
 	# so they can continue working
 	if tmpInventory != null:
@@ -158,12 +160,12 @@ func select():
 	# If the Slot contains an Item, set it on the Player
 	if inventory.items[get_index()] != null:
 		playerItem.item = inventory.items[get_index()]
-		# If the Item is Placeable, start the Placement
 		# If another Placement is already in Progress 
 		# but didn't finish, cancel it
-		if playerItem.item.placeable:
-			if tileMap.currentObject != null:
+		if tileMap.currentObject != null:
 				tileMap.cancel()
+		# If the Item is Placeable, start the Placement
+		if playerItem.item.placeable:
 			if tileMap.currentObject == null:
 				tileMap.instancePlaceableObject(inventory.items[get_index()], get_global_mouse_position())
 			tileMap.connect("stopped_placing", self, "_on_stopped_placing", [], CONNECT_ONESHOT)

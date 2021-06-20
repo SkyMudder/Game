@@ -38,7 +38,6 @@ func addInventorySlotsFurnace(targetInventory, targetContainer, amount):
 	targetInventory.setInventorySize(targetInventory.size)
 	
 func getSlot(index, inventoryChanged):
-	print("1")
 	if inventoryChanged == sourceInventory.id:
 		return sourceContainer.get_child(index)
 	elif inventoryChanged == productInventory.id:
@@ -49,8 +48,6 @@ Connects Signal for when Items changed
 Updates the Inventory on the UI"""
 func _on_stopped_placing(placed):
 	if placed:
-		print(sourceContainer)
-		print(productContainer)
 		addInventorySlotsFurnace(sourceInventory, sourceContainer, sourceInventory.size)
 		addInventorySlotsFurnace(productInventory, productContainer, productInventory.size)
 		columns = sourceInventory.columns
@@ -62,10 +59,4 @@ func _on_stopped_placing(placed):
 		updateInventoryDisplay(self, productInventory, productInventory.id)
 		sourceInventory.connect("items_changed", self, "_on_items_changed")
 		productInventory.connect("items_changed", self, "_on_items_changed")
-#		var item = preload("res://Items/Copper.tres").duplicate()
-#		var item2 = preload("res://Items/Wood.tres").duplicate()
-#		item.amount = 20
-#		item2.amount = 20
-#		sourceInventory.set(item, 0)
-#		sourceInventory.set(item2, 1)
 	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")

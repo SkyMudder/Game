@@ -239,14 +239,10 @@ cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 2 )
 
-[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-collision_layer = 2
-script = ExtResource( 5 )
-
-[node name="InventoryWrapper" type="CanvasLayer" parent="KinematicBody2D"]
+[node name="InventoryWrapper" type="CanvasLayer" parent="."]
 layer = 128
 
-[node name="InventoryTabs" type="TabContainer" parent="KinematicBody2D/InventoryWrapper"]
+[node name="InventoryTabs" type="TabContainer" parent="InventoryWrapper"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -261,7 +257,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Inventory" type="Tabs" parent="KinematicBody2D/InventoryWrapper/InventoryTabs"]
+[node name="Inventory" type="Tabs" parent="InventoryWrapper/InventoryTabs"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -269,7 +265,7 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="CenterPlayerInventory" type="CenterContainer" parent="KinematicBody2D/InventoryWrapper/InventoryTabs/Inventory"]
+[node name="CenterPlayerInventory" type="CenterContainer" parent="InventoryWrapper/InventoryTabs/Inventory"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -282,7 +278,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InventoryDisplay" parent="KinematicBody2D/InventoryWrapper/InventoryTabs/Inventory/CenterPlayerInventory" instance=ExtResource( 10 )]
+[node name="InventoryDisplay" parent="InventoryWrapper/InventoryTabs/Inventory/CenterPlayerInventory" instance=ExtResource( 10 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -292,7 +288,7 @@ margin_top = 241.0
 margin_right = 470.0
 margin_bottom = 241.0
 
-[node name="Crafting" type="Tabs" parent="KinematicBody2D/InventoryWrapper/InventoryTabs"]
+[node name="Crafting" type="Tabs" parent="InventoryWrapper/InventoryTabs"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -301,11 +297,11 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="CraftingList" parent="KinematicBody2D/InventoryWrapper/InventoryTabs/Crafting" instance=ExtResource( 11 )]
+[node name="CraftingList" parent="InventoryWrapper/InventoryTabs/Crafting" instance=ExtResource( 11 )]
 margin_right = 452.0
 margin_bottom = 471.0
 
-[node name="CenterPlayerInventory" type="CenterContainer" parent="KinematicBody2D/InventoryWrapper"]
+[node name="CenterPlayerInventory" type="CenterContainer" parent="InventoryWrapper"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -318,7 +314,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ToolbarDisplay" parent="KinematicBody2D/InventoryWrapper/CenterPlayerInventory" instance=ExtResource( 10 )]
+[node name="ToolbarDisplay" parent="InventoryWrapper/CenterPlayerInventory" instance=ExtResource( 10 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -328,6 +324,10 @@ margin_top = 92.0
 margin_right = 898.0
 margin_bottom = 92.0
 script = ExtResource( 13 )
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+collision_layer = 2
+script = ExtResource( 5 )
 
 [node name="Camera2D" type="Camera2D" parent="KinematicBody2D"]
 current = true
@@ -355,5 +355,6 @@ collide_with_bodies = false
 
 [node name="Objects" type="YSort" parent="."]
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]
-[connection signal="gui_input" from="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" to="KinematicBody2D/InventoryWrapper/CenterPlayerInventory/ToolbarDisplay" method="_on_InventoryDisplay_gui_input"]
