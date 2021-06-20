@@ -355,4 +355,6 @@ collide_with_bodies = false
 
 [node name="Objects" type="YSort" parent="."]
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="on_player_moved" from="KinematicBody2D" to="." method="_on_KinematicBody2D_on_player_moved"]

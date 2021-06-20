@@ -110,7 +110,7 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 		tileMap = tileMapGrassTopGreen
 	elif type == 1:
 		tileMap = tileMapGrassTopBrown
-	if rand < SpawnRates.getGrass():
+	if rand < SpawnRates.grassTop:
 		tileMap.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 		posCurrent.y + root.y * chunkSizeTiles, randGrass)
 	
@@ -132,34 +132,29 @@ func generateNature(type, posCurrent, root, rand):
 	var randResource
 	rng.randomize()
 	if type == 0:
-		randResource = rng.randi_range(0, 1)
+		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Tree.tscn")
-			randCheck = SpawnRates.getTree()
-		if randResource == 1:
+			randCheck = SpawnRates.grass.tree
+		elif randResource == 1:
 			spawnResource = preload("res://Objects/Stick.tscn")
-			randCheck = SpawnRates.getStick()
-		if rand < randCheck:
-			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
-			+ root.x * chunkSizePixels,
-			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels))
-	if type == 1:
-		randResource = rng.randi_range(0, 2)
+			randCheck = SpawnRates.grass.stick
+	elif type == 1:
+		randResource = rng.randi_range(0, SpawnRates.dirt.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Rock.tscn")
-			randCheck = SpawnRates.getRock()
+			randCheck = SpawnRates.dirt.rock
 		elif randResource == 1:
 			spawnResource = preload("res://Objects/RockCopper.tscn")
-			randCheck = SpawnRates.getCopper()
+			randCheck = SpawnRates.dirt.copper
 		elif randResource == 2:
 			spawnResource = preload("res://Objects/RockSmall.tscn")
-			randCheck = SpawnRates.getRockSmall()
-		if rand < randCheck:
-			instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
-			+ root.x * chunkSizePixels,
-			posCurrent.y * tileSizePixels
-			+ root.y * chunkSizePixels))
+			randCheck = SpawnRates.dirt.rocksmall
+	if rand < randCheck:
+		instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
+		+ root.x * chunkSizePixels,
+		posCurrent.y * tileSizePixels
+		+ root.y * chunkSizePixels))
 		
 	
 """Removes a Chunk from the World and from the Generated Chunks Array"""

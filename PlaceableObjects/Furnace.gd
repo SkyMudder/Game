@@ -1,5 +1,6 @@
 extends StaticBody2D
 
+signal ready_to_remove
 
 onready var furnace = $Furnace
 onready var furnaceOff = preload("res://PlaceableObjects/FurnaceOff.png")
@@ -19,8 +20,7 @@ var previousHurtboxShape
 
 var currentlyBurning = false
 var currentlySmelting = false
-
-var exists = true
+var queuedForRemoval = false
 
 var fuel = 0
 
@@ -42,7 +42,7 @@ func _ready():
 	
 """Runs while there are Items in the Queue"""
 func _process(_delta):
-	if queue.size() > 0:
+	if queue.size() > 0 and !queuedForRemoval:
 		if readyToBurn():
 			setState(1)
 			burn()
@@ -54,7 +54,6 @@ func _process(_delta):
 			else:
 				smelt()
 	else:
-		print(queue)
 		setState(0)
 		set_process(false)
 	
@@ -71,6 +70,8 @@ func setState(state):
 		furnace.texture = furnaceOff
 	elif state == 1:
 		furnace.texture = furnaceOn
+	else:
+		furnace.hide()
 	
 """Toggle Collision"""
 func setCollision(state):
@@ -109,6 +110,8 @@ func burn():
 				else:
 					ui.sourceInventory.remove(index)
 		currentlyBurning = false
+		if queuedForRemoval:
+			emit_signal("ready_to_remove")
 	
 """Burn a Stack until there is no Fuel anymore,
 Until the Stack has no Items
@@ -143,6 +146,8 @@ func smelt():
 			else:
 				smeltUpdateValues(sourceItems[index], index, targetItems[0], item)
 		currentlySmelting = false
+		if queuedForRemoval:
+			emit_signal("ready_to_remove")
 	
 func smeltUpdateValues(sourceItem, index, targetItem, item):
 	# Remove the smelted Item and the Fuel
@@ -205,6 +210,11 @@ func readyToSmelt():
 func getProductFromSource(item):
 	return item.smeltingProduct
 	
+func getFurnaceItems(inventory):
+	for x in range(inventory.size):
+		if inventory.items[x] != null:
+			Inventories.playerInventory.add(inventory.items[x])
+	
 """This gets called when Items enter or leave the Furnace
 They are added or removed from the Queue accordingly
 Starts the Process when something entered the Queue"""
@@ -215,7 +225,6 @@ func _on_queue_updated(itemIndex, flag):
 			set_process(true)
 	else:
 		queue.erase(itemIndex)
-	print(queue)
 	
 """For closing the Furnace Inventory when opening the Main Inventory
 Or right Clicking anywhere"""
@@ -231,11 +240,23 @@ func _on_Hurtbox_input_event(_viewport, _event, _shape_idx):
 			ui.hide()
 		else:
 			ui.show()
-	# Destroy the Furnace
+	# Deactivate the Furnace's Collision, remove the Texture and hide the UI
+	# Add the Furnace and the Items inside it to the Player Inventory
+	# The Furnace Node will be removed once all its Operations are finished
 	if Input.is_action_just_pressed("mouse_left"):
 		if Input.is_action_pressed("ctrl"):
-			if exists:
-				Inventories.playerInventory.add(preload("res://Items/Furnace.tres"))
-				Inventories.removeFurnaceInventory(ui.sourceInventory.id)
-				queue_free()
-				exists = false
+			# warning-ignore:return_value_discarded
+			connect("ready_to_remove", self, "_on_ready_to_remove")
+			queuedForRemoval = true
+			Inventories.playerInventory.add(preload("res://Items/Furnace.tres"))
+			getFurnaceItems(ui.sourceInventory)
+			getFurnaceItems(ui.productInventory)
+			setCollision(0)
+			setState(-1)
+			ui.hide()
+	
+# Destroy the Furnace
+func _on_ready_to_remove():
+	if !currentlyBurning and !currentlySmelting:
+		Inventories.removeFurnaceInventory(ui.sourceInventory.id)
+		queue_free()

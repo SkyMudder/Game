@@ -38,7 +38,6 @@ func addInventorySlotsFurnace(targetInventory, targetContainer, amount):
 	targetInventory.setInventorySize(targetInventory.size)
 	
 func getSlot(index, inventoryChanged):
-	print("1")
 	if inventoryChanged == sourceInventory.id:
 		return sourceContainer.get_child(index)
 	elif inventoryChanged == productInventory.id:
@@ -49,8 +48,6 @@ Connects Signal for when Items changed
 Updates the Inventory on the UI"""
 func _on_stopped_placing(placed):
 	if placed:
-		print(sourceContainer)
-		print(productContainer)
 		addInventorySlotsFurnace(sourceInventory, sourceContainer, sourceInventory.size)
 		addInventorySlotsFurnace(productInventory, productContainer, productInventory.size)
 		columns = sourceInventory.columns

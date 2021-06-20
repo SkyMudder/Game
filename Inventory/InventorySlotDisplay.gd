@@ -34,15 +34,17 @@ func displayItem(inventoryDisplay, item):
 func get_drag_data(_position):
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
+	var dragPreview
 	var data = {}
 	if item != null:
 		# Notify specific Objects that an Item has been picked up
 		# so they stop working
 		if Inventories.getFurnaceInventoryByID(inventory.id) != null:
 			Inventories.notifyMoving(true)
-		var dragPreview = TextureRect.new()
+		dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
+		print(dragPreview)
 		data.id = inventory.id
 		data.name = item.name
 		data.previousAmount = item.amount
@@ -58,7 +60,6 @@ func get_drag_data(_position):
 				data.split = true
 				set_drag_preview(dragPreview)
 				print(inventory)
-				print(dragPreview)
 				return data
 		# For moving Items
 		else:
@@ -94,7 +95,6 @@ func drop_data(_position, data):
 		# Check if the items are of the same Type
 		# And if the Source Stack has been split
 		if item.name == data.item.name and !data.has("split"):
-			print("YARABBO")
 			var space = item.stackLimit - item.amount
 			# Check if the split Stack has enough Space to be merged
 			# With the new Stack
@@ -142,7 +142,6 @@ func drop_data(_position, data):
 			inventory.set(data.item, itemIndex)
 	# For simply swapping Items
 	else:
-		print("YARABBI")
 		inventory.swap(data.id, inventory.id, data.itemIndex, itemIndex)
 		Inventories.getInventoryByID(data.id).set(item, data.itemIndex)
 		inventory.set(data.item.duplicate(), itemIndex)
