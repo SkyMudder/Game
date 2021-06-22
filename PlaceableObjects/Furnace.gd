@@ -1,7 +1,6 @@
 extends StaticBody2D
 
 signal ready_to_remove
-var falg = 0
 onready var furnace = $Furnace
 onready var furnaceOff = preload("res://PlaceableObjects/FurnaceOff.png")
 onready var furnaceOn = preload("res://PlaceableObjects/FurnaceOn.png")
@@ -13,7 +12,6 @@ onready var ui = get_node("FurnaceViewWrapper/FurnaceView")
 onready var fuelProgress = get_node("FurnaceViewWrapper/FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
 var queue = []
-var lastItems = [null, null, null]
 var productItem
 
 var previousCollisionShape
@@ -22,8 +20,6 @@ var previousHurtboxShape
 var currentlyBurning = false
 var currentlySmelting = false
 var queuedForRemoval = false
-var idleBurn = false
-var idleSmelt = false
 var fuel = 0
 
 const burnDuration = 1
@@ -44,8 +40,6 @@ func _ready():
 	
 """Runs while there are Items in the Queue"""
 func _process(_delta):
-	print(falg)
-	falg += 1
 	if queue.size() > 0 and !queuedForRemoval:
 		if readyToBurn():
 			setState(1)
@@ -218,23 +212,6 @@ func getFurnaceItems(inventory):
 	for x in range(inventory.size):
 		if inventory.items[x] != null:
 			Inventories.playerInventory.add(inventory.items[x])
-	
-func checkIdle():
-	var size = queue.size()
-	for x in range(size):
-		if size - 1 >= x and lastItems[queue[x]] != null:
-			print(ui.sourceInventory.items[queue[x]].amount)
-			print(lastItems[queue[x]].amount)
-			if ui.sourceInventory.items[queue[x]].amount != lastItems[queue[x]].amount:
-				return
-		else:
-			return
-	set_process(false)
-	
-func cloneItems(inventory):
-	for x in range(inventory.size):
-		if inventory.items[x] != null:
-			lastItems[x] = inventory.items[x].duplicate()
 	
 func ableToContinue():
 	var checks = [false, false]
