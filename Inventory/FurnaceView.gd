@@ -9,7 +9,7 @@ onready var sourceInventory = Inventories.furnaceInventories[localFurnaceInvento
 onready var productInventory = Inventories.furnaceInventories[localFurnaceInventoriesIndex + 1]
 onready var sourceContainer = get_node("FurnaceHBoxContainer/InventoryVBoxContainer/SourceHBoxContainer")
 onready var productContainer = get_node("FurnaceHBoxContainer/InventoryVBoxContainer/ProductHBoxContainer")
-onready var furnace = get_parent()
+onready var furnace = get_parent().get_parent()
 onready var fuelLabel = get_node("FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
 """Adds the given Amount of Inventory Slots to the UI

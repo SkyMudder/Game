@@ -1,7 +1,7 @@
 extends StaticBody2D
 
 signal ready_to_remove
-
+var falg = 0
 onready var furnace = $Furnace
 onready var furnaceOff = preload("res://PlaceableObjects/FurnaceOff.png")
 onready var furnaceOn = preload("res://PlaceableObjects/FurnaceOn.png")
@@ -13,6 +13,7 @@ onready var ui = get_node("FurnaceViewWrapper/FurnaceView")
 onready var fuelProgress = get_node("FurnaceViewWrapper/FurnaceView/FurnaceHBoxContainer/InventoryVBoxContainer/FuelHBoxContainer/Fuel")
 
 var queue = []
+var lastItems = [null, null, null]
 var productItem
 
 var previousCollisionShape
@@ -21,7 +22,8 @@ var previousHurtboxShape
 var currentlyBurning = false
 var currentlySmelting = false
 var queuedForRemoval = false
-
+var idleBurn = false
+var idleSmelt = false
 var fuel = 0
 
 const burnDuration = 1
@@ -42,6 +44,8 @@ func _ready():
 	
 """Runs while there are Items in the Queue"""
 func _process(_delta):
+	print(falg)
+	falg += 1
 	if queue.size() > 0 and !queuedForRemoval:
 		if readyToBurn():
 			setState(1)
@@ -49,9 +53,9 @@ func _process(_delta):
 		if readyToSmelt():
 			setState(1)
 			if productItem[0] != null:
-				if productItem[0].amount < productItem[0].stackLimit:
+				if ableToContinue():
 					smelt()
-			else:
+			elif ableToContinue():
 				smelt()
 	else:
 		setState(0)
@@ -124,7 +128,7 @@ func smelt():
 	var targetItems = ui.productInventory.items
 	var index = findSmeltable()
 	# Check if there is enough Fuel and a smeltable Item was found
-	if index != null and fuel > 0:
+	if index != null:
 		# Get the Source Item and determine what the Product is
 		var item = getProductFromSource(sourceItems[index]).duplicate()
 		currentlySmelting = true
@@ -214,6 +218,38 @@ func getFurnaceItems(inventory):
 	for x in range(inventory.size):
 		if inventory.items[x] != null:
 			Inventories.playerInventory.add(inventory.items[x])
+	
+func checkIdle():
+	var size = queue.size()
+	for x in range(size):
+		if size - 1 >= x and lastItems[queue[x]] != null:
+			print(ui.sourceInventory.items[queue[x]].amount)
+			print(lastItems[queue[x]].amount)
+			if ui.sourceInventory.items[queue[x]].amount != lastItems[queue[x]].amount:
+				return
+		else:
+			return
+	set_process(false)
+	
+func cloneItems(inventory):
+	for x in range(inventory.size):
+		if inventory.items[x] != null:
+			lastItems[x] = inventory.items[x].duplicate()
+	
+func ableToContinue():
+	var checks = [false, false]
+	if (findSmeltable() != null or (findBurnable() != null and fuel != 100)) and (findBurnable() != null or fuel > 0):
+		print("true")
+		checks[0] = true
+	if productItem[0] != null:
+		if productItem[0].amount < productItem[0].stackLimit:
+			checks[1] = true
+	else:
+		checks[1] = true
+	if checks[0] and checks[1]:
+		return true
+	else:
+		set_process(false)
 	
 """This gets called when Items enter or leave the Furnace
 They are added or removed from the Queue accordingly
