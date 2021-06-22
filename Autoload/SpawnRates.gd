@@ -16,10 +16,10 @@ const __percentage : int = 1000
 
 """Getters"""
 
-func getPercentage():
+func getPercentage() -> int:
 	return __percentage
 
 """World"""
 var dirt = {}
 var grass = {}
-var grassTop = 100
+var grassTop : int = 100

@@ -5,9 +5,9 @@ signal item_switched(flag)	# Flag: 0 if the Player Item should be updated
 							# Flag: 1 if the Building Object should be updated
 
 onready var InventorySlotDisplay = preload("res://Inventory/InventorySlotDisplay.tscn")
-onready var inventory = Inventories.toolbar
+onready var inventory : Inventory = Inventories.toolbar
 
-var currentlySelected = 9
+var currentlySelected : int = 9
 
 """Adds the given Amount of Inventory Slots to the UI
 Connects Signal for when Items changed
@@ -21,6 +21,7 @@ func _ready():
 	updateInventoryDisplay(self, inventory, inventory.id)
 	if inventory == playerInventories[1]:
 		get_child(currentlySelected).select()
+	# warning-ignore:return_value_discarded
 	inventory.connect("items_changed", self, "_on_items_changed")
 	for x in get_children():
 		x.connect("slot_updated", self, "_on_slot_updated")
@@ -32,12 +33,12 @@ func _ready():
 		inventory.add(preload("res://Items/Wood.tres"))
 	
 """When Item changes, update the Inventory Slot Display"""
-func _on_items_changed(inventoryChanged, index):
+func _on_items_changed(inventoryChanged, index) -> void:
 	if inventoryChanged == inventory.id:
 		updateInventorySlotDisplay(self, inventory, inventoryChanged, index)
 	
 """Update Slots when a new Slot is selected"""
-func _input(event):
+func _input(event) -> void:
 	if event.is_action_pressed("scroll_up") and !Inventories.open:
 		get_child(currentlySelected).deselect()
 		if !(currentlySelected - 1 < 0):
@@ -55,11 +56,11 @@ func _input(event):
 		if get_child(currentlySelected).inventory == playerInventories[1]:
 			get_child(currentlySelected).select()
 	
+func getSlot(index, _inventoryChanged):
+	return get_child(index)
+	
 """For updating the Player Item
 When an Item is placed in an already selected Slot"""
 func _on_slot_updated(index):
 	get_child(index).select()
 	emit_signal("item_switched", 0)
-	
-func getSlot(index, _inventoryChanged):
-	return get_child(index)

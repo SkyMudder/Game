@@ -22,30 +22,30 @@ func _ready():
 		setAmounts()
 		setDescription()
 	
-func setTextures():
+func setTextures() -> void:
 	if item.product != null:
 		itemTexture.texture = item.product.texture
 	for x in range(item.ingredients.size()):
 		if item.ingredients[x] != null:
 			ingredientTextures.get_child(x).texture = item.ingredients[x].texture
 	
-func setNames():
+func setNames() -> void:
 	for x in range(item.ingredients.size()):
 		if item.ingredients[x] != null:
 			ingredientNames.get_child(x).text = item.ingredients[x].name
 	
-func setAmounts():
+func setAmounts() -> void:
 	for x in range(item.ingredientAmounts.size()):
 		if item.ingredients[x] != null:
 			ingredientAmounts.get_child(x).text = str(item.ingredientAmounts[x])
 	
-func setDescription():
+func setDescription() -> void:
 	description.text = item.description
 	
-func select():
+func select() -> void:
 	selected.show()
 	
-func deselect():
+func deselect() -> void:
 	selected.hide()
 	
 func _on_RecipeContainer_gui_input(_event):

@@ -5,18 +5,18 @@ signal resume
 
 const Inventory = preload("res://Inventory/Inventory.gd")
 
-onready var currentInventory = 0
-var currentFurnace = 0
+onready var currentInventory : int = 0
+var currentFurnace : int = 0
 
-var moving
-var open = false
-var unhandledData = {}
+var moving : = false
+var open : = false
+var unhandledData : Dictionary = {}
 
-var playerInventory = Inventory.new(0, 24, 6)
-var toolbar = Inventory.new(1, 10, 10)
+var playerInventory : Inventory = Inventory.new(0, 24, 6)
+var toolbar : Inventory = Inventory.new(1, 10, 10)
 
-onready var playerInventories = []
-onready var furnaceInventories = []
+onready var playerInventories : Array = []
+onready var furnaceInventories : Array = []
 
 func _ready():
 	playerInventories.push_back(playerInventory)
@@ -24,7 +24,7 @@ func _ready():
 	playerInventories.push_back(toolbar)
 	currentInventory += 1
 	
-func newFurnaceInventory():
+func newFurnaceInventory() -> int:
 	furnaceInventories.push_back(Inventory.new(currentInventory, 3, 1))
 	currentInventory += 1
 	furnaceInventories.push_back(Inventory.new(currentInventory, 1, 1))
@@ -32,38 +32,41 @@ func newFurnaceInventory():
 	currentFurnace += 2
 	return currentFurnace - 2
 	
-func removeFurnaceInventory(inventoryID):
+func removeFurnaceInventory(inventoryID) -> void:
 	furnaceInventories.erase(getInventoryByID(inventoryID))
 	furnaceInventories.erase(getInventoryByID(inventoryID + 1))
 	currentInventory -= 2
 	currentFurnace -= 2
 	
-func getInventoryByID(inventoryID):
+func getInventoryByID(inventoryID) -> Inventory:
 	var inventory = getPlayerInventoryByID(inventoryID)
 	if inventory != null:
 		return inventory
 	inventory = getFurnaceInventoryByID(inventoryID)
 	if inventory != null:
 		return inventory
+	return null
 	
-func getPlayerInventoryByID(inventoryID):
+func getPlayerInventoryByID(inventoryID) -> Inventory:
 	for x in playerInventories:
 		if x.id == inventoryID:
 			return x
+	return null
 	
-func getFurnaceInventoryByID(inventoryID):
+func getFurnaceInventoryByID(inventoryID) -> Inventory:
 	for x in furnaceInventories:
 		if x.id == inventoryID:
 			return x
+	return null
 	
-func notifyMoving(state):
+func notifyMoving(state) -> void:
 	if state:
 		moving = true
 	else:
 		moving = false
 		emit_signal("resume")
 	
-func setUnhandledData(inventory, item, amount, index):
+func setUnhandledData(inventory, item, amount, index) -> void:
 	unhandledData.inventory = inventory
 	unhandledData.item = item
 	unhandledData.amount = amount

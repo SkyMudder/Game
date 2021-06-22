@@ -3,8 +3,8 @@ extends CenterContainer
 
 signal slot_updated(index)
 
-onready var playerInventories = Inventories.playerInventories
-var inventory
+onready var playerInventories : Array = Inventories.playerInventories
+var inventory : Inventory
 
 onready var textureRect = get_node("TextureRect")
 onready var itemAmount = get_node("TextureRect/ItemAmount")
@@ -17,7 +17,7 @@ onready var furnaceView = get_parent().get_parent().get_parent()
 """Shows a given Item on the UI
 If the Amount is lower than 0 it gets set to null
 If the Stack only has one Item, the Amount is not shown on the UI"""
-func displayItem(inventoryDisplay, item):
+func displayItem(inventoryDisplay, item) -> void:
 	if item is Item and item.amount > 0:
 		textureRect.texture = item.texture
 		itemAmount.text = str(item.amount)
@@ -31,7 +31,7 @@ func displayItem(inventoryDisplay, item):
 	if selected.visible:
 		emit_signal("slot_updated", get_index())
 	
-func get_drag_data(_position):
+func get_drag_data(_position) -> Dictionary:
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
 	var dragPreview
@@ -44,7 +44,6 @@ func get_drag_data(_position):
 		dragPreview = TextureRect.new()
 		dragPreview.texture = item.texture
 		dragPreview.set_scale(Vector2(5, 5))
-		print(dragPreview)
 		data.id = inventory.id
 		data.name = item.name
 		data.previousAmount = item.amount
@@ -69,11 +68,12 @@ func get_drag_data(_position):
 				data.itemIndex = itemIndex
 				set_drag_preview(dragPreview)
 				return data
+	return data
 	
-func can_drop_data(_position, data):
+func can_drop_data(_position, data) -> bool:
 	return data is Dictionary and data.has("item")
 	
-func drop_data(_position, data):
+func drop_data(_position, data) -> void:
 	var itemIndex = get_index()
 	var item = inventory.items[itemIndex]
 	var tmpInventory = Inventories.getFurnaceInventoryByID(data.id)
@@ -154,7 +154,7 @@ func drop_data(_position, data):
 	Inventories.setUnhandledData(null, null, null, null)
 	
 """Handle Item Selection"""
-func select():
+func select() -> void:
 	# Mark the Slot as selected
 	selected.show()
 	# If the Slot contains an Item, set it on the Player
@@ -178,7 +178,7 @@ func select():
 	get_parent().emit_signal("item_switched", 0)
 	
 """Deselect a Slot"""
-func deselect():
+func deselect() -> void:
 	selected.hide()
 	
 """Get notified when the Player stopped placing the Item"""

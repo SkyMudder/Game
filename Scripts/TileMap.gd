@@ -43,7 +43,7 @@ func _process(_delta):
 
 """Generates a Chunk and keeps track of the Currently
 Generated and Next To Generate Chunks"""
-func generateChunk(root):
+func generateChunk(root) -> void:
 	createNoiseAndGenerate(root)
 	ww.setGeneratedChunks(root)
 	ww.removeNextToGenerate(root)
@@ -65,8 +65,8 @@ func generateChunk(root):
 	
 """Creates a Noise Texture 
 Used generate specific Tiles based on the Noise Value"""
-func createNoiseAndGenerate(root):
-	var percentage = SpawnRates.getPercentage()
+func createNoiseAndGenerate(root) -> void:
+	var percentage : int = SpawnRates.getPercentage()
 	var rng = RandomNumberGenerator.new()
 	rng.seed = root.x * root.y
 	
@@ -90,21 +90,21 @@ func createNoiseAndGenerate(root):
 	
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
-func generateDirt(posCurrent, root, rand):
+func generateDirt(posCurrent, root, rand) -> void:
 	tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
 	generateNature(1, posCurrent, root, rand)
 	
 """Generates the Grass Floor
 None of these Tiles have Collision"""
-func generateGrass(posCurrent, root, rand):
+func generateGrass(posCurrent, root, rand) -> void:
 	tileMapGrass.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
 	generateNature(0, posCurrent, root, rand)
 	
 """Generates Grass on top of the Grass Floor
 None of these Tiles have Collision"""
-func generateGrassTop(posCurrent, root, rand, randGrass, type):
+func generateGrassTop(posCurrent, root, rand, randGrass, type) -> void:
 	var tileMap
 	if type == 0:
 		tileMap = tileMapGrassTopGreen
@@ -116,7 +116,7 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 	
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
-func generateNature(type, posCurrent, root, rand):
+func generateNature(type, posCurrent, root, rand) -> void:
 	var rng = RandomNumberGenerator.new()
 	var spawnResource
 	var randCheck
@@ -149,7 +149,7 @@ func generateNature(type, posCurrent, root, rand):
 		
 	
 """Removes a Chunk from the World and from the Generated Chunks Array"""
-func removeChunk(root):
+func removeChunk(root) -> void:
 	removeDirt(root)
 	removeGrass(root)
 	removeGrassTop(root)
@@ -157,28 +157,28 @@ func removeChunk(root):
 	ww.removeGeneratedChunks(root)
 	
 """Removes the Dirt"""
-func removeDirt(root):
+func removeDirt(root) -> void:
 	for x in chunkSizeTiles:
 		for y in chunkSizeTiles:
 			tileMapDirt.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Grass"""
-func removeGrass(root):
+func removeGrass(root) -> void:
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
 			tileMapGrass.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Grass on top of the Grass Floor"""
-func removeGrassTop(root):
+func removeGrassTop(root) -> void:
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
 			tileMapGrassTopGreen.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Nature-Objects"""
-func removeNature():
+func removeNature() -> void:
 	for x in get_tree().get_nodes_in_group("Objects"):
 		if player.isFarFromObject(x.global_position):
 			x.queue_free()
@@ -188,7 +188,7 @@ So they can only be placed in specific Increments of the World
 Switches between different Textures
 Depending on if the Object can be placed or not
 Uses the Blueprint Textures which must be included in the Object Scene"""
-func blueprint(object):
+func blueprint(object) -> void:
 	var posXRest = fmod(get_global_mouse_position().x, tileSizePixels)
 	var posYRest = fmod(get_global_mouse_position().y, tileSizePixels)
 	var posX = get_global_mouse_position().x - posXRest - tileSizePixels
@@ -209,46 +209,44 @@ func blueprint(object):
 	
 """Instances an Object and adds it to the Scene Tree
 Adds it to a Group of created Objects"""
-func instanceAndAddObject(objectScene, position):
+func instanceAndAddObject(objectScene, position) -> void:
 	var newObject = objectScene.instance()
 	objects.add_child(newObject)
 	positionObject(newObject, position)
 	newObject.add_to_group("Objects")
-	return newObject
 	
 """Places an Object at a specific Position"""
-func positionObject(instance, position):
+func positionObject(instance, position) -> void:
 	instance.global_position = position
 	
 """Instance a new Object, add it to the Scene Tree
 Show its Blueprint Texture which should be in the Scene"""
-func instancePlaceableObject(item, position):
+func instancePlaceableObject(item, position) -> void:
 	var objectScene = item.getObject()
 	var newObject = objectScene.instance()
 	objects.add_child(newObject)
-	print("Created and added to Tree")
 	positionObject(newObject, position)
 	newObject.setCollision(0)
 	currentObject = newObject
 	blueprint(currentObject)
 	
 """Checks if the Player clicked LMB to place an object"""
-func checkPlaceObject():
+func checkPlaceObject() -> bool:
 	blueprint(currentObject)
 	if Input.is_mouse_button_pressed(BUTTON_LEFT) and !Input.is_action_pressed("ctrl") and areaClear:
 		return true
+	return false
 	
 """Places an Object"""
-func placeObject():
+func placeObject() -> void:
 	if checkPlaceObject():
-		print("PLACED")
 		currentObject.setState(0)
 		currentObject.setCollision(1)
 		currentObject.add_to_group("Objects")
 		currentObject = null
 		emit_signal("stopped_placing", true)
 	
-func cancel():
+func cancel() -> void:
 	Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
 	currentObject.queue_free()
 	currentObject = null
