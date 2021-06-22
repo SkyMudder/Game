@@ -42,10 +42,8 @@ func _ready():
 func _process(_delta):
 	if queue.size() > 0 and !queuedForRemoval:
 		if readyToBurn():
-			setState(1)
 			burn()
 		if readyToSmelt():
-			setState(1)
 			if productItem[0] != null:
 				if ableToContinue():
 					smelt()
@@ -208,11 +206,15 @@ func readyToSmelt():
 func getProductFromSource(item):
 	return item.smeltingProduct
 	
+"""Gets the Items that are in the Furnace Inventories
+And returns them to the Player Inventory"""
 func getFurnaceItems(inventory):
 	for x in range(inventory.size):
 		if inventory.items[x] != null:
 			Inventories.playerInventory.add(inventory.items[x])
 	
+"""Checks if the Furnace can continue to process anything
+If not, sets process to false"""
 func ableToContinue():
 	var checks = [false, false]
 	if (findSmeltable() != null or (findBurnable() != null and fuel != 100)) and (findBurnable() != null or fuel > 0):
@@ -224,8 +226,10 @@ func ableToContinue():
 	else:
 		checks[1] = true
 	if checks[0] and checks[1]:
+		setState(1)
 		return true
 	else:
+		setState(0)
 		set_process(false)
 	
 """This gets called when Items enter or leave the Furnace

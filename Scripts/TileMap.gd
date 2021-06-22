@@ -117,15 +117,6 @@ func generateGrassTop(posCurrent, root, rand, randGrass, type):
 """Generates Nature-Objects on top of the Floor
 All of these Tiles have Collision"""
 func generateNature(type, posCurrent, root, rand):
-	### MAKE SIMPLER ###
-	#
-	#
-	#
-	#
-	#
-	#
-	#
-	### MAKE SIMPLER ###
 	var rng = RandomNumberGenerator.new()
 	var spawnResource
 	var randCheck
