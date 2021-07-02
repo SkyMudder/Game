@@ -2,7 +2,7 @@ extends Sprite
 
 
 onready var toolbar = get_node("../../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
-var item
+var item : Item
 
 func _ready():
 	toolbar.connect("item_switched", self, "_on_item_switched")

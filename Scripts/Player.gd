@@ -1,13 +1,13 @@
 extends KinematicBody2D
 
-onready var inventory = Inventories.playerInventories[0]
-onready var toolbar = Inventories.playerInventories[1]
+onready var inventory : Inventory = Inventories.playerInventory
+onready var toolbar : Inventory = Inventories.toolbar
 
-var velocity = Vector2.ZERO	# Player Velocity
+var velocity : = Vector2.ZERO	# Player Velocity
 
-const MAX_SPEED = 100
-const ACCELERATION = 500
-const FRICTION = 500
+const MAX_SPEED : int = 100
+const ACCELERATION : int = 500
+const FRICTION : int = 500
 
 signal on_player_moved	# Signal used to notify other Nodes of a Player Movement
 
@@ -29,7 +29,7 @@ func _physics_process(delta):
 	
 """Checks if the Player is close to a Chunk
 Close is defined by the Render Distance"""
-func isCloseToChunk(chunk):
+func isCloseToChunk(chunk) -> bool:
 	if self.position.distance_to(chunk * WorldVariables.getChunkSizePixels()) < WorldVariables.getRenderDistance() * WorldVariables.getChunkSizePixels():
 		return true
 	else:
@@ -37,7 +37,7 @@ func isCloseToChunk(chunk):
 	
 """Checks if the Player is far from a Chunk
 Far is defined by the Render Distance"""
-func isFarFromChunk(chunk):
+func isFarFromChunk(chunk) -> bool:
 	if self.position.distance_to(chunk * WorldVariables.getChunkSizePixels()) > WorldVariables.getRenderDistance() * WorldVariables.getChunkSizePixels():
 		return true
 	else:
@@ -45,7 +45,7 @@ func isFarFromChunk(chunk):
 	
 """Checks if the Player is far from an Object
 Far is defined by the Render Distance"""
-func isFarFromObject(pos):
+func isFarFromObject(pos) -> bool:
 	if self.position.distance_to(pos) > WorldVariables.getRenderDistance() * WorldVariables.getChunkSizePixels() + 150:
 		return true
 	else:

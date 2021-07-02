@@ -1,8 +1,6 @@
 extends "res://Objects/SmallObject.gd"
 
 
-onready var inventory = Inventories.playerInventory
-
 var amount = 1
 var item = preload("res://Items/Stone.tres")
 var exists = true

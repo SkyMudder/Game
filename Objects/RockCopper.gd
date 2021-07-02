@@ -1,7 +1,6 @@
 extends "res://Objects/Object.gd"
 
 
-onready var inventory = Inventories.playerInventory
 onready var sprite = get_child(0)
 onready var collision = get_child(1)
 onready var breakingEffect = sprite.get_child(0)

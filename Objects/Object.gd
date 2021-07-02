@@ -1,10 +1,12 @@
 extends StaticBody2D
 
 
+onready var inventory : Inventory = Inventories.playerInventory
+
 """While active, removes HP
 Unbound from Framerate
 When HP reaches 0, the Particles stop emitting and the Object gets destroyed"""
-func damage(object, delta):
+func damage(object, delta) -> void:
 	if object.playerItem.item != null:
 		if object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level:
 			object.damagingEffect.emitting = true
@@ -24,7 +26,7 @@ func damage(object, delta):
 A new explosive Particle Effect gets emitted
 Texture and Collision of the Object get deactivated on Particle Emission
 The Object gets freed after the time the Particle Effect needs to process"""
-func destroy(object):
+func destroy(object) -> void:
 	if object.exists:
 		object.item.amount = object.amount
 		object.inventory.add(object.item)

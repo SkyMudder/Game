@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 
-onready var inventory = Inventories.playerInventories[0]
+onready var inventory : Inventory = Inventories.playerInventory
 
 onready var craftingSection = get_node("CraftingSection")
 onready var itemTexture = get_node("CraftingSection/ItemTexture")
@@ -9,8 +9,8 @@ onready var itemTexture = get_node("CraftingSection/ItemTexture")
 onready var recipes = get_node("ScrollContainer/Recipes")
 onready var RecipeContainer = preload("res://Recipes/RecipeContainer.tscn")
 
-var currentlySelected = null
-var previouslySelected = null
+var currentlySelected : int
+var previouslySelected : int
 
 """Hides the crafting Section to prevent unselected Items from being crafted
 Adds all the Recipes to the Recipe Section
@@ -24,12 +24,12 @@ func _ready():
 		newRecipeContainer.connect("recipe_selected", self, "_on_recipe_selected")
 		recipes.add_child(newRecipeContainer)
 	
-func updateItemTexture():
+func updateItemTexture() -> void:
 	itemTexture.texture = recipes.get_child(currentlySelected).item.product.texture
 	
 """Checks if the requested Item is available to craft
 This is done by checking if the needed Items are available in the Inventory"""
-func checkCraft():
+func checkCraft() -> bool:
 	var currentItem = recipes.get_child(currentlySelected).item
 	for x in range(currentItem.ingredients.size()):
 		if inventory.seek(currentItem.ingredients[x], currentItem.ingredientAmounts[x]) == false:

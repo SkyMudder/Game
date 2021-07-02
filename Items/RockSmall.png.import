@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Stick.png-04b23f5d4eab4811029753e844bc2947.stex"
+path="res://.import/RockSmall.png-991fe73c1779e180b5bcc090aebdb51a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Stick.png"
-dest_files=[ "res://.import/Stick.png-04b23f5d4eab4811029753e844bc2947.stex" ]
+source_file="res://Items/RockSmall.png"
+dest_files=[ "res://.import/RockSmall.png-991fe73c1779e180b5bcc090aebdb51a.stex" ]
 
 [params]
 

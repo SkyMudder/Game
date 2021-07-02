@@ -1,30 +1,30 @@
 extends GridContainer
 
 
-onready var playerInventories = Inventories.playerInventories
-onready var furnaceInventories = Inventories.furnaceInventories
+onready var playerInventories : Array = Inventories.playerInventories
+onready var furnaceInventories : Array = Inventories.furnaceInventories
 onready var tileMap = get_node("/root/Main/Dirt")
 
 """Goes through the whole Inventory and updates the Slots"""
-func updateInventoryDisplay(object, inventory, inventoryChanged):
+func updateInventoryDisplay(object, inventory, inventoryChanged) -> void:
 	for itemIndex in inventory.size:
 		object.updateInventorySlotDisplay(object, inventory, inventoryChanged, itemIndex)
 	
 """Updates an Inventory Slot at a given Index"""
-func updateInventorySlotDisplay(object, inventory, inventoryChanged, itemIndex):
+func updateInventorySlotDisplay(object, inventory, inventoryChanged, itemIndex) -> void:
 	var inventorySlotDisplay = object.getSlot(itemIndex, inventoryChanged)
 	var item = inventory.items[itemIndex]
 	inventorySlotDisplay.displayItem(inventory, item)
 	
 """Create Inventory with a given Amount of Slots"""
-func addInventorySlots(object, amount):
+func addInventorySlots(object, amount) -> void:
 	for _x in range(amount):
 		var slot = object.InventorySlotDisplay.instance()
 		object.add_child(slot)
 	object.inventory.setInventorySize(object.inventory.size)
 	
 """Load Inventory with a given Amount of Slots"""
-func loadInventorySlots(object, amount):
+func loadInventorySlots(object, amount) -> void:
 	for _x in range(amount):
 		var slot = object.InventorySlotDisplay.instance()
 		object.add_child(slot)
