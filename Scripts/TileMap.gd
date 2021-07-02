@@ -14,7 +14,6 @@ onready var objects = get_parent().get_node("Objects")
 var raycastOffset = Vector2(1, 1)
 
 var ww = WorldVariables
-
 var areaClear = true
 var currentObject = null
 
@@ -25,7 +24,7 @@ var chunkSizePixels : int = ww.getChunkSizePixels()
 # Tile Size in Pixels
 var tileSizePixels : int = ww.getTileSizePixels()
 # Holds Noise Texture
-var noise : OpenSimplexNoise = OpenSimplexNoise.new()
+var noise : = OpenSimplexNoise.new()
 
 """Ready Method
 Sets the Seed and the First Chunk as the Next To Generate"""
@@ -45,23 +44,7 @@ func _process(_delta):
 Generated and Next To Generate Chunks"""
 func generateChunk(root) -> void:
 	createNoiseAndGenerate(root)
-	ww.setGeneratedChunks(root)
-	ww.removeNextToGenerate(root)
-	var rootLeft = root + Vector2.LEFT
-	var rootRight = root + Vector2.RIGHT
-	var rootDown = root + Vector2.DOWN
-	var rootUp = root + Vector2.UP
-	
-	# Adds next to generate chunks if they are not already generated to an Array
-	if !ww.getGeneratedChunks().has(rootLeft):
-		ww.setNextToGenerate(rootLeft)
-	if !ww.getGeneratedChunks().has(rootRight):
-		ww.setNextToGenerate(rootRight)
-	if !ww.getGeneratedChunks().has(rootDown):
-		ww.setNextToGenerate(rootDown)
-	if !ww.getGeneratedChunks().has(rootUp):
-		ww.setNextToGenerate(rootUp)
-	ww.updateNextToGenerate()
+	generationFinished(root)
 	
 """Creates a Noise Texture 
 Used generate specific Tiles based on the Noise Value"""
@@ -87,6 +70,26 @@ func createNoiseAndGenerate(root) -> void:
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				tileMapGrass.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
+	
+"""Updates the Chunk Arrays when the Generation is finished"""
+func generationFinished(root):
+	ww.setGeneratedChunks(root)
+	ww.removeNextToGenerate(root)
+	var rootLeft = root + Vector2.LEFT
+	var rootRight = root + Vector2.RIGHT
+	var rootDown = root + Vector2.DOWN
+	var rootUp = root + Vector2.UP
+	
+	# Adds next to generate chunks if they are not already generated to an Array
+	if !ww.getGeneratedChunks().has(rootLeft):
+		ww.setNextToGenerate(rootLeft)
+	if !ww.getGeneratedChunks().has(rootRight):
+		ww.setNextToGenerate(rootRight)
+	if !ww.getGeneratedChunks().has(rootDown):
+		ww.setNextToGenerate(rootDown)
+	if !ww.getGeneratedChunks().has(rootUp):
+		ww.setNextToGenerate(rootUp)
+	ww.updateNextToGenerate()
 	
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
@@ -146,7 +149,6 @@ func generateNature(type, posCurrent, root, rand) -> void:
 		+ root.x * chunkSizePixels,
 		posCurrent.y * tileSizePixels
 		+ root.y * chunkSizePixels))
-		
 	
 """Removes a Chunk from the World and from the Generated Chunks Array"""
 func removeChunk(root) -> void:
@@ -175,6 +177,8 @@ func removeGrassTop(root) -> void:
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
 			tileMapGrassTopGreen.set_cell(x + root.x * chunkSizeTiles,
+			y + root.y * chunkSizeTiles, -1)
+			tileMapGrassTopBrown.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Nature-Objects"""
@@ -211,7 +215,7 @@ func blueprint(object) -> void:
 Adds it to a Group of created Objects"""
 func instanceAndAddObject(objectScene, position) -> void:
 	var newObject = objectScene.instance()
-	objects.add_child(newObject)
+	objects.call_deferred("add_child", newObject)
 	positionObject(newObject, position)
 	newObject.add_to_group("Objects")
 	

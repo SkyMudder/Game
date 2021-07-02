@@ -55,7 +55,7 @@ func removeGeneratedChunks(value) -> void:
 	
 func removeNextToGenerate(value) -> void:
 	__nextToGenerate.erase(value)
-
+	
 """Other Methods"""
 
 """Remove Chunks that are too far away from

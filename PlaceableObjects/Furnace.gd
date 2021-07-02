@@ -183,14 +183,16 @@ func findSmeltable():
 Returns a Boolean"""
 func checkBurnable(item) -> bool:
 	if item != null:
-		return true
+		if item.burnable:
+			return true
 	return false
 	
 """Checks if a specific Item is Smeltable
 Returns a Boolean"""
 func checkSmeltable(item) -> bool:
 	if item != null:
-		return true
+		if item.smeltable:
+			return true
 	return false
 	
 """Check if Items are already being burned"""
