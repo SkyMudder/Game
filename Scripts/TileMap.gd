@@ -8,9 +8,9 @@ onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
 onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
-onready var raycast = get_parent().get_node("ObjectPlacementCollision")
 onready var objects = get_parent().get_node("Objects")
 
+var raycast : RayCast2D
 var raycastOffset = Vector2(1, 1)
 
 var ww = WorldVariables
@@ -226,6 +226,7 @@ func positionObject(instance, position) -> void:
 """Instance a new Object, add it to the Scene Tree
 Show its Blueprint Texture which should be in the Scene"""
 func instancePlaceableObject(item, position) -> void:
+	raycast = newRayCast()
 	var objectScene = item.getObject()
 	var newObject = objectScene.instance()
 	objects.add_child(newObject)
@@ -248,10 +249,22 @@ func placeObject() -> void:
 		currentObject.setCollision(1)
 		currentObject.add_to_group("Objects")
 		currentObject = null
+		raycast.queue_free()
 		emit_signal("stopped_placing", true)
 	
 func cancel() -> void:
 	Inventories.removeFurnaceInventory(currentObject.ui.sourceInventory.id)
 	currentObject.queue_free()
 	currentObject = null
+	raycast.queue_free()
 	emit_signal("stopped_placing", false)
+	
+func newRayCast() -> RayCast2D:
+	var newRaycast = RayCast2D.new()
+	newRaycast.enabled = true
+	newRaycast.collide_with_areas = true
+	newRaycast.collide_with_bodies = false
+	newRaycast.collision_mask = 8
+	newRaycast.cast_to = Vector2(1, 1)
+	get_node("/root/Main").call_deferred("add_child", newRaycast)
+	return newRaycast
