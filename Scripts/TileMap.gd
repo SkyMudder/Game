@@ -4,6 +4,7 @@ signal stopped_placing(placed)
 
 onready var tileMapDirt = get_node("../Dirt")
 onready var tileMapGrass = get_node("../Grass")
+onready var tileMapGrassDark = get_node("../GrassDark")
 onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
 onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
 onready var player = get_node("../KinematicBody2D")
