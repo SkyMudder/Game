@@ -3,7 +3,7 @@
 [ext_resource path="res://HitHurtBoxes/Hitbox.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 0.63203
+radius = 0.487428
 
 [node name="MousePointer" type="Node2D"]
 
@@ -12,7 +12,7 @@ collision_layer = 16
 collision_mask = 8
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
-position = Vector2( 4, 4 )
+position = Vector2( 1.20632, 1.21354 )
 shape = SubResource( 1 )
 
 [editable path="Hitbox"]
