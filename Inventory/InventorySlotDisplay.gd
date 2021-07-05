@@ -11,7 +11,7 @@ onready var itemAmount = get_node("TextureRect/ItemAmount")
 onready var emptySlotTexture = preload("res://Items/EmptyInventorySlot.png")
 onready var selected = get_node("Selected")
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
-onready var tileMap = get_node("/root/Main/Dirt")
+onready var tileMap = get_node("/root/Main/GroundLayer")
 onready var furnaceView = get_parent().get_parent().get_parent()
 
 """Shows a given Item on the UI

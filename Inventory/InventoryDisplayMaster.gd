@@ -3,7 +3,7 @@ extends GridContainer
 
 onready var playerInventories : Array = Inventories.playerInventories
 onready var furnaceInventories : Array = Inventories.furnaceInventories
-onready var tileMap = get_node("/root/Main/Dirt")
+onready var groundLayer = get_node("/root/Main/GroundLayer")
 
 """Goes through the whole Inventory and updates the Slots"""
 func updateInventoryDisplay(object, inventory, inventoryChanged) -> void:
