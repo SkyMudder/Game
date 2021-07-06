@@ -49,7 +49,7 @@ func zoomIn():
 		camera.zoom -= Vector2(0.1, 0.1)
 	
 func zoomOut():
-	if !camera.zoom >= Vector2(0.5, 0.5):
+	if !camera.zoom >= Vector2(0.7, 0.7):
 		camera.zoom += Vector2(0.1, 0.1)
 	
 """Gets called every time the Player moves"""

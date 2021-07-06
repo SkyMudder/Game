@@ -8,6 +8,7 @@ func _ready():
 	dirt.rocksmall = 30
 	grass.tree = 60
 	grass.stick = 20
+	grassdark.treedark = grass.tree
 	
 """Percentage of Spawnrates"""
 
@@ -22,4 +23,5 @@ func getPercentage() -> int:
 """World"""
 var dirt = {}
 var grass = {}
+var grassdark = {}
 var grassTop : int = 100

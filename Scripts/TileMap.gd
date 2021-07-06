@@ -57,20 +57,20 @@ func createNoiseAndGenerate(root) -> void:
 			var randGrass = rng.randi_range(0, 4)
 			var posCurrent = Vector2(x, y)
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
-			y + root.y * chunkSizeTiles) + 1
-			if noise2D <= 0.8:
+			y + root.y * chunkSizeTiles) * 2 + 2
+			if noise2D <= 1:
 				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 1.5:
+			elif noise2D <= 2.5:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 2:
+			elif noise2D <= 4:
 				generateGrassDark(posCurrent, root, rand)
-				generateGrassTop(posCurrent, root, rand, randGrass, 0)
+				generateGrassTop(posCurrent, root, rand, randGrass, 2)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 	
@@ -99,27 +99,29 @@ None of these Tiles have Collision"""
 func generateDirt(posCurrent, root, rand) -> void:
 	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
-	generateNature(1, posCurrent, root, rand)
+	generateNature(0, posCurrent, root, rand)
 	
 """Generates the Grass Floor
 None of these Tiles have Collision"""
 func generateGrass(posCurrent, root, rand) -> void:
 	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 1)
-	generateNature(0, posCurrent, root, rand)
+	generateNature(1, posCurrent, root, rand)
 	
 """Generates the Dark Grass Floor
 None of these Tiles have Collision"""
 func generateGrassDark(posCurrent, root, rand) -> void:
 	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 2)
-	generateNature(0, posCurrent, root, rand)
+	generateNature(2, posCurrent, root, rand)
 	
 """Generates Grass on top of the Grass Floor
 None of these Tiles have Collision"""
 func generateGrassTop(posCurrent, root, rand, randGrass, type) -> void:
 	if type == 1:
 		randGrass += 5
+	if type == 2:
+		randGrass += 10
 	if rand < SpawnRates.grassTop:
 		topLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 		posCurrent.y + root.y * chunkSizeTiles, randGrass)
@@ -133,14 +135,6 @@ func generateNature(type, posCurrent, root, rand) -> void:
 	var randResource
 	rng.randomize()
 	if type == 0:
-		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
-		if randResource == 0:
-			spawnResource = preload("res://Objects/Tree.tscn")
-			randCheck = SpawnRates.grass.tree
-		elif randResource == 1:
-			spawnResource = preload("res://Objects/Stick.tscn")
-			randCheck = SpawnRates.grass.stick
-	elif type == 1:
 		randResource = rng.randi_range(0, SpawnRates.dirt.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Rock.tscn")
@@ -151,6 +145,19 @@ func generateNature(type, posCurrent, root, rand) -> void:
 		elif randResource == 2:
 			spawnResource = preload("res://Objects/RockSmall.tscn")
 			randCheck = SpawnRates.dirt.rocksmall
+	elif type == 1:
+		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
+		if randResource == 0:
+			spawnResource = preload("res://Objects/Tree.tscn")
+			randCheck = SpawnRates.grass.tree
+		elif randResource == 1:
+			spawnResource = preload("res://Objects/Stick.tscn")
+			randCheck = SpawnRates.grass.stick
+	elif type == 2:
+		randResource = rng.randi_range(0, SpawnRates.grassdark.size() - 1)
+		if randResource == 0:
+			spawnResource = preload("res://Objects/TreeDark.tscn")
+			randCheck = SpawnRates.grassdark.treedark
 	if rand < randCheck:
 		instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
 		+ root.x * chunkSizePixels,
