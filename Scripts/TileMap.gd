@@ -28,6 +28,7 @@ var noise : = OpenSimplexNoise.new()
 Sets the Seed and the First Chunk as the Next To Generate"""
 func _ready():
 	ww.setNextToGenerate(ww.getRoot())
+	noise.lacunarity = 3
 	noise.seed = 1
 	
 """Updates the Mouse Pointer Hitbox
@@ -57,18 +58,18 @@ func createNoiseAndGenerate(root) -> void:
 			var randGrass = rng.randi_range(0, 4)
 			var posCurrent = Vector2(x, y)
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
-			y + root.y * chunkSizeTiles) * 2 + 2
+			y + root.y * chunkSizeTiles) * 1.5 + 1.5
 			if noise2D <= 1:
 				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 2.5:
+			elif noise2D <= 2:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 4:
+			elif noise2D <= 3:
 				generateGrassDark(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 2)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
