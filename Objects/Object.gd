@@ -2,13 +2,14 @@ extends StaticBody2D
 
 
 onready var inventory : Inventory = Inventories.playerInventory
+onready var player = get_node("/root/Main/KinematicBody2D")
 
 """While active, removes HP
 Unbound from Framerate
 When HP reaches 0, the Particles stop emitting and the Object gets destroyed"""
 func damage(object, delta) -> void:
 	if object.playerItem.item != null:
-		if object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level:
+		if checkDamageable(object):
 			object.damagingEffect.emitting = true
 			var remove = 60 * delta
 			if object.playerItem.item != null:
@@ -36,3 +37,11 @@ func destroy(object) -> void:
 		object.breakingEffect.emitting = true
 		yield(get_tree().create_timer(object.breakingEffect.lifetime), "timeout")
 		object.queue_free()
+	
+"""Checks if the Object is damageable"""
+func checkDamageable(object) -> bool:
+	var hasCompatibleItem : bool = object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level
+	var isCloseEnough : bool = object.global_position.distance_to(player.global_position) < WorldVariables.damageRange
+	if hasCompatibleItem and isCloseEnough:
+		return true
+	return false

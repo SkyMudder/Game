@@ -2,13 +2,18 @@ extends StaticBody2D
 
 
 onready var inventory : Inventory = Inventories.playerInventory
+onready var player = get_node("/root/Main/KinematicBody2D")
 
-"""While LMB is held on the Object, it gets damaged
-Meaning the _process Method is active
-Emits Particles with the Colors of the Object while damaged"""
+"""Adds the Item to the Player Inventory and removes it from the World"""
 func addToInventory(object) -> void:
-	if object.exists:
+	if object.exists and pickable(object):
 			object.item.amount = object.amount
 			object.inventory.add(object.item)
 			object.exists = false
 			object.queue_free()
+	
+"""Checks if an Item can be picked up"""
+func pickable(object) -> bool:
+	if object.global_position.distance_to(player.global_position) < WorldVariables.pickupRange:
+		return true
+	return false

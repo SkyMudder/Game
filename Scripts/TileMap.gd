@@ -34,8 +34,6 @@ func _ready():
 """Updates the Mouse Pointer Hitbox
 Handles Object Placement if an Object is currently getting placed"""
 func _process(_delta):
-	var mousePointer = get_parent().get_node("MousePointer")
-	mousePointer.global_position = get_global_mouse_position()
 	if currentObject != null:
 		placeObject()
 
