@@ -16,12 +16,14 @@ func damage(object, delta) -> void:
 				remove *= object.playerItem.item.damageMultiplier
 			object.hp -= remove
 			if object.hp < 0:
-				object.damagingEffect.emitting = false
+				stop(object)
 				destroy(object)
-				object.set_process(false)
 			if !Input.is_mouse_button_pressed(BUTTON_LEFT):
-				object.set_process(false)
-				object.damagingEffect.emitting = false
+				stop(object)
+		else:
+			stop(object)
+	else:
+		stop(object)
 	
 """On Destroy, the Resource of the Object gets added to the Inventory
 A new explosive Particle Effect gets emitted
@@ -45,3 +47,7 @@ func checkDamageable(object) -> bool:
 	if hasCompatibleItem and isCloseEnough:
 		return true
 	return false
+	
+func stop(object):
+	object.set_process(false)
+	object.damagingEffect.emitting = false
