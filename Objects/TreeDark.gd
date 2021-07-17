@@ -7,10 +7,10 @@ onready var breakingEffect = sprite.get_child(0)
 onready var damagingEffect = sprite.get_child(1)
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 
-var damageType = WorldVariables.type.MINERAL
+var damageType = WorldVariables.type.WOOD
 var level = 1
 var hp = 400
-var item = preload("res://Items/Stone.tres")
+var item = preload("res://Items/WoodDark.tres")
 var amount = 6
 
 var exists = true
