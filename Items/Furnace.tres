@@ -11,6 +11,7 @@ amount = 1
 stackLimit = 1
 damageMultiplier = 0.0
 damageType = -1
+craftingType = -1
 burnable = false
 smeltable = false
 level = -1

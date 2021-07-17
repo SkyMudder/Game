@@ -7,6 +7,7 @@ export(int) var amount = 1
 export(int) var stackLimit
 export(float) var damageMultiplier
 export(int) var damageType
+export(int) var craftingType
 export(bool) var burnable
 export(bool) var smeltable
 export(Resource) var smeltingProduct

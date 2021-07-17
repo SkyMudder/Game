@@ -44,7 +44,6 @@ func destroy(object) -> void:
 func checkDamageable(object) -> bool:
 	var hasCompatibleItem : bool = object.damageType == object.playerItem.item.damageType and object.level <= object.playerItem.item.level
 	var isCloseEnough : bool = object.global_position.distance_to(player.global_position) < WorldVariables.damageRange
-	print(hasCompatibleItem)
 	if hasCompatibleItem and isCloseEnough:
 		return true
 	return false
