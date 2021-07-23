@@ -3,6 +3,7 @@ extends TileMap
 signal stopped_placing(placed)
 
 onready var groundLayer = get_node("../GroundLayer")
+onready var groundLayerBackground = get_node("../GroundLayerBackground")
 onready var topLayer = get_node("../TopLayer")
 onready var player = get_node("../KinematicBody2D")
 onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
@@ -40,8 +41,16 @@ func _process(_delta):
 """Generates a Chunk and keeps track of the Currently
 Generated and Next To Generate Chunks"""
 func generateChunk(root) -> void:
+	var start = OS.get_ticks_usec()
+	var start1 = OS.get_ticks_msec()
 	createNoiseAndGenerate(root)
 	generationFinished(root)
+	var end = OS.get_ticks_usec()
+	var end1 = OS.get_ticks_msec()
+	print("usec")
+	print(end - start)
+	print("msec")
+	print(end1 - start1)
 	
 """Creates a Noise Texture 
 Used generate specific Tiles based on the Noise Value"""
@@ -58,16 +67,24 @@ func createNoiseAndGenerate(root) -> void:
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles) * 1.5 + 1.5
 			if noise2D <= 1:
+				if noise2D > 0.95:
+					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 1)
 				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 			elif noise2D <= 2:
+				if noise2D < 1.05:
+					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 0)
+				if noise2D > 1.95:
+					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 2)
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 			elif noise2D <= 3:
+				if noise2D < 2.95:
+					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 1)
 				generateGrassDark(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 2)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,

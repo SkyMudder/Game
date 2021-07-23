@@ -8,7 +8,7 @@ const pickupRange : float = 100.0
 const damageRange : float = 180.0
 
 var root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
-var renderDistance : int = 10	# Render distance in Chunks (Must be higher than 1)
+var renderDistance : int = 5	# Render distance in Chunks (Must be higher than 1)
 var generatedChunks : Array = []	# Array that stores all generated Chunks
 var nextToGenerate : Array = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)

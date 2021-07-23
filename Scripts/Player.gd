@@ -5,7 +5,7 @@ onready var toolbar : Inventory = Inventories.toolbar
 
 var velocity : = Vector2.ZERO	# Player Velocity
 
-const MAX_SPEED : int = 100
+const MAX_SPEED : int = 1000
 const ACCELERATION : int = 500
 const FRICTION : int = 500
 
@@ -22,7 +22,7 @@ func _physics_process(delta):
 	if input_vector != Vector2.ZERO:
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta) 
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta * 10)
 		
 	velocity = move_and_slide(velocity)
 	emit_signal("on_player_moved")
