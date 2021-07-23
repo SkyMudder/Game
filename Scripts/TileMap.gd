@@ -41,16 +41,8 @@ func _process(_delta):
 """Generates a Chunk and keeps track of the Currently
 Generated and Next To Generate Chunks"""
 func generateChunk(root) -> void:
-	var start = OS.get_ticks_usec()
-	var start1 = OS.get_ticks_msec()
 	createNoiseAndGenerate(root)
 	generationFinished(root)
-	var end = OS.get_ticks_usec()
-	var end1 = OS.get_ticks_msec()
-	print("usec")
-	print(end - start)
-	print("msec")
-	print(end1 - start1)
 	
 """Creates a Noise Texture 
 Used generate specific Tiles based on the Noise Value"""
@@ -61,34 +53,29 @@ func createNoiseAndGenerate(root) -> void:
 	
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
+			var biomes = 3
 			var rand = rng.randi_range(0, percentage)
 			var randGrass = rng.randi_range(0, 4)
 			var posCurrent = Vector2(x, y)
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
-			y + root.y * chunkSizeTiles) * 1.5 + 1.5
-			if noise2D <= 1:
-				if noise2D > 0.95:
-					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 1)
+			y + root.y * chunkSizeTiles) * biomes as float / 2 + biomes as float / 2
+			if noise2D <= biomes - 2:
 				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 2:
-				if noise2D < 1.05:
-					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 0)
-				if noise2D > 1.95:
-					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 2)
+			elif noise2D <= biomes - 1:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D <= 3:
-				if noise2D < 2.95:
-					groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, 1)
+			elif noise2D <= biomes:
 				generateGrassDark(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 2)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
+			transition(noise2D, posCurrent, root)
+			
 	
 """Updates the Chunk Arrays when the Generation is finished"""
 func generationFinished(root):
@@ -214,6 +201,13 @@ func removeNature() -> void:
 	for x in get_tree().get_nodes_in_group("Objects"):
 		if player.isFarFromObject(x.global_position):
 			x.queue_free()
+	
+func transition(noise2D, posCurrent, root):
+	var limit = 0.05
+	if noise2D > noise2D as int + 1 - limit and noise2D < noise2D as int + 1:
+		groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, noise2D as int + 1)
+	elif noise2D < noise2D as int + 1 + limit:
+		groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, noise2D as int - 1)
 	
 """Places the Blueprint of an Object in Increments of the Tile Size in Pixels
 So they can only be placed in specific Increments of the World
