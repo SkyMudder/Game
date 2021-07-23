@@ -2,7 +2,7 @@ extends Node2D
 
 
 onready var player = get_node("KinematicBody2D")
-onready var tileMapGrass = get_node("Grass")
+onready var groundLayer = get_node("GroundLayer")
 onready var mousePointer = preload("res://Sprites/MousePointer.png")
 onready var inventoryTabs = get_node("InventoryWrapper/InventoryTabs")
 onready var camera = get_node("KinematicBody2D/Camera2D")
@@ -19,14 +19,14 @@ and if it is not already generated"""
 func checkGenerateChunk():
 	for x in WorldVariables.getNextToGenerate():
 		if player.isCloseToChunk(x) and !WorldVariables.getGeneratedChunks().has(x):
-			tileMapGrass.generateChunk(x)
+			groundLayer.generateChunk(x)
 	
 """Checks if a Chunk should be removed
 Based on how far the Player is from it"""
 func checkRemoveChunk():
 	for x in WorldVariables.getGeneratedChunks():
 		if player.isFarFromChunk(x):
-			tileMapGrass.removeChunk(x)
+			groundLayer.removeChunk(x)
 	
 func _input(_event):
 	if Input.is_action_pressed("ui_focus_next"):
@@ -49,7 +49,7 @@ func zoomIn():
 		camera.zoom -= Vector2(0.1, 0.1)
 	
 func zoomOut():
-	if !camera.zoom >= Vector2(0.5, 0.5):
+	if !camera.zoom >= Vector2(0.7, 0.7):
 		camera.zoom += Vector2(0.1, 0.1)
 	
 """Gets called every time the Player moves"""

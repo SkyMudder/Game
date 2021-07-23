@@ -16,7 +16,7 @@ onready var fuelLabel = get_node("FurnaceHBoxContainer/InventoryVBoxContainer/Fu
 Connects Signal for when Items changed
 Updates the Inventory on the UI"""
 func _ready():
-	tileMap.connect("stopped_placing", self, "_on_stopped_placing")
+	groundLayer.connect("stopped_placing", self, "_on_stopped_placing")
 	
 """When Item changes, update the Inventory Slot Display"""
 func _on_items_changed(inventoryChanged, index) -> void:
@@ -61,4 +61,4 @@ func _on_stopped_placing(placed):
 		sourceInventory.connect("items_changed", self, "_on_items_changed")
 	# warning-ignore:return_value_discarded
 		productInventory.connect("items_changed", self, "_on_items_changed")
-	tileMap.disconnect("stopped_placing", self, "_on_stopped_placing")
+	groundLayer.disconnect("stopped_placing", self, "_on_stopped_placing")

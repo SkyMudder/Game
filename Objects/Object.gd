@@ -2,25 +2,28 @@ extends StaticBody2D
 
 
 onready var inventory : Inventory = Inventories.playerInventory
+onready var player = get_node("/root/Main/KinematicBody2D")
 
 """While active, removes HP
 Unbound from Framerate
 When HP reaches 0, the Particles stop emitting and the Object gets destroyed"""
 func damage(object, delta) -> void:
 	if object.playerItem.item != null:
-		if object.type == object.playerItem.item.type and object.level <= object.playerItem.item.level:
+		if checkDamageable(object):
 			object.damagingEffect.emitting = true
 			var remove = 60 * delta
 			if object.playerItem.item != null:
 				remove *= object.playerItem.item.damageMultiplier
 			object.hp -= remove
 			if object.hp < 0:
-				object.damagingEffect.emitting = false
+				stop(object)
 				destroy(object)
-				object.set_process(false)
 			if !Input.is_mouse_button_pressed(BUTTON_LEFT):
-				object.set_process(false)
-				object.damagingEffect.emitting = false
+				stop(object)
+		else:
+			stop(object)
+	else:
+		stop(object)
 	
 """On Destroy, the Resource of the Object gets added to the Inventory
 A new explosive Particle Effect gets emitted
@@ -36,3 +39,15 @@ func destroy(object) -> void:
 		object.breakingEffect.emitting = true
 		yield(get_tree().create_timer(object.breakingEffect.lifetime), "timeout")
 		object.queue_free()
+	
+"""Checks if the Object is damageable"""
+func checkDamageable(object) -> bool:
+	var hasCompatibleItem : bool = object.damageType == object.playerItem.item.damageType and object.level <= object.playerItem.item.level
+	var isCloseEnough : bool = object.global_position.distance_to(player.global_position) < WorldVariables.damageRange
+	if hasCompatibleItem and isCloseEnough:
+		return true
+	return false
+	
+func stop(object):
+	object.set_process(false)
+	object.damagingEffect.emitting = false

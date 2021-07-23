@@ -2,10 +2,9 @@ extends TileMap
 
 signal stopped_placing(placed)
 
-onready var tileMapDirt = get_node("../Dirt")
-onready var tileMapGrass = get_node("../Grass")
-onready var tileMapGrassTopGreen = get_node("../GrassTopGreen")
-onready var tileMapGrassTopBrown = get_node("../GrassTopBrown")
+onready var groundLayer = get_node("../GroundLayer")
+onready var groundLayerBackground = get_node("../GroundLayerBackground")
+onready var topLayer = get_node("../TopLayer")
 onready var player = get_node("../KinematicBody2D")
 onready var toolbar = get_node("../InventoryWrapper/CenterPlayerInventory/ToolbarDisplay")
 onready var objects = get_parent().get_node("Objects")
@@ -30,13 +29,12 @@ var noise : = OpenSimplexNoise.new()
 Sets the Seed and the First Chunk as the Next To Generate"""
 func _ready():
 	ww.setNextToGenerate(ww.getRoot())
+	noise.lacunarity = 3
 	noise.seed = 1
 	
 """Updates the Mouse Pointer Hitbox
 Handles Object Placement if an Object is currently getting placed"""
 func _process(_delta):
-	var mousePointer = get_parent().get_node("MousePointer")
-	mousePointer.global_position = get_global_mouse_position()
 	if currentObject != null:
 		placeObject()
 
@@ -55,21 +53,29 @@ func createNoiseAndGenerate(root) -> void:
 	
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
+			var biomes = 3
 			var rand = rng.randi_range(0, percentage)
 			var randGrass = rng.randi_range(0, 4)
 			var posCurrent = Vector2(x, y)
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
-			y + root.y * chunkSizeTiles) + 1
-			if noise2D <= 1:
+			y + root.y * chunkSizeTiles) * biomes as float / 2 + biomes as float / 2
+			if noise2D <= biomes - 2:
 				generateDirt(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
-				tileMapDirt.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
-			elif noise2D > 1:
+			elif noise2D <= biomes - 1:
 				generateGrass(posCurrent, root, rand)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
-				tileMapGrass.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
+			elif noise2D <= biomes:
+				generateGrassDark(posCurrent, root, rand)
+				generateGrassTop(posCurrent, root, rand, randGrass, 2)
+				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
+				y + root.y * chunkSizeTiles))
+			transition(noise2D, posCurrent, root)
+			
 	
 """Updates the Chunk Arrays when the Generation is finished"""
 func generationFinished(root):
@@ -94,27 +100,33 @@ func generationFinished(root):
 """Generates the Dirt Floor
 None of these Tiles have Collision"""
 func generateDirt(posCurrent, root, rand) -> void:
-	tileMapDirt.set_cell(posCurrent.x + root.x * chunkSizeTiles,
+	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 	posCurrent.y + root.y * chunkSizeTiles, 0)
-	generateNature(1, posCurrent, root, rand)
+	generateNature(0, posCurrent, root, rand)
 	
 """Generates the Grass Floor
 None of these Tiles have Collision"""
 func generateGrass(posCurrent, root, rand) -> void:
-	tileMapGrass.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-	posCurrent.y + root.y * chunkSizeTiles, 0)
-	generateNature(0, posCurrent, root, rand)
+	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
+	posCurrent.y + root.y * chunkSizeTiles, 1)
+	generateNature(1, posCurrent, root, rand)
+	
+"""Generates the Dark Grass Floor
+None of these Tiles have Collision"""
+func generateGrassDark(posCurrent, root, rand) -> void:
+	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
+	posCurrent.y + root.y * chunkSizeTiles, 2)
+	generateNature(2, posCurrent, root, rand)
 	
 """Generates Grass on top of the Grass Floor
 None of these Tiles have Collision"""
 func generateGrassTop(posCurrent, root, rand, randGrass, type) -> void:
-	var tileMap
-	if type == 0:
-		tileMap = tileMapGrassTopGreen
-	elif type == 1:
-		tileMap = tileMapGrassTopBrown
+	if type == 1:
+		randGrass += 5
+	if type == 2:
+		randGrass += 10
 	if rand < SpawnRates.grassTop:
-		tileMap.set_cell(posCurrent.x + root.x * chunkSizeTiles,
+		topLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
 		posCurrent.y + root.y * chunkSizeTiles, randGrass)
 	
 """Generates Nature-Objects on top of the Floor
@@ -126,14 +138,6 @@ func generateNature(type, posCurrent, root, rand) -> void:
 	var randResource
 	rng.randomize()
 	if type == 0:
-		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
-		if randResource == 0:
-			spawnResource = preload("res://Objects/Tree.tscn")
-			randCheck = SpawnRates.grass.tree
-		elif randResource == 1:
-			spawnResource = preload("res://Objects/Stick.tscn")
-			randCheck = SpawnRates.grass.stick
-	elif type == 1:
 		randResource = rng.randi_range(0, SpawnRates.dirt.size() - 1)
 		if randResource == 0:
 			spawnResource = preload("res://Objects/Rock.tscn")
@@ -144,6 +148,19 @@ func generateNature(type, posCurrent, root, rand) -> void:
 		elif randResource == 2:
 			spawnResource = preload("res://Objects/RockSmall.tscn")
 			randCheck = SpawnRates.dirt.rocksmall
+	elif type == 1:
+		randResource = rng.randi_range(0, SpawnRates.grass.size() - 1)
+		if randResource == 0:
+			spawnResource = preload("res://Objects/Tree.tscn")
+			randCheck = SpawnRates.grass.tree
+		elif randResource == 1:
+			spawnResource = preload("res://Objects/Stick.tscn")
+			randCheck = SpawnRates.grass.stick
+	elif type == 2:
+		randResource = rng.randi_range(0, SpawnRates.grassdark.size() - 1)
+		if randResource == 0:
+			spawnResource = preload("res://Objects/TreeDark.tscn")
+			randCheck = SpawnRates.grassdark.treedark
 	if rand < randCheck:
 		instanceAndAddObject(spawnResource, Vector2(posCurrent.x * tileSizePixels
 		+ root.x * chunkSizePixels,
@@ -162,23 +179,21 @@ func removeChunk(root) -> void:
 func removeDirt(root) -> void:
 	for x in chunkSizeTiles:
 		for y in chunkSizeTiles:
-			tileMapDirt.set_cell(x + root.x * chunkSizeTiles,
+			groundLayer.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Grass"""
 func removeGrass(root) -> void:
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
-			tileMapGrass.set_cell(x + root.x * chunkSizeTiles,
+			groundLayer.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Grass on top of the Grass Floor"""
 func removeGrassTop(root) -> void:
 	for x in range(chunkSizeTiles):
 		for y in range(chunkSizeTiles):
-			tileMapGrassTopGreen.set_cell(x + root.x * chunkSizeTiles,
-			y + root.y * chunkSizeTiles, -1)
-			tileMapGrassTopBrown.set_cell(x + root.x * chunkSizeTiles,
+			topLayer.set_cell(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles, -1)
 	
 """Removes the Nature-Objects"""
@@ -186,6 +201,13 @@ func removeNature() -> void:
 	for x in get_tree().get_nodes_in_group("Objects"):
 		if player.isFarFromObject(x.global_position):
 			x.queue_free()
+	
+func transition(noise2D, posCurrent, root):
+	var limit = 0.05
+	if noise2D > noise2D as int + 1 - limit and noise2D < noise2D as int + 1:
+		groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, noise2D as int + 1)
+	elif noise2D < noise2D as int + 1 + limit:
+		groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, noise2D as int - 1)
 	
 """Places the Blueprint of an Object in Increments of the Tile Size in Pixels
 So they can only be placed in specific Increments of the World

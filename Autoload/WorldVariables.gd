@@ -1,15 +1,18 @@
 extends Node
 
 
-const __tileSizePixels : int = 32	# Tile Size in Engine Units
-const __chunkSizeTiles : int = 10	# Chunk Size in Tiles
-const __chunkSizePixels : int = __tileSizePixels * __chunkSizeTiles	# Chunk Size in Enigne Units
+const tileSizePixels : int = 32	# Tile Size in Engine Units
+const chunkSizeTiles : int = 10	# Chunk Size in Tiles
+const chunkSizePixels : int = tileSizePixels * chunkSizeTiles	# Chunk Size in Enigne Units
+const pickupRange : float = 100.0
+const damageRange : float = 180.0
 
-var __root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
-var __renderDistance : int = 5	# Render distance in Chunks (Must be higher than 1)
-var __generatedChunks : Array = []	# Array that stores all generated Chunks
-var __nextToGenerate : Array = []	# Array that stores all the Chunks that are up next
+var root : Vector2 = Vector2.ZERO	# Where the first Chunk gets generated
+var renderDistance : int = 5	# Render distance in Chunks (Must be higher than 1)
+var generatedChunks : Array = []	# Array that stores all generated Chunks
+var nextToGenerate : Array = []	# Array that stores all the Chunks that are up next
 							# to generate (Neighbours of generated Chunks)
+	
 var placeableObjects = [preload("res://PlaceableObjects/Furnace.tscn")]
 
 enum type{WOOD, MINERAL}
@@ -17,44 +20,44 @@ enum type{WOOD, MINERAL}
 """Getter-Methods"""
 
 func getRoot() -> Vector2:
-	return __root
+	return root
 
 func getRenderDistance() -> int:
-	return __renderDistance
+	return renderDistance
 
 func getTileSizePixels() -> int:
-	return __tileSizePixels
+	return tileSizePixels
 	
 func getChunkSizeTiles() -> int:
-	return __chunkSizeTiles
+	return chunkSizeTiles
 	
 func getChunkSizePixels()  -> int:
-	return __chunkSizePixels
+	return chunkSizePixels
 	
 func getGeneratedChunks() -> Array:
-	return __generatedChunks
+	return generatedChunks
 	
 func getNextToGenerate() -> Array:
-	return __nextToGenerate
+	return nextToGenerate
 
 """Setter-Methods"""
 
 func setRenderDistance(val) -> void:
-	__renderDistance = val
+	renderDistance = val
 
 func setGeneratedChunks(value) -> void:
-	__generatedChunks.push_back(value)
+	generatedChunks.push_back(value)
 
 func setNextToGenerate(value) -> void:
-	__nextToGenerate.push_back(value)
+	nextToGenerate.push_back(value)
 
 """Methods to remove Elements from Array"""
 
 func removeGeneratedChunks(value) -> void:
-	__generatedChunks.erase(value)
+	generatedChunks.erase(value)
 	
 func removeNextToGenerate(value) -> void:
-	__nextToGenerate.erase(value)
+	nextToGenerate.erase(value)
 	
 """Other Methods"""
 
@@ -66,9 +69,9 @@ func updateNextToGenerate() -> void:
 	var rootDown : = Vector2.DOWN
 	var rootUp : = Vector2.UP
 	
-	for x in __nextToGenerate:
-		if !__generatedChunks.has(x + rootLeft):
-			if !__generatedChunks.has(x + rootRight):
-				if !__generatedChunks.has(x + rootDown):
-					if !__generatedChunks.has(x + rootUp):
+	for x in nextToGenerate:
+		if !generatedChunks.has(x + rootLeft):
+			if !generatedChunks.has(x + rootRight):
+				if !generatedChunks.has(x + rootDown):
+					if !generatedChunks.has(x + rootUp):
 						removeNextToGenerate(x)

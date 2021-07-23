@@ -7,7 +7,7 @@ onready var breakingEffect = sprite.get_child(0)
 onready var damagingEffect = sprite.get_child(1)
 onready var playerItem = get_node("/root/Main/KinematicBody2D/PlayerItem")
 
-var type = WorldVariables.type.MINERAL
+var damageType = WorldVariables.type.MINERAL
 var level = 1
 var hp = 400
 var item = preload("res://Items/Stone.tres")
