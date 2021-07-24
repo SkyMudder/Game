@@ -60,63 +60,44 @@ func createNoiseAndGenerate(root) -> void:
 			var noise2D = noise.get_noise_2d(x + root.x * chunkSizeTiles,
 			y + root.y * chunkSizeTiles) * biomes as float / 2 + biomes as float / 2
 			if noise2D <= biomes - 2:
-				generateDirt(posCurrent, root, rand)
+				generateGround(posCurrent, root, rand, 0)
 				generateGrassTop(posCurrent, root, rand, randGrass, 1)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 			elif noise2D <= biomes - 1:
-				generateGrass(posCurrent, root, rand)
+				generateGround(posCurrent, root, rand, 1)
 				generateGrassTop(posCurrent, root, rand, randGrass, 0)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 			elif noise2D <= biomes:
-				generateGrassDark(posCurrent, root, rand)
+				generateGround(posCurrent, root, rand, 2)
 				generateGrassTop(posCurrent, root, rand, randGrass, 2)
 				groundLayer.update_bitmask_area(Vector2(x + root.x * chunkSizeTiles,
 				y + root.y * chunkSizeTiles))
 			transition(noise2D, posCurrent, root)
-			
 	
 """Updates the Chunk Arrays when the Generation is finished"""
 func generationFinished(root):
 	ww.setGeneratedChunks(root)
 	ww.removeNextToGenerate(root)
-	var rootLeft = root + Vector2.LEFT
-	var rootRight = root + Vector2.RIGHT
-	var rootDown = root + Vector2.DOWN
-	var rootUp = root + Vector2.UP
 	
 	# Adds next to generate chunks if they are not already generated to an Array
-	if !ww.getGeneratedChunks().has(rootLeft):
-		ww.setNextToGenerate(rootLeft)
-	if !ww.getGeneratedChunks().has(rootRight):
-		ww.setNextToGenerate(rootRight)
-	if !ww.getGeneratedChunks().has(rootDown):
-		ww.setNextToGenerate(rootDown)
-	if !ww.getGeneratedChunks().has(rootUp):
-		ww.setNextToGenerate(rootUp)
+	if !ww.getGeneratedChunks().has(root + Vector2.LEFT):
+		ww.setNextToGenerate(root + Vector2.LEFT)
+	if !ww.getGeneratedChunks().has(root + Vector2.RIGHT):
+		ww.setNextToGenerate(root + Vector2.RIGHT)
+	if !ww.getGeneratedChunks().has(root + Vector2.DOWN):
+		ww.setNextToGenerate(root + Vector2.DOWN)
+	if !ww.getGeneratedChunks().has(root + Vector2.UP):
+		ww.setNextToGenerate(root + Vector2.UP)
 	ww.updateNextToGenerate()
 	
-"""Generates the Dirt Floor
+"""Generates a specific Type of Floor
 None of these Tiles have Collision"""
-func generateDirt(posCurrent, root, rand) -> void:
+func generateGround(posCurrent, root, rand, type) -> void:
 	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-	posCurrent.y + root.y * chunkSizeTiles, 0)
-	generateNature(0, posCurrent, root, rand)
-	
-"""Generates the Grass Floor
-None of these Tiles have Collision"""
-func generateGrass(posCurrent, root, rand) -> void:
-	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-	posCurrent.y + root.y * chunkSizeTiles, 1)
-	generateNature(1, posCurrent, root, rand)
-	
-"""Generates the Dark Grass Floor
-None of these Tiles have Collision"""
-func generateGrassDark(posCurrent, root, rand) -> void:
-	groundLayer.set_cell(posCurrent.x + root.x * chunkSizeTiles,
-	posCurrent.y + root.y * chunkSizeTiles, 2)
-	generateNature(2, posCurrent, root, rand)
+	posCurrent.y + root.y * chunkSizeTiles, type)
+	generateNature(type, posCurrent, root, rand)
 	
 """Generates Grass on top of the Grass Floor
 None of these Tiles have Collision"""
@@ -203,7 +184,7 @@ func removeNature() -> void:
 			x.queue_free()
 	
 func transition(noise2D, posCurrent, root):
-	var limit = 0.05
+	var limit = 0.1
 	if noise2D > noise2D as int + 1 - limit and noise2D < noise2D as int + 1:
 		groundLayerBackground.set_cell(posCurrent.x + root.x * chunkSizeTiles, posCurrent.y + root.y * chunkSizeTiles, noise2D as int + 1)
 	elif noise2D < noise2D as int + 1 + limit:
